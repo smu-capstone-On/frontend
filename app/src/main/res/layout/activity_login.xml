@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ActivityLogin">
-
+    <!-- 로그인 제목 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_title"
         android:padding="5dp"
@@ -25,7 +25,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
-
+    <!-- 아이디 비밀번호 입력 레이아웃-->
     <LinearLayout
         android:id="@+id/login_text_layout"
         android:layout_width="match_parent"
@@ -57,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:selectAllOnFocus="true"/>
         </com.google.android.material.textfield.TextInputLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,7 +79,7 @@
                 android:selectAllOnFocus="true" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
-
+    <!-- 자동로그인 / 계정 찾기 -->
     <LinearLayout
         android:id="@+id/login_auto_layout"
         android:layout_width="match_parent"
@@ -109,7 +108,7 @@
             android:layout_weight="1"
             android:gravity="center|end" />
     </LinearLayout>
-
+    <!-- 로그인 버튼-->
     <Button
         android:id="@+id/login_loginbtn"
         android:layout_width="match_parent"
