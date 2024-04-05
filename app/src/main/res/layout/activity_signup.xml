@@ -7,147 +7,146 @@
     tools:context=".ActivitySignup">
 
     <!-- 회원가입 제목 -->
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/signup_title"
-        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/yellow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/yellow">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="회원가입"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="parent"/>
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 계정 생성 레이아웃 -->
-    <LinearLayout
-        android:id="@+id/signup_layout"
-        android:layout_width="match_parent"
+        app:title="회원가입"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@color/white" />
+
+    <!-- 아이디 -->
+    <TextView
+        android:id="@+id/signup_text_id"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
+        android:text="아이디"
+        android:textSize="20sp"
+        android:textColor="@color/darkgray"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/signup_edit_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.17"/>
+
+    <!-- 아이디 입력-->
+    <EditText
+        android:id="@+id/signup_edit_id"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:layout_marginTop="60dp"
+        android:hint="영문/숫자 입력"
+        android:textSize="15sp"
+        android:textColorHint="@color/hint"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
         app:layout_constraintTop_toBottomOf="@id/signup_title"
-        android:orientation="vertical">
-        <!-- 아이디 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="아이디"
-            android:textSize="20sp"
-            android:textColor="@color/darkgray"
-            android:textStyle="bold" />
-        <!-- 아이디 입력-->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signup_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="영문/숫자 입력"
-                android:textSize="15sp"
-                android:textColorHint="@color/hint"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:selectAllOnFocus="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <!-- 비밀번호 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="비밀번호"
-            android:textSize="20sp"
-            android:textColor="@color/darkgray"
-            android:textStyle="bold"/>
-        <!-- 비밀번호 입력 -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:endIconMode="clear_text">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signup_pwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="영문/숫자/특수문자 혼용하여 입력"
-                android:textSize="15sp"
-                android:textColor="@color/hint"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:selectAllOnFocus="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <!-- 비밀번호 재확인 -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signup_pwdcheck"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="비밀번호 확인"
-                android:textSize="15sp"
-                android:textColor="@color/hint"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:selectAllOnFocus="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <!-- 이메일 입력-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="이메일"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="이메일로 인증 링크가 발송되며, 링크 클릭 시 회원가입이 완료됩니다."
-            android:textSize="11sp"/>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signup_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="이메일 입력"
-                android:textSize="15sp"
-                android:textColor="@color/hint"
-                android:imeOptions="actionDone"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 비밀번호 -->
+    <TextView
+        android:id="@+id/signup_text_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="비밀번호"
+        android:textSize="20sp"
+        android:textColor="@color/darkgray"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/signup_edit_pwd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.17"/>
+
+    <!-- 비밀번호 입력 -->
+    <EditText
+        android:id="@+id/signup_edit_pwd"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:layout_marginTop="60dp"
+        android:hint="영문/숫자/특수문자 혼용하여 입력"
+        android:textSize="15sp"
+        android:textColor="@color/hint"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- 비밀번호 재확인 -->
+    <EditText
+        android:id="@+id/signup_edit_pwdcheck"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:layout_marginTop="10dp"
+        android:hint="비밀번호 확인"
+        android:textSize="15sp"
+        android:textColor="@color/hint"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_pwd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- 이메일 입력-->
+    <TextView
+        android:id="@+id/signup_text_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="이메일"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/signup_detail_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.17"/>
+    <TextView
+        android:id="@+id/signup_detail_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이메일로 인증 링크가 발송되며, 링크 클릭 시 회원가입이 완료됩니다."
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@id/signup_edit_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+        android:id="@+id/signup_edit_email"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:layout_marginTop="70dp"
+        android:hint="이메일 입력"
+        android:textSize="15sp"
+        android:textColor="@color/hint"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_pwdcheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <!-- 회원가입 버튼 -->
     <Button
         android:id="@+id/signup_signupbtn"
-        android:layout_width="match_parent"
+        android:layout_width="288dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginEnd="45dp"
         android:text="회원가입"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="@color/yellow"
-        app:layout_constraintTop_toBottomOf="@id/signup_layout"/>
+        android:textColor="@color/white"
+        android:background="@drawable/radius_10_solid_yellow"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

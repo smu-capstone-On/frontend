@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityFindPW">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/findpw_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="비밀번호 찾기"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@color/white" />
+
+    <EditText
+        android:id="@+id/findpw_edit_id"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:ems="10"
+        android:inputType="text"
+        android:paddingStart="8dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.455"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_toolbar" />
+
+    <TextView
+        android:id="@+id/findpw_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="아이디"
+        android:textColor="@color/darkgray"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/findpw_edit_id"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_id" />
+
+    <EditText
+        android:id="@+id/findpw_edit_email"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/radius_5_stroke_lightgray"
+        android:ems="10"
+        android:hint="이메일 입력"
+        android:inputType="text"
+        android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_id" />
+
+    <TextView
+        android:id="@+id/findpw_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="이메일"
+        android:textColor="@color/darkgray"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/findpw_edit_email"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email" />
+
+    <TextView
+        android:id="@+id/findpw_text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="입력하신 이메일로 인증 링크가 발송됩니다."
+        android:textColor="@color/gray"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/findpw_text2"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_text2" />
+
+    <Button
+        android:id="@+id/findpw_btn_end"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/radius_10_solid_yellow"
+        android:text="입력 완료"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_email" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
