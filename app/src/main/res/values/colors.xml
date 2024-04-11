@@ -9,4 +9,5 @@
     <color name="hint">#808080</color>
     <color name="lightgray">#CCCCCC</color>
     <color name="autogray">#828282</color>
+    <color name="errorred">#FF0000</color>
 </resources>

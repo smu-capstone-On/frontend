@@ -11,10 +11,18 @@ class ActivityLogin : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        /*
-        binding.loginFindIdpwd.setOnClickListener {
-            startActivity(Intent(this, ))
+
+        binding.loginFindId.setOnClickListener {
+            startActivity(Intent(this, ActivityFindID::class.java))
         }
-         */
+        binding.loginFindPwd.setOnClickListener {
+            startActivity(Intent(this, ActivityFindPW::class.java))
+        }
+        binding.loginSignup.setOnClickListener {
+            startActivity(Intent(this, ActivitySignup::class.java))
+        }
+        binding.loginLoginbtn.setOnClickListener {  }
+        binding.loginKakaoLoginbtn.setOnClickListener {  }
     }
+
 }
