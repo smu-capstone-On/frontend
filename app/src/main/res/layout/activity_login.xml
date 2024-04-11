@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="아이디"
-        android:textColor="@color/darkgray"
+        android:textColor="@color/titletext"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/login_edit_id"
@@ -36,7 +36,7 @@
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:imeOptions="actionNext"
         android:inputType="text"
@@ -52,18 +52,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="비밀번호"
-        android:textColor="@color/darkgray"
+        android:textColor="@color/titletext"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/login_edit_pwd"
-        app:layout_constraintStart_toStartOf="@id/login_edit_pwd"/>
+        app:layout_constraintStart_toStartOf="@id/login_edit_pwd" />
 
     <EditText
         android:id="@+id/login_edit_pwd"
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
@@ -88,27 +88,27 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
         android:text="자동 로그인"
         android:textColor="@color/autogray"
         android:textSize="12sp"
-        app:layout_constraintTop_toTopOf="@id/login_find_idpwd"
-        app:layout_constraintStart_toEndOf="@id/login_auto_checkbox"/>
+        app:layout_constraintStart_toEndOf="@id/login_auto_checkbox"
+        app:layout_constraintTop_toTopOf="@id/login_find_idpwd" />
 
     <Button
         android:id="@+id/login_find_idpwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:minHeight="0dp"
-        android:minWidth="0dp"
         android:background="#00FF0000"
-        android:text="ID/PW 찾기"
-        android:textColor="@color/autogray"
-        android:textSize="13sp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/login_edit_pwd"
-        app:layout_constraintEnd_toEndOf="@id/login_edit_pwd" />
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="ID/PW 찾기"
+        android:textColor="@color/hint"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/login_edit_pwd"
+        app:layout_constraintTop_toBottomOf="@id/login_edit_pwd" />
 
     <!-- 로그인 버튼-->
     <Button

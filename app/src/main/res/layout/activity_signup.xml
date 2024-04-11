@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="아이디"
-        android:textColor="@color/darkgray"
+        android:textColor="@color/titletext"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/signup_edit_id"
-        app:layout_constraintStart_toStartOf="@id/signup_edit_id"/>
+        app:layout_constraintStart_toStartOf="@id/signup_edit_id" />
 
     <!-- 아이디 입력-->
     <EditText
@@ -38,7 +38,7 @@
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="영문/숫자 입력"
         android:inputType="text"
@@ -57,11 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="비밀번호"
-        android:textColor="@color/darkgray"
+        android:textColor="@color/titletext"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/signup_edit_pwd"
-        app:layout_constraintStart_toStartOf="@id/signup_edit_pwd"/>
+        app:layout_constraintStart_toStartOf="@id/signup_edit_pwd" />
 
     <!-- 비밀번호 입력 -->
     <EditText
@@ -69,7 +69,7 @@
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="영문/숫자/특수문자 혼용하여 입력"
         android:inputType="textPassword"
@@ -87,7 +87,7 @@
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="비밀번호 확인"
         android:inputType="textPassword"
@@ -105,11 +105,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="이메일"
-        android:textColor="@color/darkgray"
+        android:textColor="@color/titletext"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/signup_edit_email"
-        app:layout_constraintStart_toStartOf="@id/signup_edit_email"/>
+        app:layout_constraintStart_toStartOf="@id/signup_edit_email" />
 
     <TextView
         android:id="@+id/signup_detail_email"
@@ -127,7 +127,7 @@
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="90dp"
-        android:background="@drawable/radius_5_stroke_lightgray"
+        android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="이메일 입력"
         android:imeOptions="actionDone"
