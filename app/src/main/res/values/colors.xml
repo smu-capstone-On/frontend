@@ -5,6 +5,6 @@
     <color name="yellow">#FFC700</color>
     <color name="titletext">#5E5E5E</color>
     <color name="hint">#808080</color>
-    <color name="autogray">#828282</color>
     <color name="gray">#CCCCCC</color>
+    <color name="red">#FF0000</color>
 </resources>

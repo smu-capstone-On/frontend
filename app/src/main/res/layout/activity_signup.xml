@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginStart="-5dp"
         android:text="아이디"
         android:textColor="@color/titletext"
         android:textSize="20sp"
@@ -35,7 +36,7 @@
     <!-- 아이디 입력-->
     <EditText
         android:id="@+id/signup_edit_id"
-        android:layout_width="288dp"
+        android:layout_width="214dp"
         android:layout_height="33dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/radius_5_stroke_gray"
@@ -47,8 +48,32 @@
         android:textSize="14sp"
         android:selectAllOnFocus="true"
         app:layout_constraintTop_toBottomOf="@id/signup_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toStartOf="@id/signup_edit_pwd" />
+
+    <Button
+        android:id="@+id/signup_btn_checkId"
+        android:layout_width="67dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/radius_5_enabledbutton"
+        android:enabled="true"
+        android:text="중복 확인"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintTop_toTopOf="@id/signup_edit_id"
+        app:layout_constraintStart_toEndOf="@id/signup_edit_id"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingStart="2dp"
+        android:text="이미 존재하는 아이디입니다"
+        android:textColor="@color/red"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/signup_edit_id"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_id"/>
 
     <!-- 비밀번호 -->
     <TextView
@@ -56,6 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginStart="-5dp"
         android:text="비밀번호"
         android:textColor="@color/titletext"
         android:textSize="20sp"
@@ -68,22 +94,22 @@
         android:id="@+id/signup_edit_pwd"
         android:layout_width="288dp"
         android:layout_height="33dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="74dp"
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="영문/숫자/특수문자 혼용하여 입력"
         android:inputType="textPassword"
         android:paddingStart="8dp"
+        android:selectAllOnFocus="true"
         android:textColor="@color/hint"
         android:textSize="14sp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintTop_toBottomOf="@id/signup_edit_id"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_id" />
 
     <!-- 비밀번호 재확인 -->
     <EditText
-        android:id="@+id/signup_edit_pwdcheck"
+        android:id="@+id/signup_edit_pwdCheck"
         android:layout_width="288dp"
         android:layout_height="33dp"
         android:layout_marginTop="10dp"
@@ -98,12 +124,25 @@
         app:layout_constraintTop_toBottomOf="@id/signup_edit_pwd"
         app:layout_constraintStart_toStartOf="@id/signup_edit_pwd" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingStart="2dp"
+        android:text="입력한 정보가 일치하지 않습니다."
+        android:textColor="@color/red"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/signup_edit_pwdCheck"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_pwdCheck"/>
+
     <!-- 이메일 입력-->
     <TextView
         android:id="@+id/signup_text_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_marginStart="-5dp"
         android:text="이메일"
         android:textColor="@color/titletext"
         android:textSize="20sp"
@@ -116,7 +155,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="이메일로 인증 링크가 발송되며, 링크 클릭 시 회원가입이 완료됩니다."
+        android:text="입력하신 이메일로 회원가입을 위한 인증 링크가 발송됩니다."
         android:textColor="@color/gray"
         android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@id/signup_edit_email"
@@ -124,34 +163,67 @@
 
     <EditText
         android:id="@+id/signup_edit_email"
-        android:layout_width="288dp"
+        android:layout_width="209dp"
         android:layout_height="33dp"
         android:layout_marginTop="90dp"
         android:background="@drawable/radius_5_stroke_gray"
-        android:ems="10"
-        android:hint="이메일 입력"
-        android:imeOptions="actionDone"
-        android:inputType="textEmailAddress"
-        android:paddingStart="8dp"
-        android:textColor="@color/hint"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/signup_edit_pwdcheck"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toStartOf="@+id/signup_edit_pwdCheck"
+        app:layout_constraintTop_toBottomOf="@+id/signup_edit_pwdCheck" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingStart="2dp"
+        android:text="이미 존재하는 이메일입니다"
+        android:textColor="@color/red"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/signup_edit_email"
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_email"/>
+    
+    <Button
+        android:id="@+id/signup_btn_sendEmail"
+        android:layout_width="67dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="11dp"
+        android:background="@drawable/radius_5_enabledbutton"
+        android:enabled="true"
+        android:text="인증 요청"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/signup_edit_email"
+        app:layout_constraintStart_toEndOf="@id/signup_edit_email"/>
+
+    <Button
+        android:id="@+id/signup_btn_checkEmail"
+        android:layout_width="67dp"
+        android:layout_height="33dp"
+        android:background="@drawable/radius_5_enabledbutton"
+        android:enabled="true"
+        android:text="인증 확인"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/signup_edit_pwdCheck"
+        app:layout_constraintTop_toTopOf="@id/signup_edit_email" />
 
     <!-- 회원가입 버튼 -->
     <Button
         android:id="@+id/signup_signupbtn"
         android:layout_width="288dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/radius_10_solid_yellow"
-        android:text="회원가입"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/radius_10_enabledbutton"
+        android:enabled="true"
+        android:text="다음"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/signup_edit_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/signup_edit_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
