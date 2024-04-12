@@ -156,7 +156,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:text="입력하신 이메일로 회원가입을 위한 인증 링크가 발송됩니다."
-        android:textColor="@color/gray"
+        android:textColor="@color/hint"
         android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@id/signup_edit_email"
         app:layout_constraintStart_toStartOf="@id/signup_edit_email" />
@@ -167,6 +167,12 @@
         android:layout_height="33dp"
         android:layout_marginTop="90dp"
         android:background="@drawable/radius_5_stroke_gray"
+        android:ems="10"
+        android:hint="이메일 입력"
+        android:inputType="textEmailAddress"
+        android:paddingStart="8dp"
+        android:textColor="@color/hint"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/signup_edit_pwdCheck"
         app:layout_constraintTop_toBottomOf="@+id/signup_edit_pwdCheck" />
 
