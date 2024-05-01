@@ -12,15 +12,5 @@ class ActivityMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.mainSignupbtn.setOnClickListener {
-            startActivity(Intent(this, ActivitySignup::class.java))
-        }
-        binding.mainLoginbtn.setOnClickListener {
-            startActivity(Intent(this, ActivityLogin::class.java))
-        }
-        binding.mainBtnGoprofile.setOnClickListener {
-            val intent = Intent(this, ActivityProfile::class.java)
-            startActivity(intent)
-        }
     }
 }
