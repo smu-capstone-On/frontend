@@ -6,6 +6,206 @@
     android:layout_height="match_parent"
     tools:context=".ActivityProfile">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar"
+        tools:layout_editor_absoluteX="0dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_profile"
+                android:layout_width="101dp"
+                android:layout_height="101dp"
+                android:layout_marginTop="60dp"
+                android:src="@drawable/svg_default_profile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/profile_btn_change_image"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="73dp"
+                app:layout_constraintStart_toStartOf="@+id/profile_image_profile"
+                app:layout_constraintTop_toTopOf="@+id/profile_image_profile"
+                app:srcCompat="@drawable/svg_profile_plus" />
+
+            <EditText
+                android:id="@+id/profile_edit_nick"
+                android:layout_width="214dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/radius_5_stroke_gray"
+                android:ems="10"
+                android:inputType="text"
+                android:paddingStart="8dp"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/profile_edit_age"
+                app:layout_constraintTop_toBottomOf="@+id/profile_image_profile" />
+
+            <TextView
+                android:id="@+id/profile_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginBottom="5dp"
+                android:text="닉네임"
+                android:textColor="@color/titleText"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/profile_edit_nick"
+                app:layout_constraintStart_toStartOf="@+id/profile_edit_nick" />
+
+            <EditText
+                android:id="@+id/profile_edit_age"
+                android:layout_width="288dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/radius_5_stroke_gray"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="3"
+                android:paddingStart="8dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_edit_nick" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginBottom="5dp"
+                android:text="나이"
+                android:textColor="@color/titleText"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/profile_edit_age"
+                app:layout_constraintStart_toStartOf="@+id/profile_edit_age" />
+
+            <RadioGroup
+                android:id="@+id/profile_radio_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/profile_edit_age"
+                app:layout_constraintTop_toBottomOf="@+id/profile_edit_age">
+
+                <RadioButton
+                    android:id="@+id/profile_btn_m"
+                    android:layout_width="71dp"
+                    android:layout_height="33dp"
+                    android:background="@drawable/custom_radiobutton"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="남자"
+                    android:textColor="@drawable/custom_radiobutton_text" />
+
+                <RadioButton
+                    android:id="@+id/profile_btn_w"
+                    android:layout_width="67dp"
+                    android:layout_height="33dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/custom_radiobutton"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="여자"
+                    android:textColor="@drawable/custom_radiobutton_text" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/profile_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginBottom="5dp"
+                android:text="성별"
+                android:textColor="@color/titleText"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/profile_radio_sex"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex" />
+
+            <Button
+                android:id="@+id/profile_btn_signup"
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="60dp"
+                android:background="@drawable/radius_10_solid_yellow"
+                android:text="회원 가입"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex"
+                app:layout_constraintTop_toBottomOf="@+id/profile_radio_animal" />
+
+            <Button
+                android:id="@+id/profile_btn_nickcheck"
+                android:layout_width="67dp"
+                android:layout_height="33dp"
+                android:background="@drawable/radius_5_solid_yellow"
+                android:text="중복확인"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_edit_nick"
+                app:layout_constraintEnd_toEndOf="@+id/profile_edit_age" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginBottom="5dp"
+                android:text="반려동물 유무"
+                android:textColor="@color/titleText"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/profile_radio_animal"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_animal" />
+
+            <RadioGroup
+                android:id="@+id/profile_radio_animal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex"
+                app:layout_constraintTop_toBottomOf="@+id/profile_radio_sex">
+
+                <RadioButton
+                    android:id="@+id/profile_btn_true"
+                    android:layout_width="71dp"
+                    android:layout_height="33dp"
+                    android:background="@drawable/custom_radiobutton"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="있음"
+                    android:textColor="@drawable/custom_radiobutton_text" />
+
+                <RadioButton
+                    android:id="@+id/profile_btn_false"
+                    android:layout_width="71dp"
+                    android:layout_height="33dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/custom_radiobutton"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="없음"
+                    android:textColor="@drawable/custom_radiobutton_text" />
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/profile_toolbar"
         android:layout_width="match_parent"
@@ -17,148 +217,5 @@
         app:title="프로필 생성"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:titleTextColor="@color/white" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image_profile"
-        android:layout_width="101dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/svg_default_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="73dp"
-        app:layout_constraintStart_toStartOf="@+id/profile_image_profile"
-        app:layout_constraintTop_toTopOf="@+id/profile_image_profile"
-        app:srcCompat="@drawable/svg_profile_plus" />
-
-    <EditText
-        android:id="@+id/profile_edit_nick"
-        android:layout_width="214dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="80dp"
-        android:background="@drawable/radius_5_stroke_gray"
-        android:ems="10"
-        android:inputType="text"
-        android:paddingStart="8dp"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/profile_edit_age"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image_profile" />
-
-    <TextView
-        android:id="@+id/profile_text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-5dp"
-        android:layout_marginBottom="5dp"
-        android:text="닉네임"
-        android:textColor="@color/titleText"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/profile_edit_nick"
-        app:layout_constraintStart_toStartOf="@+id/profile_edit_nick" />
-
-    <EditText
-        android:id="@+id/profile_edit_age"
-        android:layout_width="288dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="64dp"
-        android:background="@drawable/radius_5_stroke_gray"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="3"
-        android:paddingStart="8dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_edit_nick" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-5dp"
-        android:layout_marginBottom="5dp"
-        android:text="나이"
-        android:textColor="@color/titleText"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/profile_edit_age"
-        app:layout_constraintStart_toStartOf="@+id/profile_edit_age" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/profile_edit_age"
-        app:layout_constraintTop_toBottomOf="@+id/profile_edit_age">
-
-        <RadioButton
-            android:id="@+id/profile_btn_m"
-            android:layout_width="67dp"
-            android:layout_height="33dp"
-            android:background="@drawable/custom_radiobutton"
-            android:button="@null"
-            android:gravity="center"
-            android:text="남자"
-            android:textColor="@color/hint" />
-
-        <RadioButton
-            android:id="@+id/profile_btn_w"
-            android:layout_width="67dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/custom_radiobutton"
-            android:button="@null"
-            android:gravity="center"
-            android:text="여자"
-            android:textColor="@color/hint" />
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/profile_text3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-5dp"
-        android:layout_marginBottom="5dp"
-        android:text="성별"
-        android:textColor="@color/titleText"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
-        app:layout_constraintStart_toStartOf="@+id/radioGroup" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="288dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:background="@drawable/radius_10_solid_yellow"
-        android:text="입력 완료"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/radioGroup"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <Button
-        android:id="@+id/profile_btn_nickcheck"
-        android:layout_width="67dp"
-        android:layout_height="33dp"
-        android:background="@drawable/radius_5_solid_yellow"
-        android:text="중복확인"
-        android:textColor="@color/white"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_edit_nick"
-        app:layout_constraintEnd_toEndOf="@+id/profile_edit_age" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
