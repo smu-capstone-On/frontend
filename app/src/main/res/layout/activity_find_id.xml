@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:text="이메일"
-        android:textColor="@color/titletext"
+        android:textColor="@color/titleText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/findid_edit_email"
