@@ -17,7 +17,7 @@ class ActivitySignup : AppCompatActivity() {
         binding.signupBtnSendEmail.setOnClickListener {  }
         binding.signupBtnCheckEmail.setOnClickListener {  }
         binding.signupSignupbtn.setOnClickListener {
-            startActivity(Intent(this, ActivityProfileBinding::class.java))
+            startActivity(Intent(this, ActivityProfile::class.java))
         }
     }
 }

@@ -37,6 +37,7 @@
         android:id="@+id/findpw_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="-5dp"
         android:layout_marginBottom="5dp"
         android:text="아이디"
         android:textColor="@color/titleText"
@@ -49,7 +50,7 @@
         android:id="@+id/findpw_edit_email"
         android:layout_width="214dp"
         android:layout_height="33dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="이메일 입력"
@@ -58,19 +59,22 @@
         android:textColorHint="@color/hint"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/findpw_edit_id"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_id" />
+        app:layout_constraintTop_toBottomOf="@+id/findpw_text3" />
 
     <TextView
         android:id="@+id/findpw_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="15dp"
         android:text="이메일"
         android:textColor="@color/titleText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/findpw_edit_email"
-        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email" />
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_id" />
 
     <TextView
         android:id="@+id/findpw_text3"
@@ -79,7 +83,7 @@
         android:text="입력하신 이메일로 인증 링크가 발송됩니다."
         android:textColor="@color/gray"
         android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="@+id/findpw_text2"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
         app:layout_constraintTop_toBottomOf="@+id/findpw_text2" />
 
     <Button
