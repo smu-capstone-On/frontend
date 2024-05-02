@@ -9,8 +9,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -42,8 +42,11 @@
                 android:layout_marginTop="80dp"
                 android:background="@drawable/radius_5_stroke_gray"
                 android:ems="10"
+                android:hint="2~10자리 닉네임"
                 android:inputType="text"
+                android:maxLength="10"
                 android:paddingStart="8dp"
+                android:textColorHint="@color/hint"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/profile_edit_age"
                 app:layout_constraintTop_toBottomOf="@+id/profile_image_profile" />
@@ -68,9 +71,11 @@
                 android:layout_marginTop="64dp"
                 android:background="@drawable/radius_5_stroke_gray"
                 android:ems="10"
+                android:hint="나이를 입력해 주세요. ex)25"
                 android:inputType="number"
                 android:maxLength="3"
                 android:paddingStart="8dp"
+                android:textColorHint="@color/hint"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +95,7 @@
                 app:layout_constraintStart_toStartOf="@+id/profile_edit_age" />
 
             <RadioGroup
-                android:id="@+id/profile_radio_sex"
+                android:id="@+id/profile_radio_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="64dp"
@@ -130,22 +135,22 @@
                 android:textColor="@color/titleText"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/profile_radio_sex"
-                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex" />
+                app:layout_constraintBottom_toTopOf="@+id/profile_radio_gender"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_gender" />
 
             <Button
                 android:id="@+id/profile_btn_signup"
                 android:layout_width="288dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="60dp"
+                android:layout_marginBottom="100dp"
                 android:background="@drawable/radius_10_solid_yellow"
                 android:text="회원 가입"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex"
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_gender"
                 app:layout_constraintTop_toBottomOf="@+id/profile_radio_animal" />
 
             <Button
@@ -178,8 +183,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="64dp"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="@+id/profile_radio_sex"
-                app:layout_constraintTop_toBottomOf="@+id/profile_radio_sex">
+                app:layout_constraintStart_toStartOf="@+id/profile_radio_gender"
+                app:layout_constraintTop_toBottomOf="@+id/profile_radio_gender">
 
                 <RadioButton
                     android:id="@+id/profile_btn_true"
@@ -202,6 +207,17 @@
                     android:text="없음"
                     android:textColor="@drawable/custom_radiobutton_text" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/profile_text_checkNick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="text"
+                android:textSize="10sp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="@+id/profile_edit_nick"
+                app:layout_constraintTop_toBottomOf="@+id/profile_edit_nick" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

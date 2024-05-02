@@ -46,8 +46,8 @@ class ActivityLogin : AppCompatActivity() {
                 Toast.makeText(this@ActivityLogin,"비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             }else{
                 val call = RetrofitObject.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
-                call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
-                    override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
+                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if(responseBody != null){
@@ -61,7 +61,7 @@ class ActivityLogin : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<Retrofit.ResponseSignIn>, t: Throwable) {
+                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
                         val errorMessage = "Call Failed: ${t.message}"
                         Log.d("Retrofit", errorMessage)
                     }

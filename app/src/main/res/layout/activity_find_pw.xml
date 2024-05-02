@@ -22,35 +22,39 @@
         android:id="@+id/findpw_edit_id"
         android:layout_width="288dp"
         android:layout_height="33dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
+        android:hint="아이디 입력"
         android:inputType="text"
         android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/findpw_text1" />
 
     <TextView
         android:id="@+id/findpw_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-5dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="5dp"
         android:text="아이디"
         android:textColor="@color/titleText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/findpw_edit_id"
-        app:layout_constraintStart_toStartOf="@+id/findpw_edit_id" />
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_id"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_toolbar" />
 
     <EditText
-        android:id="@+id/findpw_edit_email"
-        android:layout_width="214dp"
+        android:id="@+id/findpw_edit_mail"
+        android:layout_width="288dp"
         android:layout_height="33dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="85dp"
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="이메일 입력"
@@ -59,57 +63,84 @@
         android:textColorHint="@color/hint"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/findpw_edit_id"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_text3" />
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_id" />
 
     <TextView
         android:id="@+id/findpw_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-5dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="15dp"
         android:text="이메일"
         android:textColor="@color/titleText"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/findpw_edit_email"
-        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_id" />
+        app:layout_constraintBottom_toTopOf="@+id/findpw_text3"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_mail" />
 
     <TextView
         android:id="@+id/findpw_text3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="입력하신 이메일로 인증 링크가 발송됩니다."
+        android:layout_marginBottom="5dp"
+        android:text="입력하신 이메일로 인증 번호가 발송됩니다."
         android:textColor="@color/gray"
         android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_text2" />
+        app:layout_constraintBottom_toTopOf="@+id/findpw_edit_mail"
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_mail" />
 
     <Button
         android:id="@+id/findpw_btn_end"
         android:layout_width="288dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/radius_10_solid_yellow"
         android:text="입력 완료"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/findpw_edit_email"
-        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_email" />
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_mail"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_mail" />
 
     <Button
-        android:id="@+id/findpw_btn_sendmail"
+        android:id="@+id/findpw_btn_mail"
         android:layout_width="67dp"
         android:layout_height="33dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/radius_5_solid_yellow"
         android:enabled="true"
         android:text="인증 요청"
         android:textColor="@color/white"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/findpw_edit_email"
-        app:layout_constraintEnd_toEndOf="@+id/findpw_btn_end" />
+        app:layout_constraintStart_toStartOf="@+id/findpw_edit_mail"
+        app:layout_constraintTop_toBottomOf="@+id/findpw_edit_mail" />
+
+    <EditText
+        android:id="@+id/findpw_edit_auth"
+        android:layout_width="134dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_5_stroke_gray"
+        android:ems="10"
+        android:hint="인증 번호 입력"
+        android:inputType="number"
+        android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/findpw_btn_mail"
+        app:layout_constraintStart_toEndOf="@+id/findpw_btn_mail" />
+
+    <Button
+        android:id="@+id/findpw_btn_auth"
+        android:layout_width="67dp"
+        android:layout_height="33dp"
+        android:alpha="0.5"
+        android:background="@drawable/radius_5_solid_yellow"
+        android:enabled="false"
+        android:text="인증 확인"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/findpw_edit_auth"
+        app:layout_constraintEnd_toEndOf="@+id/findpw_edit_mail" />
 
     <Button
         android:id="@+id/findpw_btn_checkmail"
@@ -121,7 +152,7 @@
         android:textColor="@color/white"
         android:textSize="13sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/findpw_edit_email"
+        app:layout_constraintBottom_toBottomOf="@+id/findpw_edit_mail"
         app:layout_constraintEnd_toEndOf="@+id/findpw_btn_end" />
 
 
