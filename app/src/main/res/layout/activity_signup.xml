@@ -187,7 +187,7 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@id/signup_edit_email"
         app:layout_constraintTop_toBottomOf="@id/signup_edit_email"/>
-    
+
     <Button
         android:id="@+id/signup_btn_sendEmail"
         android:layout_width="67dp"
