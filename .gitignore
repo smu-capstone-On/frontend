@@ -38,3 +38,5 @@ obj/
 .externalNativeBuild
 
 local.properties
+
+KakaoKey.kt

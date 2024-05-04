@@ -1,12 +1,11 @@
 package com.example.team_on
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.ActivityLoginBinding
@@ -19,7 +18,6 @@ class ActivityLogin : AppCompatActivity() {
     private val binding: ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private lateinit var editId: EditText
     private lateinit var editPw: EditText
-    private lateinit var buttonSignIn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,5 +68,4 @@ class ActivityLogin : AppCompatActivity() {
         }
         binding.loginBtnKakao.setOnClickListener {  }
     }
-
 }

@@ -12,5 +12,10 @@ class ActivityMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.gotokakao.setOnClickListener {
+            val intent = Intent(this, ActivityWalk::class.java)
+            startActivity(intent)
+        }
     }
 }
