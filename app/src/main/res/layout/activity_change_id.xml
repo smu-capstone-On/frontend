@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/change_id_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="계정 관리"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@color/white" />
+
+    <EditText
+        android:id="@+id/change_id_edit_id"
+        android:layout_width="214dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="-3dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/radius_5_stroke_gray"
+        android:ems="10"
+        android:hint="변경하실 아이디를 입력해주세요."
+        android:inputType="text"
+        android:maxLength="10"
+        android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/change_id_btn_save"
+        app:layout_constraintStart_toStartOf="@id/change_id_btn_save" />
+
+    <TextView
+        android:id="@+id/change_id_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="45dp"
+        android:text="아이디 변경"
+        android:textColor="@color/titleText"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/change_id_edit_id"
+        app:layout_constraintStart_toStartOf="@+id/change_id_edit_id" />
+
+    <TextView
+        android:id="@+id/change_id_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="회원 로그인을 위한 아이디를 변경합니다.
+        \n새로운 아이디를 입력해 주세요."
+        android:textColor="@color/hint"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/change_id_text1"
+        app:layout_constraintStart_toStartOf="@id/change_id_text1" />
+
+    <TextView
+        android:id="@+id/change_id_text_checkId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="이미 존재하는 아이디입니다."
+        android:textSize="10sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/change_id_edit_id"
+        app:layout_constraintTop_toBottomOf="@+id/change_id_edit_id" />
+
+    <Button
+        android:id="@+id/change_id_btn_idcheck"
+        android:layout_width="67dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="7dp"
+        android:background="@drawable/radius_5_solid_yellow"
+        android:text="중복 확인"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/change_id_edit_id"
+        app:layout_constraintStart_toEndOf="@+id/change_id_edit_id" />
+
+    <Button
+        android:id="@+id/change_id_btn_save"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="270dp"
+        android:background="@drawable/radius_10_solid_yellow"
+        android:text="완료"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

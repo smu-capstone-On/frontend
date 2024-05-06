@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/change_pw_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="계정 관리"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@color/white" />
+
+    <EditText
+        android:id="@+id/change_pw_edit_pw"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="-3dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/radius_5_stroke_gray"
+        android:ems="10"
+        android:hint="영문/숫자/특수문자 혼용하여 입력"
+        android:inputType="text"
+        android:maxLength="10"
+        android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/change_pw_btn_save"
+        app:layout_constraintStart_toStartOf="@id/change_pw_btn_save"/>
+
+    <EditText
+        android:id="@+id/change_pw_edit_pwcheck"
+        android:layout_width="288dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/radius_5_stroke_gray"
+        android:ems="10"
+        android:hint="비밀번호 확인"
+        android:inputType="text"
+        android:maxLength="10"
+        android:paddingStart="8dp"
+        android:textColorHint="@color/hint"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/change_pw_edit_pw"
+        app:layout_constraintStart_toStartOf="@id/change_pw_edit_pw"/>
+
+    <TextView
+        android:id="@+id/change_pw_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="45dp"
+        android:text="비밀번호 변경"
+        android:textColor="@color/titleText"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/change_pw_edit_pw"
+        app:layout_constraintStart_toStartOf="@+id/change_pw_edit_pw" />
+
+    <TextView
+        android:id="@+id/change_pw_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="회원 로그인을 위한 비밀번호를 변경합니다.
+        \n새로운 비밀번호를 입력해 주세요."
+        android:textColor="@color/hint"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/change_pw_text1"
+        app:layout_constraintStart_toStartOf="@id/change_pw_text1" />
+
+    <TextView
+        android:id="@+id/change_pw_text_checkPw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="text"
+        android:textSize="10sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/change_pw_edit_pwcheck"
+        app:layout_constraintTop_toBottomOf="@+id/change_pw_edit_pwcheck" />
+
+    <Button
+        android:id="@+id/change_pw_btn_save"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="270dp"
+        android:background="@drawable/radius_10_solid_yellow"
+        android:text="완료"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

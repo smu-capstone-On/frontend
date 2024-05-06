@@ -20,6 +20,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityChangeId"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityChangePw"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityEditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityManageAccount"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityMypage"
+            android:exported="false" />
+        <activity
             android:name=".ActivityFindPW"
             android:exported="false" />
         <activity
