@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ActivityChangeId : AppCompatActivity() {
+class ActivityChangeId : AppCompatActivity(), DialogAlertInterface {
 
     private val binding: ActivityChangeIdBinding by lazy { ActivityChangeIdBinding.inflate(layoutInflater) }
 
@@ -83,11 +83,21 @@ class ActivityChangeId : AppCompatActivity() {
             })
         }
 
+        clickViewEvents()
+    }
+    private fun clickViewEvents() {
         btnSave.setOnClickListener {
             if (checkId) {
+                id = editId.text.toString()
 
+                val title = "아이디 변경\n 완료"
+                val dialog = DialogAlert(this@ActivityChangeId, title, null, "확인", -1)
+                dialog.isCancelable = false
+                dialog.show(this.supportFragmentManager, "DialogAlert")
             }
         }
-
+    }
+    override fun onClickOkButton(id: Int) {
+        finish()
     }
 }

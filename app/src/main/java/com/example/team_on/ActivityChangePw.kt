@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.databinding.ActivityChangePwBinding
 
-class ActivityChangePw : AppCompatActivity() {
+class ActivityChangePw : AppCompatActivity(), DialogAlertInterface {
 
     private val binding: ActivityChangePwBinding by lazy { ActivityChangePwBinding.inflate(layoutInflater) }
 
@@ -57,11 +57,22 @@ class ActivityChangePw : AppCompatActivity() {
 
         editPwCheck.addTextChangedListener(checkPwWatcherListener)
 
+        clickViewEvents()
+    }
+    private fun clickViewEvents() {
         btnSave.setOnClickListener {
             if (checkPw) {
+                pw = editPw.text.toString()
 
+                val title = "비밀번호 변경\n 완료"
+                val dialog = DialogAlert(this@ActivityChangePw, title, null, "확인", -1)
+                dialog.isCancelable = false
+                dialog.show(this.supportFragmentManager, "DialogAlert")
             }
         }
+    }
 
+    override fun onClickOkButton(id: Int) {
+        finish()
     }
 }
