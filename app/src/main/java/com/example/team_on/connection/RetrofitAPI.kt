@@ -3,6 +3,7 @@ package com.example.team_on.connection
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -23,4 +24,16 @@ interface RetrofitAPI {
     //닉네임 중복 확인
     @GET("/api/checkNick")
     fun checkNick(@Query("nick") nick: String): Call<Retrofit.ResponseSuccess>
+    //아이디 변경 요청
+    @PATCH("/api/changeId")
+    fun changeId(@Body request: Retrofit.RequestChangeId): Call<Retrofit.ResponseSuccess>
+    //비밀번호 변경 요청
+    @PATCH("/api/changePw")
+    fun changePw(@Body request: Retrofit.RequestChangePw): Call<Retrofit.ResponseSuccess>
+    //아이디 찾기
+    @GET("/api/findId")
+    fun findId(@Body request: Retrofit.RequestFindId): Call<Retrofit.ResponseFindId>
+    //비밀번호 찾기
+    @GET("/api/findPw")
+    fun findPw(@Body request: Retrofit.RequestFindPw): Call<Retrofit.ResponseFindPw>
 }

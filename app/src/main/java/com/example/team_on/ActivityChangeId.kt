@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
@@ -25,7 +26,8 @@ class ActivityChangeId : AppCompatActivity(), DialogAlertInterface {
     private lateinit var btnIdCheck: Button
     private lateinit var btnSave: Button
     private lateinit var textCheckId: TextView
-    private lateinit var id : String
+    private lateinit var newId : String
+    private lateinit var oldId: String
     private var checkId = false
 
     //아이디 중복 체크
@@ -54,8 +56,8 @@ class ActivityChangeId : AppCompatActivity(), DialogAlertInterface {
 
         btnIdCheck.setOnClickListener {
             btnIdCheck.isEnabled = false
-            id = editId.text.toString()
-            val call = RetrofitObject.getRetrofitService.checkId(id)
+            newId = editId.text.toString()
+            val call = RetrofitObject.getRetrofitService.checkId(newId)
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
                     btnIdCheck.isEnabled = true
@@ -88,12 +90,28 @@ class ActivityChangeId : AppCompatActivity(), DialogAlertInterface {
     private fun clickViewEvents() {
         btnSave.setOnClickListener {
             if (checkId) {
-                id = editId.text.toString()
-
-                val title = "아이디 변경\n 완료"
-                val dialog = DialogAlert(this@ActivityChangeId, title, null, "확인", -1)
-                dialog.isCancelable = false
-                dialog.show(this.supportFragmentManager, "DialogAlert")
+                newId = editId.text.toString()
+                val call = RetrofitObject.getRetrofitService.changeId(Retrofit.RequestChangeId(oldId, newId))
+                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            // 아이디 변경 성공 시 팝업
+                            if (responseBody != null) {
+                                val title = "아이디 변경\n 완료"
+                                val dialog = DialogAlert(this@ActivityChangeId, title, null, "확인", -1)
+                                dialog.isCancelable = false
+                                dialog.show(this@ActivityChangeId.supportFragmentManager, "DialogAlert")
+                            }
+                        }
+                    }
+                    // 아이디 변경 실패 시
+                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                        Toast.makeText(this@ActivityChangeId, "아이디 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            } else {
+                Toast.makeText(this@ActivityChangeId, "완료되지 않은 작업이 있습니다", Toast.LENGTH_SHORT).show()
             }
         }
     }
