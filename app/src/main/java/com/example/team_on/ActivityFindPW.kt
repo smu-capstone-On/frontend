@@ -50,6 +50,8 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
                         // 인증 번호 전송 성공 시
                         if (responseBody != null) {
                             Toast.makeText(this@ActivityFindPW, "인증 번호를 메일로 전송했습니다.", Toast.LENGTH_SHORT).show()
+                            btnAuth.isEnabled = true
+                            btnAuth.alpha = 1f
                         }
                     }
                 }
@@ -102,7 +104,7 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
                                 val title = "비밀번호 찾기"
                                 val content = responseBody.pw
 
-                                val dialog = DialogAlert(this@ActivityFindPW, title, content, "로그인 하기", -1)
+                                val dialog = DialogAlert(this@ActivityFindPW, title, content, "로그인 하기")
                                 // 배경 클릭 막기
                                 dialog.isCancelable = false
                                 dialog.show(this@ActivityFindPW.supportFragmentManager, "DialogAlert")

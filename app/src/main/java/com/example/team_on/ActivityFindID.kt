@@ -48,6 +48,8 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
                         // 인증 번호 전송 성공 시
                         if (responseBody != null) {
                             Toast.makeText(this@ActivityFindID, "인증 번호를 메일로 전송했습니다.", Toast.LENGTH_SHORT).show()
+                            btnAuth.isEnabled = true
+                            btnAuth.alpha = 1f
                         }
                     }
                 }
@@ -101,7 +103,7 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
                                 val title = "아이디 찾기"
                                 val content = responseBody.id
 
-                                val dialog = DialogAlert(this@ActivityFindID, title, content, "로그인 하기", -1)
+                                val dialog = DialogAlert(this@ActivityFindID, title, content, "로그인 하기")
                                 // 배경 클릭 막기
                                 dialog.isCancelable = false
                                 dialog.show(this@ActivityFindID.supportFragmentManager, "DialogAlert")

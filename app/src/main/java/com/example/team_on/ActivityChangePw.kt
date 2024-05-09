@@ -79,7 +79,7 @@ class ActivityChangePw : AppCompatActivity(), DialogAlertInterface {
                             // 비밀번호 변경 성공 시 팝업
                             if (responseBody != null) {
                                 val title = "비밀번호 변경\n 완료"
-                                val dialog = DialogAlert(this@ActivityChangePw, title, null, "확인", -1)
+                                val dialog = DialogAlert(this@ActivityChangePw, title, null, "확인")
                                 dialog.isCancelable = false
                                 dialog.show(this@ActivityChangePw.supportFragmentManager, "DialogAlert")
                             }

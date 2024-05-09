@@ -17,7 +17,7 @@ interface DialogAlertInterface {
 
 class DialogAlert(
     dialogAlertInterface: DialogAlertInterface,
-    title: String, content: String?, buttonText: String, id: Int
+    title: String, content: String?, buttonText: String
 ) :  DialogFragment() {
 
     private var _binding: DialogAlertBinding? = null
@@ -34,9 +34,9 @@ class DialogAlert(
     private var id: Int? = null
 
     init {
-        textTitle.text = title
-        textResponse.text = content
-        btnEnd.text = buttonText
+        this.title= title
+        this.content = content
+        this.buttonText = buttonText
         this.id = id
         this.dialogAlertInterface = dialogAlertInterface
     }
@@ -66,9 +66,6 @@ class DialogAlert(
         } else {
             textResponse.text = content
         }
-
-        // 다른 버튼 유무
-        if (id == -1) { }
 
         // 확인 버튼 클릭
         btnEnd.setOnClickListener {
