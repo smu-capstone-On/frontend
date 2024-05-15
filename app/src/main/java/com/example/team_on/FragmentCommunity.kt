@@ -11,11 +11,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentCommunityBinding
 
 class FragmentCommunity: Fragment() {

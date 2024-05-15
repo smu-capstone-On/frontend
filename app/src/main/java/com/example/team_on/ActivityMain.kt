@@ -1,82 +1,65 @@
 package com.example.team_on
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import com.example.team_on.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ActivityMain : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private var fragmentHome: FragmentHome? = null
-    private var fragmentCommunity: FragmentCommunity? = null
+    private lateinit var bnv : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this
+        setContentView(binding.root)
 
-        initBottomNavigation()
-    }
+        bnv = binding.mainBnv
 
-    private fun initBottomNavigation() {
-        fragmentHome = FragmentHome()
-        supportFragmentManager.beginTransaction().replace(R.id.main_frameLayout, fragmentHome!!).commit()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(binding.mainFrame.id, FragmentHome())
+            .commitAllowingStateLoss()
 
-        binding.mainBottomNavi.setOnItemSelectedListener { menuItem ->
+        bnv.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_bottom_home -> {
-                    if (fragmentHome == null) {
-                        fragmentHome = FragmentHome()
-                        supportFragmentManager.beginTransaction().add(R.id.main_frameLayout, fragmentHome!!).commit()
-                    }
-                    if (fragmentHome != null) supportFragmentManager.beginTransaction().show(fragmentHome!!).commit()
-
-                    if (fragmentCommunity != null) supportFragmentManager.beginTransaction().hide(fragmentCommunity!!).commit()
-
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(binding.mainFrame.id, FragmentHome()) // Replace with your fragment
+                        .commitAllowingStateLoss()
+                    true
                 }
                 R.id.nav_bottom_walk -> {
-
-                    if (fragmentHome != null) supportFragmentManager.beginTransaction().hide(fragmentHome!!).commit()
-
-                    if (fragmentCommunity != null) supportFragmentManager.beginTransaction().hide(fragmentCommunity!!).commit()
-
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(binding.mainFrame.id, FragmentWalk())
+                        .commitAllowingStateLoss()
+                    true
                 }
                 R.id.nav_bottom_community -> {
-                    if (fragmentCommunity == null){
-                        fragmentCommunity = FragmentCommunity()
-                        supportFragmentManager.beginTransaction().add(R.id.main_frameLayout, fragmentCommunity!!).commit()
-                    }
-                    if (fragmentHome != null) supportFragmentManager.beginTransaction().hide(fragmentHome!!).commit()
-
-                    if (fragmentCommunity != null) supportFragmentManager.beginTransaction().show(fragmentCommunity!!).commit()
-
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(binding.mainFrame.id, FragmentCommunity())
+                        .commitAllowingStateLoss()
+                    true
                 }
                 R.id.nav_bottom_deal -> {
-
-                    if (fragmentHome != null) supportFragmentManager.beginTransaction().hide(fragmentHome!!).commit()
-
-                    if (fragmentCommunity != null) supportFragmentManager.beginTransaction().hide(fragmentCommunity!!).commit()
-
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(binding.mainFrame.id, FragmentDeal())
+                        .commitAllowingStateLoss()
+                    true
                 }
                 R.id.nav_bottom_mypage -> {
-
-                    if (fragmentHome != null) supportFragmentManager.beginTransaction().hide(fragmentHome!!).commit()
-
-                    if (fragmentCommunity != null) supportFragmentManager.beginTransaction().hide(fragmentCommunity!!).commit()
-
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(binding.mainFrame.id, FragmentMyPage()) // Replace with your fragment
+                        .commitAllowingStateLoss()
+                    true
                 }
-                else ->{
-                    return@setOnItemSelectedListener true
-                }
+                else -> false
             }
         }
     }
