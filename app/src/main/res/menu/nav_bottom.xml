@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_bottom_home"
+        android:icon="@drawable/svg_home"
+        android:title="홈"
+        android:enabled="true" />
+
+    <item
+        android:id="@+id/nav_bottom_walk"
+        android:icon="@drawable/svg_walk"
+        android:title="산책메이트"
+        android:enabled="true" />
+
+    <item
+        android:id="@+id/nav_bottom_community"
+        android:icon="@drawable/svg_community"
+        android:title="게시판"
+        android:enabled="true" />
+
+    <item
+        android:id="@+id/nav_bottom_deal"
+        android:icon="@drawable/svg_deal"
+        android:title="물품 거래"
+        android:enabled="true" />
+
+    <item
+        android:id="@+id/nav_bottom_mypage"
+        android:icon="@drawable/svg_mypage"
+        android:title="마이페이지"
+        android:enabled="true" />
+
+</menu>
