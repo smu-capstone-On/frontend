@@ -6,20 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentTransaction
-import com.example.team_on.databinding.FragmentMyPageBinding
+import com.example.team_on.databinding.FragmentManageAccountBinding
 
-class FragmentMyPage : Fragment() {
+class FragmentManageAccount : Fragment() {
 
-    private var _binding: FragmentMyPageBinding? = null
+    private var _binding: FragmentManageAccountBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var btnEditProfile: ImageButton
-    private lateinit var btnViewArticle: ImageButton
-    private lateinit var btnViewComment: ImageButton
-    private lateinit var btnViewBlacklist: ImageButton
-    private lateinit var btnManageAccount: ImageButton
-    private lateinit var btnLogout: ImageButton
+    private lateinit var btnChangeId: ImageButton
+    private lateinit var btnChangePw: ImageButton
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,32 +27,33 @@ class FragmentMyPage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMyPageBinding.inflate(inflater, container, false)
+        _binding = FragmentManageAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnEditProfile = binding.mypageBtnEditProfile
-        btnViewArticle = binding.mypageBtnArticle
-        btnViewComment = binding.mypageBtnComment
-        btnViewBlacklist = binding.mypageBtnBlacklist
-        btnManageAccount = binding.mypageBtnManageAccount
-        btnLogout = binding.mypageBtnLogout
+        btnChangeId = binding.accountBtnChangeId
+        btnChangePw = binding.accountBtnChangePw
+        toolbar = binding.accountToolbar
 
-        btnEditProfile.setOnClickListener {
+        btnChangeId.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_frame, FragmentEditProfile())
+            transaction.replace(R.id.main_frame, FragmentChangeId())
             transaction.addToBackStack(null)
             transaction.commit()
         }
 
-        btnManageAccount.setOnClickListener {
+        btnChangePw.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_frame, FragmentManageAccount())
+            transaction.replace(R.id.main_frame, FragmentChangePw())
             transaction.addToBackStack(null)
             transaction.commit()
+        }
+
+        toolbar.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 

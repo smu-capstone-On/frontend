@@ -53,7 +53,7 @@
             android:name=".ActivityMypage"
             android:exported="false" />
         <activity
-            android:name=".ddd"
+            android:name=".ActivityMain"
             android:exported="false" />
         <activity
             android:name=".ActivityLogin"

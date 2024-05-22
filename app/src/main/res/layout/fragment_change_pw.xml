@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".FragmentChangePw">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/change_pw_toolbar"
@@ -15,7 +17,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="계정 관리"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/svg_back"/>
 
     <EditText
         android:id="@+id/change_pw_edit_pw"
