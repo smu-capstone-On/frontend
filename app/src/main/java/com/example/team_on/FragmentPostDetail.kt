@@ -5,7 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.FragmentPostDetailBinding
 
 class FragmentPostDetail : Fragment() {
@@ -14,7 +19,11 @@ class FragmentPostDetail : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var boardType: String
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var editComment: EditText
+    private lateinit var btnLike: ImageButton
+    private lateinit var btnSendComment: ImageButton
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var toolbar: Toolbar
 
     private lateinit var commentAdapter: AdapterComment
     private var commentList = mutableListOf<Comment>()
@@ -37,10 +46,14 @@ class FragmentPostDetail : Fragment() {
         val title = arguments?.getString(ARG_TITLE)
         val content = arguments?.getString(ARG_CONTENT)
 
-        toolbar = binding.postDetailToolbar
-
         binding.postDetailTitle.text = title
         binding.postDetailContent.text = content
+
+        btnLike = binding.postDetailBtnLike
+        btnSendComment = binding.postDetailBtnSendComment
+        editComment = binding.postDetailEditComment
+        recyclerView = binding.postDetailRecyclerview
+        toolbar = binding.postDetailToolbar
 
         commentList = mutableListOf(
             Comment("User1", "This is a comment."),
@@ -57,13 +70,40 @@ class FragmentPostDetail : Fragment() {
             adapter = commentAdapter
         }
 
+        // 좋아요 버튼 클릭
+        btnLike.setOnClickListener {
+            btnLike.isSelected = !btnLike.isSelected
+            if (btnLike.isSelected) {
+                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.red))
+            } else {
+                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.hint))
+            }
+        }
+
+        // 댓글 버튼 클릭
+        btnSendComment.setOnClickListener {
+            val newComment = editComment.text.toString()
+            if (newComment.isNotBlank()) {
+                addComment(Comment("User", newComment))
+                editComment.text.clear()
+            }
+        }
+
+        // 뒤로가기 버튼
         toolbar.setOnClickListener{
             parentFragmentManager.popBackStack()
         }
     }
 
+    private fun addComment(comment: Comment) {
+        commentList.add(comment)
+        commentAdapter.notifyItemInserted(commentList.size - 1)
+        recyclerView.scrollToPosition(commentList.size - 1)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as? ActivityMain)?.showBottomNaviagtion()
         _binding = null
     }
 

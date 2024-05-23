@@ -87,6 +87,7 @@ class FragmentCommunity: Fragment() {
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
                 ?.commit()
+            (activity as? ActivityMain)?.hideBottomNavigation()
         }
 
         recyclerView.apply {
@@ -168,6 +169,8 @@ class FragmentCommunity: Fragment() {
     // 게시글 작성 화면으로 전환
     private fun addPost() {
         btnAddPost.setOnClickListener {
+            (activity as? ActivityMain)?.hideBottomNavigation()
+
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.main_frame, FragmentAddPost())
             transaction.addToBackStack(null)

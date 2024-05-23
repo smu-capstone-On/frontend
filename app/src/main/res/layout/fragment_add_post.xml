@@ -17,6 +17,8 @@
             android:id="@+id/add_post_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:title="게시글 작성"
+            app:titleTextColor="@color/black"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:navigationIcon="@drawable/svg_back"/>
 
@@ -39,7 +41,7 @@
         android:layout_marginTop="10dp"
         android:background="@null"
         android:ems="10"
-        android:hint="제목"
+        android:hint="제목을 입력하세요."
         android:padding="10dp"
         android:textColor="@color/gray"
         android:textSize="15sp"
@@ -60,18 +62,129 @@
         android:id="@+id/add_post_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:background="@null"
         android:ems="10"
         android:gravity="start"
-        android:hint="내용을 입력하세요"
+        android:hint="게시글 내용을 입력하세요"
         android:padding="10dp"
         android:textColor="@color/gray"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/add_post_add_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_post_line2" />
+    
+    <ImageButton
+        android:id="@+id/add_post_add_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="90dp"
+        android:layout_marginStart="15dp"
+        android:background="@null"
+        android:src="@drawable/svg_camera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/add_post_line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_post_add_image"/>
+
+    <TextView
+        android:id="@+id/add_post_tag_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="태그 설정"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/add_post_add_image"
+        app:layout_constraintTop_toBottomOf="@id/add_post_line3" />
+
+    <Button
+        android:id="@+id/add_post_tag1"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="강아지"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/add_post_tag_list"
+        app:layout_constraintTop_toBottomOf="@id/add_post_tag_list" />
+
+    <Button
+        android:id="@+id/add_post_tag2"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="고양이"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/add_post_tag1"
+        app:layout_constraintTop_toTopOf="@id/add_post_tag1" />
+
+    <Button
+        android:id="@+id/add_post_tag3"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="소동물"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/add_post_tag2"
+        app:layout_constraintTop_toTopOf="@id/add_post_tag2" />
+
+    <Button
+        android:id="@+id/add_post_tag4"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="파충류"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/add_post_tag3"
+        app:layout_constraintTop_toTopOf="@id/add_post_tag3" />
+
+    <Button
+        android:id="@+id/add_post_tag5"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="조류"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/add_post_tag4"
+        app:layout_constraintTop_toTopOf="@id/add_post_tag4" />
+
+    <Button
+        android:id="@+id/add_post_tag6"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="질문"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/add_post_tag5"
+        app:layout_constraintTop_toTopOf="@id/add_post_tag5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

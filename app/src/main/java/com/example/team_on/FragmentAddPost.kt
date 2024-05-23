@@ -64,6 +64,7 @@ class FragmentAddPost : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as? ActivityMain)?.showBottomNaviagtion()
         _binding = null
     }
 }

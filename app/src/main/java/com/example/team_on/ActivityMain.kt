@@ -2,6 +2,7 @@ package com.example.team_on
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import com.example.team_on.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -73,5 +74,13 @@ class ActivityMain : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    fun hideBottomNavigation() {
+        bnv.visibility = View.GONE
+    }
+
+    fun showBottomNaviagtion() {
+        bnv.visibility = View.VISIBLE
     }
 }
