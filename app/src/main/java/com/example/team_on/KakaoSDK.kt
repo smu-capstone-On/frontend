@@ -9,6 +9,6 @@ class KakaoSDK : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // KakaoMapSdk.init(this, KakaoKey.Key)
+        KakaoMapSdk.init(this, KakaoKey.Key)
     }
 }
