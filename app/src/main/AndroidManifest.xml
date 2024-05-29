@@ -24,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityCalendar"
+            android:exported="false" />
+        <activity
             android:name=".ActivityWalk"
             android:exported="false" />
         <activity

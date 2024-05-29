@@ -1,6 +1,8 @@
+
 package com.example.team_on
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +12,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -54,16 +57,31 @@ class ActivityWalk : AppCompatActivity() {
 
     private lateinit var timeText: TextView
     private var seconds = 0
-    private var running = false
+    private var cnt = 0
     private val handler = Handler(Looper.getMainLooper())
+
     private val runnable = object : Runnable {
         override fun run() {
-            if (running) {
-                handler.postDelayed(this, 100)
-                seconds++
-                updateTimerText()
+            handler.postDelayed(this, 100)
+            seconds++
+            updateTimerText()
+            if (seconds%50 == 0){
+                rootLabel(userPosition,(seconds/50).toString()+"user")
             }
         }
+    }
+
+    private fun rootLabel(pos: LatLng, id: String) {
+        // 라벨 스타일 생성
+        val styles = map.labelManager?.addLabelStyles(LabelStyles.from(
+            LabelStyle.from(R.drawable.circle17).setZoomLevel(11),
+            LabelStyle.from(R.drawable.circle17).setZoomLevel(13),
+            LabelStyle.from(R.drawable.circle17).setZoomLevel(15),
+            LabelStyle.from(R.drawable.circle17).setZoomLevel(17),
+            LabelStyle.from(R.drawable.circle19).setZoomLevel(19)))
+
+        labelLayer.addLabel(LabelOptions.from(id, pos).setStyles(styles))
+        labelLayer.getLabel(id).changeRank(0)
     }
 
     //산책 시간 나타내기
@@ -76,21 +94,22 @@ class ActivityWalk : AppCompatActivity() {
 
     //현재 위치 보여주기
     private fun showLabel(pos: LatLng) {
+        Log.d("kakaomap", "실행 됨")
         // 라벨 스타일 생성
         val styles = map.labelManager?.addLabelStyles(LabelStyles.from(
-            LabelStyle.from(R.drawable.circle17).setZoomLevel(11),
-            LabelStyle.from(R.drawable.circle17).setZoomLevel(13),
-            LabelStyle.from(R.drawable.circle17).setZoomLevel(15),
-            LabelStyle.from(R.drawable.circle17).setZoomLevel(17),
-            LabelStyle.from(R.drawable.circle19).setZoomLevel(19)))
+            LabelStyle.from(R.drawable.circle_red_17).setZoomLevel(11),
+            LabelStyle.from(R.drawable.circle_red_17).setZoomLevel(13),
+            LabelStyle.from(R.drawable.circle_red_17).setZoomLevel(15),
+            LabelStyle.from(R.drawable.circle_red_17).setZoomLevel(17),
+            LabelStyle.from(R.drawable.circle_red_19).setZoomLevel(19)))
 
         if (::trackingLabel.isInitialized) {
-            labelLayer.remove(trackingLabel)
-            Log.d("labelLayer", "destroy")
+            trackingLabel.moveTo(pos)
         }
 
         // 라벨 생성
         trackingLabel = labelLayer.addLabel(LabelOptions.from("curPos", pos).setStyles(styles))
+        labelLayer.getLabel("curPos").changeRank(1)
     }
 
     //현재 위치 가져오기
@@ -124,7 +143,7 @@ class ActivityWalk : AppCompatActivity() {
         ) { return }
 
         // 위치 업데이트 요청
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null) //여기가 백그라운드에서 자꾸 요청해서 오류가나는거임 수정 필요
     }
 
 
@@ -140,6 +159,8 @@ class ActivityWalk : AppCompatActivity() {
                     btnPosition.alpha = 0.5f
                 }
             }
+
+            getLocation()
         }
 
         override fun getPosition(): LatLng {
@@ -195,24 +216,25 @@ class ActivityWalk : AppCompatActivity() {
         timeText = binding.awalkTextTime
 
         btnStart.setOnClickListener {
-            btnStart.visibility = View.GONE
-            btnPause.visibility = View.VISIBLE
-            btnWrite.visibility = View.VISIBLE
-            running = true
-            handler.post(runnable)
+            if (locationAble){
+                btnStart.visibility = View.GONE
+                btnPause.visibility = View.VISIBLE
+                btnWrite.visibility = View.VISIBLE
+                handler.post(runnable)
+            }else{
+                Toast.makeText(this, "잠시만 기다려주세요.", Toast.LENGTH_LONG).show()
+            }
         }
 
         btnPause.setOnClickListener {
             btnPause.visibility = View.GONE
             btnPlay.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
-            running = false
         }
 
         btnPlay.setOnClickListener {
             btnPause.visibility = View.VISIBLE
             btnPlay.visibility = View.GONE
-            running = true
             handler.post(runnable)
         }
 
@@ -222,7 +244,7 @@ class ActivityWalk : AppCompatActivity() {
             btnWrite.visibility = View.GONE
             btnStart.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
-            running = false
+            cnt = 0
             seconds = 0
             updateTimerText()
         }
@@ -235,6 +257,8 @@ class ActivityWalk : AppCompatActivity() {
                 Toast.makeText(this, "잠시만 기다려주세요.", Toast.LENGTH_LONG).show()
             }
         }
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     //권한 확인
@@ -268,6 +292,14 @@ class ActivityWalk : AppCompatActivity() {
     private fun performLocationTask() {
         mapView = binding.mapView
         mapView.start(lifeCycleCallback, readyCallback)
-        getLocation()
+    }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            handler.removeCallbacks(runnable)
+            val intent = Intent(this@ActivityWalk, ActivityMain::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
