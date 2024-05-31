@@ -4,9 +4,11 @@ package com.example.team_on
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
@@ -59,15 +61,40 @@ class ActivityWalk : AppCompatActivity() {
     private var seconds = 0
     private var cnt = 0
     private val handler = Handler(Looper.getMainLooper())
+    private val locationHandler = Handler(Looper.getMainLooper())
+    private var startTime = 0L
+
+    private lateinit var distanceText: TextView
+    private lateinit var speedText: TextView
+    private var lastLocation: Location? = null
+    private var totalDistance = 0f
 
     private val runnable = object : Runnable {
         override fun run() {
-            handler.postDelayed(this, 100)
-            seconds++
+            handler.postDelayed(this, 1000)
+            val currentTime = SystemClock.elapsedRealtime()
+            seconds = ((currentTime - startTime) / 1000).toInt()
             updateTimerText()
-            if (seconds%50 == 0){
-                rootLabel(userPosition,(seconds/50).toString()+"user")
+        }
+    }
+
+    private val locationRunnable = object : Runnable {
+        override fun run(){
+            locationHandler.postDelayed(this, 5000)
+            val newLocation = Location("newLocation").apply {
+                latitude = userPosition.latitude
+                longitude = userPosition.longitude
             }
+            val distance = lastLocation!!.distanceTo(newLocation)
+            totalDistance += distance
+            distanceText.text = totalDistance.toInt().toString()
+            lastLocation = newLocation
+            if(seconds != 0){
+                val speed = (totalDistance/seconds)
+                speedText.text = String.format("%.2f", speed)
+                Log.d("distance", userPosition.toString())
+            }
+            rootLabel(userPosition,(seconds).toString()+"user")
         }
     }
 
@@ -86,9 +113,9 @@ class ActivityWalk : AppCompatActivity() {
 
     //산책 시간 나타내기
     private fun updateTimerText() {
-        val hours = seconds / 36000
-        val minutes = (seconds % 36000) / 600
-        val secs = seconds % 600 / 10
+        val hours = seconds / 3600
+        val minutes = (seconds % 3600) / 60
+        val secs = seconds % 60
         timeText.text = String.format("%02d : %02d : %02d", hours, minutes, secs)
     }
 
@@ -117,8 +144,8 @@ class ActivityWalk : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val locationRequest = LocationRequest.create().apply {
-            interval = 3000 // 5초마다 위치 업데이트
-            fastestInterval = 3000 // 가장 빠른 업데이트 간격
+            interval = 1000 // 5초마다 위치 업데이트
+            fastestInterval = 1000 // 가장 빠른 업데이트 간격
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY // 높은 정확도
         }
 
@@ -143,7 +170,7 @@ class ActivityWalk : AppCompatActivity() {
         ) { return }
 
         // 위치 업데이트 요청
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null) //여기가 백그라운드에서 자꾸 요청해서 오류가나는거임 수정 필요
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
 
@@ -214,13 +241,21 @@ class ActivityWalk : AppCompatActivity() {
         val btnWrite = binding.awalkBtnWrite
         btnPosition = binding.awalkBtnMyPosition
         timeText = binding.awalkTextTime
+        distanceText = binding.awalkTextDistance
+        speedText = binding.awalkTextSpeed
 
         btnStart.setOnClickListener {
             if (locationAble){
                 btnStart.visibility = View.GONE
                 btnPause.visibility = View.VISIBLE
                 btnWrite.visibility = View.VISIBLE
+                startTime = SystemClock.elapsedRealtime()
                 handler.post(runnable)
+                lastLocation = Location("lastLocation").apply {
+                    latitude = userPosition.latitude
+                    longitude = userPosition.longitude
+                }
+                locationHandler.post(locationRunnable)
             }else{
                 Toast.makeText(this, "잠시만 기다려주세요.", Toast.LENGTH_LONG).show()
             }
@@ -230,12 +265,14 @@ class ActivityWalk : AppCompatActivity() {
             btnPause.visibility = View.GONE
             btnPlay.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
+            locationHandler.removeCallbacks(locationRunnable)
         }
 
         btnPlay.setOnClickListener {
             btnPause.visibility = View.VISIBLE
             btnPlay.visibility = View.GONE
             handler.post(runnable)
+            locationHandler.post(locationRunnable)
         }
 
         btnWrite.setOnClickListener {
@@ -244,8 +281,11 @@ class ActivityWalk : AppCompatActivity() {
             btnWrite.visibility = View.GONE
             btnStart.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
+            locationHandler.removeCallbacks(locationRunnable)
             cnt = 0
             seconds = 0
+            speedText.text = "0"
+            distanceText.text = "0"
             updateTimerText()
         }
 
@@ -259,6 +299,14 @@ class ActivityWalk : AppCompatActivity() {
         }
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(runnable)
+        locationHandler.removeCallbacks(locationRunnable)
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        Log.d("MapView", "종료 됨")
     }
 
     //권한 확인
