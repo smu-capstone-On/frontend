@@ -45,30 +45,33 @@ class ActivityWalk : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var map: KakaoMap
 
-    private val startZoomLevel = 17
-    private val startLocation = LatLng.from(37.602638,126.955252)
-    private lateinit var userPosition: LatLng
-    private lateinit var labelLayer: LabelLayer
-    private lateinit var trackingManager: TrackingManager
-    private lateinit var trackingLabel: Label
-    private lateinit var btnPosition: ImageButton
-    private var locationAble = false
+    private val startZoomLevel = 17 //시작 카메라 레벨
+    private val startLocation = LatLng.from(37.602638,126.955252) //시작 위치
+    private lateinit var userPosition: LatLng //유저 위치
+    private lateinit var labelLayer: LabelLayer //라벨
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var trackingManager: TrackingManager //카메라 따라가기 기능
+    private lateinit var trackingLabel: Label
+
+    private lateinit var btnPosition: ImageButton //유저 위치로 이동하기 버튼
+    private var locationAble = false //유저 위치 초기화 체크
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient //유저 위치 받아오기
     private lateinit var locationCallback: LocationCallback
 
-    private lateinit var timeText: TextView
-    private var seconds = 0
-    private var cnt = 0
-    private val handler = Handler(Looper.getMainLooper())
-    private val locationHandler = Handler(Looper.getMainLooper())
+    private lateinit var timeText: TextView //시간 text
+    private var seconds = 0 //시간
+
+    private val handler = Handler(Looper.getMainLooper()) //시간 헨들러
+    private val locationHandler = Handler(Looper.getMainLooper()) //유저 루트 헨들러
     private var startTime = 0L
 
-    private lateinit var distanceText: TextView
-    private lateinit var speedText: TextView
-    private var lastLocation: Location? = null
-    private var totalDistance = 0f
+    private lateinit var distanceText: TextView //거리 text
+    private lateinit var speedText: TextView //속도 text
+    private var lastLocation: Location? = null //마지막 위치
+    private var totalDistance = 0f //총 이동 거리
 
+    //산책 시간
     private val runnable = object : Runnable {
         override fun run() {
             handler.postDelayed(this, 1000)
@@ -78,6 +81,7 @@ class ActivityWalk : AppCompatActivity() {
         }
     }
 
+    //산책 루트
     private val locationRunnable = object : Runnable {
         override fun run(){
             locationHandler.postDelayed(this, 5000)
@@ -92,12 +96,12 @@ class ActivityWalk : AppCompatActivity() {
             if(seconds != 0){
                 val speed = (totalDistance/seconds)
                 speedText.text = String.format("%.2f", speed)
-                Log.d("distance", userPosition.toString())
             }
             rootLabel(userPosition,(seconds).toString()+"user")
         }
     }
 
+    //산책 루트 표시
     private fun rootLabel(pos: LatLng, id: String) {
         // 라벨 스타일 생성
         val styles = map.labelManager?.addLabelStyles(LabelStyles.from(
@@ -139,12 +143,12 @@ class ActivityWalk : AppCompatActivity() {
         labelLayer.getLabel("curPos").changeRank(1)
     }
 
-    //현재 위치 가져오기
+    //현재 위치 가져오기 및 위치 찍기
     private fun getLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val locationRequest = LocationRequest.create().apply {
-            interval = 1000 // 5초마다 위치 업데이트
+            interval = 1000 // 1초마다 위치 업데이트
             fastestInterval = 1000 // 가장 빠른 업데이트 간격
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY // 높은 정확도
         }
@@ -155,6 +159,7 @@ class ActivityWalk : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     // 새 위치를 받을 때마다 카카오맵에 위치 업데이트
                     userPosition = LatLng.from(location.latitude, location.longitude)
+                    Log.d("distance", userPosition.toString())
                     showLabel(userPosition)
                     locationAble = true
                 }
@@ -239,11 +244,13 @@ class ActivityWalk : AppCompatActivity() {
         val btnPlay = binding.awalkBtnPlay
         val btnPause = binding.awalkBtnPause
         val btnWrite = binding.awalkBtnWrite
+        val btnCalendar = binding.awalkBtnCalendar
         btnPosition = binding.awalkBtnMyPosition
         timeText = binding.awalkTextTime
         distanceText = binding.awalkTextDistance
         speedText = binding.awalkTextSpeed
 
+        //시작 버튼
         btnStart.setOnClickListener {
             if (locationAble){
                 btnStart.visibility = View.GONE
@@ -261,6 +268,7 @@ class ActivityWalk : AppCompatActivity() {
             }
         }
 
+        //정지 버튼
         btnPause.setOnClickListener {
             btnPause.visibility = View.GONE
             btnPlay.visibility = View.VISIBLE
@@ -268,6 +276,7 @@ class ActivityWalk : AppCompatActivity() {
             locationHandler.removeCallbacks(locationRunnable)
         }
 
+        //재시작 버튼
         btnPlay.setOnClickListener {
             btnPause.visibility = View.VISIBLE
             btnPlay.visibility = View.GONE
@@ -275,6 +284,7 @@ class ActivityWalk : AppCompatActivity() {
             locationHandler.post(locationRunnable)
         }
 
+        //종료 버튼
         btnWrite.setOnClickListener {
             btnPause.visibility = View.GONE
             btnPlay.visibility = View.GONE
@@ -282,13 +292,13 @@ class ActivityWalk : AppCompatActivity() {
             btnStart.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
             locationHandler.removeCallbacks(locationRunnable)
-            cnt = 0
             seconds = 0
             speedText.text = "0"
             distanceText.text = "0"
             updateTimerText()
         }
 
+        //내 위치 이동
         btnPosition.setOnClickListener {
             if (locationAble){
                 trackingManager.startTracking(trackingLabel)
@@ -298,6 +308,16 @@ class ActivityWalk : AppCompatActivity() {
             }
         }
 
+        btnCalendar.setOnClickListener {
+            val intent = Intent(this@ActivityWalk, ActivityCalendar::class.java)
+            startActivity(intent)
+            handler.removeCallbacks(runnable)
+            locationHandler.removeCallbacks(locationRunnable)
+            fusedLocationClient.removeLocationUpdates(locationCallback)
+            finish()
+        }
+
+        //뒤로가기 버튼
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
@@ -306,7 +326,6 @@ class ActivityWalk : AppCompatActivity() {
         handler.removeCallbacks(runnable)
         locationHandler.removeCallbacks(locationRunnable)
         fusedLocationClient.removeLocationUpdates(locationCallback)
-        Log.d("MapView", "종료 됨")
     }
 
     //권한 확인
@@ -342,6 +361,7 @@ class ActivityWalk : AppCompatActivity() {
         mapView.start(lifeCycleCallback, readyCallback)
     }
 
+    //뒤로가기 버튼
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             handler.removeCallbacks(runnable)

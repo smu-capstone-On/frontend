@@ -90,6 +90,7 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/radius_10_solid_yellow"
         android:text="산책 시작"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
