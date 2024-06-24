@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,11 +19,13 @@ class FragmentPostDetail : Fragment() {
     private var _binding: FragmentPostDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var boardType: String
     private lateinit var editComment: EditText
     private lateinit var btnLike: ImageButton
     private lateinit var btnSendComment: ImageButton
+    private lateinit var imageContent: ImageView
+    private lateinit var imageUserProfile: ImageView
     private lateinit var recyclerView: RecyclerView
+
     private lateinit var toolbar: Toolbar
 
     private lateinit var commentAdapter: AdapterComment
@@ -58,14 +61,14 @@ class FragmentPostDetail : Fragment() {
         commentList = mutableListOf(
             Comment("User1", "This is a comment."),
             Comment("User2", "This is another comment."),
-            Comment("User3", "This is another comment."),
-            Comment("User4", "This is another comment."),
-            Comment("User5", "This is another comment.")
+            Comment("User3", "This is third comment."),
+            Comment("User4", "This is 4th comment."),
+            Comment("User5", "This is last comment.")
         )
 
         commentAdapter = AdapterComment(commentList)
 
-        binding.postDetailRecyclerview.apply {
+        recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = commentAdapter
         }

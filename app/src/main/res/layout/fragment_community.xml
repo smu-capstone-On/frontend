@@ -166,10 +166,12 @@
                         android:layout_width="54dp"
                         android:layout_height="22dp"
                         android:layout_marginStart="15dp"
+                        android:layout_marginEnd="10dp"
                         android:background="@drawable/radius_10_enabled_button"
                         android:text="질문"
                         android:textColor="@color/hint"
                         android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/community_tag_bird"
                         app:layout_constraintTop_toTopOf="@id/community_tag_dog"/>
 

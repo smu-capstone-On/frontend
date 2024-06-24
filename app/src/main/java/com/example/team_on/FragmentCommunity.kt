@@ -31,7 +31,7 @@ class FragmentCommunity: Fragment() {
     private lateinit var btnSearch: ImageButton
     private lateinit var btnSearchCancel: ImageButton
     private lateinit var btnAddPost: ImageButton
-    private lateinit var editText: EditText
+    private lateinit var editTextSearch: EditText
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var postAdapter: AdapterPost
@@ -63,7 +63,7 @@ class FragmentCommunity: Fragment() {
         btnSearch = binding.communityBtnSearch
         btnSearchCancel = binding.communityBtnSearchCancel
         btnAddPost = binding.communityBtnPost
-        editText = binding.communityEditSearch
+        editTextSearch = binding.communityEditSearch
         recyclerView = binding.communityRecyclerview
 
         setSearchFun()
@@ -72,11 +72,13 @@ class FragmentCommunity: Fragment() {
         addPost()
 
         postList = mutableListOf(
-            Post("Post 1", "This is the content of post 1", listOf("강아지")),
-            Post("Post 2", "This is the content of post 2", listOf("고양이", "질문")),
-            Post("Post 3", "This is the content of post 3", listOf("고양이")),
-            Post("Post 4", "This is the content of post 4", listOf("강아지", "질문")),
-            Post("Post 5", "This is the content of post 5", listOf("강아지","고양이","질문"))
+            Post("Post Dog", "This is the content of post 1\ndog", listOf("강아지")),
+            Post("Post Cat Question", "This is the content of post 2\ncat, question", listOf("고양이", "질문")),
+            Post("Post Cat", "This is the content of post 3\ncat", listOf("고양이")),
+            Post("Post Dog Question", "This is the content of post 4\ndog, question", listOf("강아지", "질문")),
+            Post("Post Dog Cat Question", "This is the content of post 5\ndog, cat, question", listOf("강아지","고양이","질문")),
+            Post("Post Small Animal ", "This is the content of post 6\nsmall", listOf("소동물")),
+            Post("Post Reptile", "This is the content of post7\nreptile", listOf("파충류"))
         )
 
         filteredList.addAll(postList)
@@ -101,10 +103,10 @@ class FragmentCommunity: Fragment() {
         btnSearch.setOnClickListener {
             btnSearch.isEnabled = false
             btnSearchCancel.visibility = View.VISIBLE
-            editText.visibility = View.VISIBLE
-            editText.requestFocus()
+            editTextSearch.visibility = View.VISIBLE
+            editTextSearch.requestFocus()
         }
-        editText.addTextChangedListener(object : TextWatcher {
+        editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -121,20 +123,20 @@ class FragmentCommunity: Fragment() {
         btnSearchCancel.setOnClickListener {
             btnSearch.isEnabled = true
             btnSearchCancel.visibility = View.GONE
-            editText.visibility = View.GONE
-            editText.text.clear()
-            editText.clearFocus()
+            editTextSearch.visibility = View.GONE
+            editTextSearch.text.clear()
+            editTextSearch.clearFocus()
             filter("")
         }
     }
 
-    // 필터링
+    // 검색 단어 및 태그 필터링
     private fun filter(text: String) {
         val searchText = text.lowercase(Locale.ROOT)
         filteredList.clear()
         val filteredPosts = postList.filter { post ->
-            val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) || post.content.lowercase(
-                Locale.ROOT).contains(searchText)
+            val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) ||
+                    post.content.lowercase(Locale.ROOT).contains(searchText)
             val matchesTags = selectedTags.isEmpty() || post.tags.any { it in selectedTags }
             matchesText && matchesTags
         }
@@ -144,10 +146,10 @@ class FragmentCommunity: Fragment() {
 
     // 아이템 목록 최신화
     private fun loadItems() {
-        filter(editText.text.toString())
+        filter(editTextSearch.text.toString())
     }
 
-    // 태그 클릭 시 색 변환, 필터 추가 필요
+    // 태그 클릭 시 색 변환
     private fun setTagBtn() {
         val btns = listOf(btnTagDog, btnTagCat, btnTagSmall, btnTagReptile, btnTagBird, btnTagQuestion)
 
@@ -161,7 +163,7 @@ class FragmentCommunity: Fragment() {
                     button.setTextColor(ContextCompat.getColor(button.context, R.color.hint))
                     selectedTags.remove(button.text.toString())
                 }
-                filter(editText.text.toString())
+                filter(editTextSearch.text.toString())
             }
         }
     }

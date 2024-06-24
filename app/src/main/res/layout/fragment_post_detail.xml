@@ -15,6 +15,7 @@
             android:id="@+id/post_detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:navigationIcon="@drawable/svg_back"/>
 
@@ -44,6 +45,9 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/radius_5_transparent"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
                 android:src="@drawable/svg_default_profile"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/post_detail_line1" />
@@ -97,11 +101,17 @@
 
             <ImageView
                 android:id="@+id/post_detail_image"
-                android:layout_width="330dp"
-                android:layout_height="164dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:maxWidth="330dp"
+                android:maxHeight="164dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/radius_5_transparent"
+                android:clipToOutline="true"
                 android:visibility="visible"
-                android:src="@drawable/pic_cat"
+                android:scaleType="fitCenter"
+                android:src="@drawable/svg_big_camera"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/post_detail_content" />
@@ -111,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="tag"
+                android:text="태그"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@id/post_detail_image"

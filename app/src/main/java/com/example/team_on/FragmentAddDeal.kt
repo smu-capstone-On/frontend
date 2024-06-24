@@ -14,31 +14,30 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.team_on.databinding.FragmentAddPostBinding
+import com.example.team_on.databinding.FragmentAddDealBinding
 
-class FragmentAddPost : Fragment() {
+class FragmentAddDeal : Fragment() {
 
-    private var _binding: FragmentAddPostBinding? = null
+    private var _binding: FragmentAddDealBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var btnAddPost: Button
+    private lateinit var btnAddDeal: Button
     private lateinit var btnTagDog: Button
     private lateinit var btnTagCat: Button
     private lateinit var btnTagSmall: Button
     private lateinit var btnTagReptile: Button
     private lateinit var btnTagBird: Button
-    private lateinit var btnTagQuestion: Button
     private lateinit var editTextTitle: EditText
     private lateinit var editTextContent: EditText
+    private lateinit var editTextPrice: EditText
     private lateinit var btnAddImage: ImageButton
-    private lateinit var imageView: ImageView
     private lateinit var toolbar: Toolbar
 
     private var selectedTags = mutableListOf<String>()
 
     private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            imageView.setImageURI(it)
+            btnAddImage.setImageURI(it)
         }
     }
 
@@ -50,7 +49,7 @@ class FragmentAddPost : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAddPostBinding.inflate(inflater, container, false)
+        _binding = FragmentAddDealBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -58,31 +57,29 @@ class FragmentAddPost : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnAddPost = binding.addPostEnterPost
-        btnTagDog = binding.addPostTagDog
-        btnTagCat = binding.addPostTagCat
-        btnTagSmall = binding.addPostTagSmall
-        btnTagReptile = binding.addPostTagReptile
-        btnTagBird = binding.addPostTagBird
-        btnTagQuestion = binding.addPostTagQuestion
-        editTextTitle = binding.addPostTitle
-        editTextContent = binding.addPostContent
-        btnAddImage = binding.addPostAddImage
-        imageView = binding.addPostImageView
-        toolbar = binding.addPostToolbar
+        btnAddDeal = binding.addDealBtnEnterPost
+        btnTagDog = binding.addDealTagDog
+        btnTagCat = binding.addDealTagCat
+        btnTagSmall = binding.addDealTagSmall
+        btnTagReptile = binding.addDealTagReptile
+        btnTagBird = binding.addDealTagBird
+        editTextTitle = binding.addDealTitle
+        editTextContent = binding.addDealContent
+        editTextPrice = binding.addDealEditPrice
+        btnAddImage = binding.addDealAddImage
+        toolbar = binding.addDealToolbar
 
         setTagBtn()
+        addDeal()
         addImage()
-        addPost()
 
         toolbar.setNavigationOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
-    // 태그 버튼 클릭 시
     private fun setTagBtn() {
-        val btns = listOf(btnTagDog, btnTagCat, btnTagSmall, btnTagReptile, btnTagBird, btnTagQuestion)
+        val btns = listOf(btnTagDog, btnTagCat, btnTagSmall, btnTagReptile, btnTagBird)
 
         btns.forEach { button ->
             button.setOnClickListener {
@@ -98,24 +95,24 @@ class FragmentAddPost : Fragment() {
         }
     }
 
-    // 이미지 추가하기
+    // 물품 이미지 추가
     private fun addImage() {
         btnAddImage.setOnClickListener {
             getImage.launch("image/*")
-            imageView.visibility = View.VISIBLE
         }
     }
 
-    // 게시글 작성 완료
-    private fun addPost() {
-        btnAddPost.setOnClickListener {
+    // 물품 등록하기
+    private fun addDeal() {
+        btnAddDeal.setOnClickListener {
             val title = editTextTitle.text.toString()
             val content = editTextContent.text.toString()
-            val tagList = selectedTags
+            val price = editTextPrice.text.toString()
+            val taglist = selectedTags
             if (title.isEmpty()) {
-                Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "게시글의 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
             } else if (content.isEmpty()) {
-                Toast.makeText(activity, "게시글 내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "게시글의 내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
             } else {
 
             }
@@ -127,4 +124,5 @@ class FragmentAddPost : Fragment() {
         (activity as? ActivityMain)?.showBottomNaviagtion()
         _binding = null
     }
+
 }

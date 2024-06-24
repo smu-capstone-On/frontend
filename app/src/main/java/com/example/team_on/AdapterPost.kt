@@ -19,27 +19,16 @@ class AdapterPost(private val posts: List<Post>,
             binding.postContent.text = post.content
 
             val tags = post.tags
+            val postTags = listOf(binding.postTag1, binding.postTag2, binding.postTag3)
 
-            if (tags.isNotEmpty()) {
-                binding.postTag1.text = tags[0]
-                binding.postTag1.visibility = View.VISIBLE
-            } else {
-                binding.postTag1.text = ""
-                binding.postTag1.visibility = View.GONE
-            }
-            if (tags.size > 1) {
-                binding.postTag2.text = tags[1]
-                binding.postTag2.visibility = View.VISIBLE
-            } else {
-                binding.postTag2.text = ""
-                binding.postTag2.visibility = View.GONE
-            }
-            if (tags.size > 2) {
-                binding.postTag3.text = tags[2]
-                binding.postTag3.visibility = View.VISIBLE
-            } else {
-                binding.postTag3.text = ""
-                binding.postTag3.visibility = View.GONE
+            for (i in tags.indices) {
+                if (i < tags.size) {
+                    postTags[i].text = tags[i]
+                    postTags[i].visibility = View.VISIBLE
+                } else {
+                    postTags[i].text = ""
+                    postTags[i].visibility = View.GONE
+                }
             }
 
             itemView.setOnClickListener {

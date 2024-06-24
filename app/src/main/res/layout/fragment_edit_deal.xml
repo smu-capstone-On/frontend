@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FragmentEditDeal">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/edit_deal_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/edit_deal_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:navigationIcon="@drawable/svg_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/edit_deal_toolbar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="16dp"
+                android:text="수정하기"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/edit_deal_btn_save"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginTop="6dp"
+                android:background="@null"
+                android:text="등록"
+                android:textColor="@color/yellow"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/edit_deal_line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_appbar"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_deal_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:ems="10"
+        android:hint="제목을 입력하세요"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_line1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/edit_deal_line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:background="@color/gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_title"/>
+
+    <EditText
+        android:id="@+id/edit_deal_content"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="상품의 상세 정보를 입력하세요"
+        android:maxLines="5"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_line2" />
+
+    <ImageButton
+        android:id="@+id/edit_deal_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxWidth="324dp"
+        android:maxHeight="164dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/radius_5_transparent"
+        android:clipToOutline="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/svg_big_camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_content" />
+
+    <ImageView
+        android:id="@+id/edit_deal_line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_add_image" />
+
+    <TextView
+        android:id="@+id/edit_deal_text_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="가격 설정"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_line3" />
+
+    <EditText
+        android:id="@+id/edit_deal_edit_price"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="#F6F6F6"
+        android:hint="상품의 가격을 입력해주세요"
+        android:inputType="number"
+        android:paddingStart="10dp"
+        android:textColorHint="@color/gray"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_price"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_text_price" />
+
+    <TextView
+        android:id="@+id/edit_deal_text_preorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="예약 여부 설정"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_price"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_edit_price" />
+
+    <Button
+        android:id="@+id/edit_deal_btn_preorder"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="예약중"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_preorder"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_text_preorder" />
+
+    <TextView
+        android:id="@+id/edit_deal_text_sold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="판매 여부 설정"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_preorder"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_btn_preorder" />
+
+    <Button
+        android:id="@+id/edit_deal_btn_sold"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="판매완료"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_sold"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_text_sold" />
+
+    <ImageView
+        android:id="@+id/edit_deal_line4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_btn_sold" />
+
+    <TextView
+        android:id="@+id/edit_deal_tag_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="태그 설정"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_text_sold"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_line4" />
+
+    <Button
+        android:id="@+id/edit_deal_tag_dog"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="강아지"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/edit_deal_tag_list"
+        app:layout_constraintTop_toBottomOf="@id/edit_deal_tag_list" />
+
+    <Button
+        android:id="@+id/edit_deal_tag_cat"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="고양이"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/edit_deal_tag_dog"
+        app:layout_constraintTop_toTopOf="@id/edit_deal_tag_dog" />
+
+    <Button
+        android:id="@+id/edit_deal_tag_small"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="소동물"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/edit_deal_tag_cat"
+        app:layout_constraintTop_toTopOf="@id/edit_deal_tag_cat" />
+
+    <Button
+        android:id="@+id/edit_deal_tag_reptile"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="파충류"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/edit_deal_tag_small"
+        app:layout_constraintTop_toTopOf="@id/edit_deal_tag_small" />
+
+    <Button
+        android:id="@+id/edit_deal_tag_bird"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/radius_10_enabled_button"
+        android:gravity="center"
+        android:text="조류"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/edit_deal_tag_reptile"
+        app:layout_constraintTop_toTopOf="@id/edit_deal_tag_reptile" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
