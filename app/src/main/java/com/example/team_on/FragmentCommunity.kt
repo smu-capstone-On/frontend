@@ -3,6 +3,7 @@ package com.example.team_on
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,7 @@ import com.example.team_on.databinding.FragmentCommunityBinding
 import java.util.Date
 import java.util.Locale
 
-class FragmentCommunity: Fragment() {
+class FragmentCommunity : Fragment() {
 
     private var _binding: FragmentCommunityBinding? = null
     private val binding get() = _binding!!
@@ -49,7 +49,7 @@ class FragmentCommunity: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCommunityBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,6 +71,8 @@ class FragmentCommunity: Fragment() {
         stopSearchFun()
         setTagBtn()
         addPost()
+
+        _binding = FragmentCommunityBinding.inflate(layoutInflater)
 
         postList = mutableListOf(
             Post("Post Dog", "This is the content of post 1\ndog",
