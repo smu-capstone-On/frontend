@@ -108,7 +108,7 @@ class FragmentAddDeal : Fragment() {
             val title = editTextTitle.text.toString()
             val content = editTextContent.text.toString()
             val price = editTextPrice.text.toString()
-            val taglist = selectedTags
+            val tagList = selectedTags
             if (title.isEmpty()) {
                 Toast.makeText(activity, "게시글의 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
             } else if (content.isEmpty()) {

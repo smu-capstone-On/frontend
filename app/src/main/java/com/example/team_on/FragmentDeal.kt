@@ -104,7 +104,7 @@ class FragmentDeal : Fragment() {
         )
 
         productAdapter = AdapterProduct(productList.toMutableList()) { product ->
-            val fragment = FragmentDealDetail.newInstance(product.title, product.price, product.date)
+            val fragment = FragmentDealDetail.newInstance(product.title, product.price, product.createdTime)
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -187,9 +187,9 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareBy<Product> {it.date}
+            "new" -> compareBy<Product> {it.createdTime}
             "price" -> compareBy<Product> {it.price}
-            else -> compareBy<Product> {it.date}
+            else -> compareBy<Product> {it.createdTime}
         }
         comparator.let {
             filteredList.sortWith(it)

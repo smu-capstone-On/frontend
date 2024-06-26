@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.FragmentCommunityBinding
+import java.util.Date
 import java.util.Locale
 
 class FragmentCommunity: Fragment() {
@@ -72,13 +73,20 @@ class FragmentCommunity: Fragment() {
         addPost()
 
         postList = mutableListOf(
-            Post("Post Dog", "This is the content of post 1\ndog", listOf("강아지")),
-            Post("Post Cat Question", "This is the content of post 2\ncat, question", listOf("고양이", "질문")),
-            Post("Post Cat", "This is the content of post 3\ncat", listOf("고양이")),
-            Post("Post Dog Question", "This is the content of post 4\ndog, question", listOf("강아지", "질문")),
-            Post("Post Dog Cat Question", "This is the content of post 5\ndog, cat, question", listOf("강아지","고양이","질문")),
-            Post("Post Small Animal ", "This is the content of post 6\nsmall", listOf("소동물")),
-            Post("Post Reptile", "This is the content of post7\nreptile", listOf("파충류"))
+            Post("Post Dog", "This is the content of post 1\ndog",
+                listOf("강아지"), Date(System.currentTimeMillis()-3),23, 43, false),
+            Post("Post Cat Question", "This is the content of post 2\ncat, question",
+                listOf("고양이", "질문"), Date(System.currentTimeMillis()-6),21, 36, false),
+            Post("Post Cat", "This is the content of post 3\ncat",
+                listOf("고양이"), Date(System.currentTimeMillis()-9),12, 33, true),
+            Post("Post Dog Question", "This is the content of post 4\ndog, question",
+                listOf("강아지", "질문"), Date(System.currentTimeMillis()-12),52, 34, false),
+            Post("Post Dog Cat Question", "This is the content of post 5\ndog, cat, question",
+                listOf("강아지","고양이","질문"), Date(System.currentTimeMillis()-15),32, 3, false),
+            Post("Post Small Animal ", "This is the content of post 6\nsmall",
+                listOf("소동물"), Date(System.currentTimeMillis()-18),22, 23, true),
+            Post("Post Reptile", "This is the content of post7\nreptile",
+                listOf("파충류"), Date(System.currentTimeMillis()-21),12, 13, true)
         )
 
         filteredList.addAll(postList)
@@ -133,13 +141,13 @@ class FragmentCommunity: Fragment() {
     // 검색 단어 및 태그 필터링
     private fun filter(text: String) {
         val searchText = text.lowercase(Locale.ROOT)
-        filteredList.clear()
         val filteredPosts = postList.filter { post ->
             val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) ||
                     post.content.lowercase(Locale.ROOT).contains(searchText)
             val matchesTags = selectedTags.isEmpty() || post.tags.any { it in selectedTags }
             matchesText && matchesTags
         }
+        filteredList.clear()
         filteredList.addAll(filteredPosts)
         postAdapter.notifyDataSetChanged()
     }

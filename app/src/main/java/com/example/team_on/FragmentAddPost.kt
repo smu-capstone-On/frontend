@@ -86,13 +86,18 @@ class FragmentAddPost : Fragment() {
 
         btns.forEach { button ->
             button.setOnClickListener {
-                button.isSelected = !button.isSelected
-                if (button.isSelected) {
-                    button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
-                    selectedTags.add(button.text.toString())
-                } else {
-                    button.setTextColor(ContextCompat.getColor(button.context, R.color.hint))
-                    selectedTags.remove(button.text.toString())
+                if (selectedTags.size == 3 && !button.isSelected) {
+                    Toast.makeText(activity, "태그는 최대 3개까지 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    button.isSelected = !button.isSelected
+                    if (button.isSelected) {
+                        button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
+                        selectedTags.add(button.text.toString())
+                    } else {
+                        button.setTextColor(ContextCompat.getColor(button.context, R.color.hint))
+                        selectedTags.remove(button.text.toString())
+                    }
                 }
             }
         }
@@ -112,6 +117,8 @@ class FragmentAddPost : Fragment() {
             val title = editTextTitle.text.toString()
             val content = editTextContent.text.toString()
             val tagList = selectedTags
+            val image = imageView
+            // userData
             if (title.isEmpty()) {
                 Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
             } else if (content.isEmpty()) {

@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.FragmentPostDetailBinding
+import java.util.Date
 
 class FragmentPostDetail : Fragment() {
 
@@ -77,9 +78,11 @@ class FragmentPostDetail : Fragment() {
         btnLike.setOnClickListener {
             btnLike.isSelected = !btnLike.isSelected
             if (btnLike.isSelected) {
-                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.red))
+                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.yellow))
+                // 증가값, 종아요 여부 전송
             } else {
                 btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.hint))
+                // 감소, 좋아요
             }
         }
 
@@ -98,6 +101,7 @@ class FragmentPostDetail : Fragment() {
         }
     }
 
+    // 댓글 등록 기능
     private fun addComment(comment: Comment) {
         commentList.add(comment)
         commentAdapter.notifyItemInserted(commentList.size - 1)
@@ -113,7 +117,6 @@ class FragmentPostDetail : Fragment() {
     companion object {
         private const val ARG_TITLE = "title"
         private const val ARG_CONTENT = "content"
-
         fun newInstance(title: String, content: String) =
             FragmentPostDetail().apply {
                 arguments = Bundle().apply {

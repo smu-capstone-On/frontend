@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.ItemViewProductBinding
 
-data class Product(val title: String, val price: String, val date: String, val content: String? = null, val tags: List<String>? = null, val isPreorder: Boolean? = null)
+data class Product(val title: String, val price: String, val createdTime: String,
+                   val content: String? = null, val tags: List<String>? = null, val isPreorder: Boolean? = null)
 
 class AdapterProduct(private val products: MutableList<Product>,
                      private val onItemClick: (Product) -> Unit
@@ -16,7 +17,7 @@ class AdapterProduct(private val products: MutableList<Product>,
         fun bind(product: Product) {
             binding.productName.text = product.title
             binding.productPrice.text = product.price
-            binding.productDate.text = product.date
+            binding.productDate.text = product.createdTime
 
             itemView.setOnClickListener {
                 onItemClick(product)

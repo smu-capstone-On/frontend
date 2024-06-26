@@ -38,7 +38,7 @@
         android:background="@drawable/radius_5_transparent"
         android:clipToOutline="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/pic_cat"
+        android:src="@drawable/svg_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     
@@ -96,45 +96,46 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
-        android:id="@+id/post_image_thumb"
+        android:id="@+id/post_image_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="10sp"
         android:src="@drawable/svg_thumbs"
         app:layout_constraintStart_toStartOf="@id/post_image"
         app:layout_constraintTop_toBottomOf="@id/post_image" />
 
     <TextView
-        android:id="@+id/post_text_thumb"
+        android:id="@+id/post_count_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="n"
+        android:layout_marginEnd="33dp"
+        android:gravity="end"
+        android:text="nnn"
         android:textColor="@color/hint"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/post_image_thumb"
-        app:layout_constraintTop_toTopOf="@id/post_image_thumb" />
+        app:layout_constraintEnd_toEndOf="@id/post_image"
+        app:layout_constraintTop_toTopOf="@id/post_image_like" />
 
     <ImageView
-        android:id="@+id/post_image_message"
+        android:id="@+id/post_image_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
         android:src="@drawable/svg_message"
-        app:layout_constraintStart_toEndOf="@id/post_text_thumb"
-        app:layout_constraintTop_toTopOf="@id/post_text_thumb" />
+        app:layout_constraintEnd_toEndOf="@id/post_image"
+        app:layout_constraintTop_toTopOf="@id/post_image_like" />
 
     <TextView
-        android:id="@+id/post_text_message"
+        android:id="@+id/post_count_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="n"
+        android:layout_marginEnd="-1dp"
+        android:text="nnn"
         android:textColor="@color/hint"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/post_image_message"
-        app:layout_constraintTop_toTopOf="@id/post_image_message" />
+        app:layout_constraintEnd_toEndOf="@id/post_image"
+        app:layout_constraintTop_toTopOf="@id/post_image_comment" />
 
     <ImageView
         android:layout_width="match_parent"

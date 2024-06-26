@@ -19,8 +19,10 @@
 
     <TextView
         android:id="@+id/product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100sp"
+        android:layout_height="16sp"
+        android:maxWidth="100sp"
+        android:maxHeight="16sp"
         android:text="product_name"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -29,8 +31,10 @@
 
     <TextView
         android:id="@+id/product_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100sp"
+        android:layout_height="16sp"
+        android:maxWidth="100sp"
+        android:maxHeight="16sp"
         android:text="price"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -39,8 +43,10 @@
 
     <TextView
         android:id="@+id/product_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100sp"
+        android:layout_height="16sp"
+        android:maxWidth="100sp"
+        android:maxHeight="16sp"
         android:text="date"
         android:textColor="@color/gray"
         android:textSize="10sp"
