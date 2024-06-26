@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.ItemViewProductBinding
+import java.util.Date
 
-data class Product(val title: String, val price: String, val createdTime: String,
+data class Product(val title: String, val price: Int, val createdTime: Date,
                    val content: String? = null, val tags: List<String>? = null, val isPreorder: Boolean? = null)
 
 class AdapterProduct(private val products: MutableList<Product>,
@@ -16,8 +17,8 @@ class AdapterProduct(private val products: MutableList<Product>,
 
         fun bind(product: Product) {
             binding.productName.text = product.title
-            binding.productPrice.text = product.price
-            binding.productDate.text = product.createdTime
+            binding.productPrice.text = product.price.toString() + "원"
+            binding.productDate.text = product.createdTime.toString()
 
             itemView.setOnClickListener {
                 onItemClick(product)

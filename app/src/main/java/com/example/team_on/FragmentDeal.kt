@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.FragmentDealBinding
+import java.util.Date
 import java.util.Locale
 
 class FragmentDeal : Fragment() {
@@ -89,22 +90,22 @@ class FragmentDeal : Fragment() {
         addDeal()
 
         productList = mutableListOf(
-            Product("Product1", "21,000원", "01", "Product1 sell", listOf("강아지")),
-            Product("Product2", "22,000원", "02", "Product2 sell", listOf("강아지")),
-            Product("Product3", "23,000원", "03", "Product3 sell", listOf("고양이")),
-            Product("Product4", "24,000원", "04", "Product4 sell", listOf("강아지")),
-            Product("Product5", "25,000원", "05", "Product5 sell", listOf("고양이")),
-            Product("Product6", "26,000원", "06", "Product6 sell", listOf("소동물")),
-            Product("Product7", "27,000원", "07", "Product7 sell", listOf("조류")),
-            Product("Product8", "28,000원", "08", "Product8 sell", listOf("파충류")),
-            Product("Product9", "29,000원", "09", "Product9 sell", listOf("소동물")),
-            Product("Product10", "10,000원", "10", "Product10 sell", listOf("조류")),
-            Product("Product11", "11,000원", "11", "Product11 sell", listOf("파충류")),
-            Product("Product12", "12,000원", "12", "Product12 sell", listOf("강아지"))
+            Product("Product1", 21000, Date(System.currentTimeMillis()), "Product1 sell", listOf("강아지")),
+            Product("Product2", 2200, Date(System.currentTimeMillis()), "Product2 sell", listOf("강아지")),
+            Product("Product3", 23000, Date(System.currentTimeMillis()), "Product3 sell", listOf("고양이")),
+            Product("Product4", 24000, Date(System.currentTimeMillis()), "Product4 sell", listOf("강아지")),
+            Product("Product5", 2500, Date(System.currentTimeMillis()), "Product5 sell", listOf("고양이")),
+            Product("Product6", 26000, Date(System.currentTimeMillis()), "Product6 sell", listOf("소동물")),
+            Product("Product7", 2700, Date(System.currentTimeMillis()), "Product7 sell", listOf("조류")),
+            Product("Product8", 2000, Date(System.currentTimeMillis()), "Product8 sell", listOf("파충류")),
+            Product("Product9", 29000, Date(System.currentTimeMillis()), "Product9 sell", listOf("소동물")),
+            Product("Product10", 1000, Date(System.currentTimeMillis()), "Product10 sell", listOf("조류")),
+            Product("Product11", 11000, Date(System.currentTimeMillis()), "Product11 sell", listOf("파충류")),
+            Product("Product12", 1200, Date(System.currentTimeMillis()), "Product12 sell", listOf("강아지"))
         )
 
         productAdapter = AdapterProduct(productList.toMutableList()) { product ->
-            val fragment = FragmentDealDetail.newInstance(product.title, product.price, product.createdTime)
+            val fragment = FragmentDealDetail.newInstance(product.title, product.price.toString(), product.createdTime.toString())
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)

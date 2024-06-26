@@ -161,7 +161,7 @@
         android:id="@+id/add_post_tag_dog"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="-8dp"
+        android:layout_marginStart="-9dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"

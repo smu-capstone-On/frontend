@@ -25,15 +25,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/deal_detail_toolbar" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/deal_detail_user_profile"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/radius_5_transparent"
-        android:clipToOutline="true"
-        android:scaleType="centerCrop"
         android:src="@drawable/svg_default_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/deal_detail_imageview" />
@@ -66,6 +63,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:maxWidth="250sp"
+        android:maxLines="1"
         android:text="Detail_title"
         android:textColor="@color/black"
         android:textSize="20sp"

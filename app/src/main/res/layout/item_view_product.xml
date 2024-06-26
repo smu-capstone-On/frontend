@@ -20,9 +20,10 @@
     <TextView
         android:id="@+id/product_name"
         android:layout_width="100sp"
-        android:layout_height="16sp"
+        android:layout_height="15sp"
         android:maxWidth="100sp"
-        android:maxHeight="16sp"
+        android:maxHeight="15sp"
+        android:maxLines="1"
         android:text="product_name"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -32,9 +33,10 @@
     <TextView
         android:id="@+id/product_price"
         android:layout_width="100sp"
-        android:layout_height="16sp"
+        android:layout_height="15sp"
         android:maxWidth="100sp"
-        android:maxHeight="16sp"
+        android:maxHeight="15sp"
+        android:maxLines="1"
         android:text="price"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -44,13 +46,29 @@
     <TextView
         android:id="@+id/product_date"
         android:layout_width="100sp"
-        android:layout_height="16sp"
+        android:layout_height="15sp"
         android:maxWidth="100sp"
-        android:maxHeight="16sp"
+        android:maxHeight="15sp"
+        android:maxLines="1"
         android:text="date"
         android:textColor="@color/gray"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@id/product_price"
         app:layout_constraintTop_toBottomOf="@id/product_price" />
+    
+    <TextView
+        android:id="@+id/product_preorder"
+        android:layout_width="30dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/radius_10_solid_yellow"
+        android:gravity="center"
+        android:text="예약"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/product_image"
+        app:layout_constraintTop_toTopOf="@id/product_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

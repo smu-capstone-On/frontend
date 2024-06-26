@@ -69,7 +69,7 @@ class FragmentDealDetail : Fragment() {
             FragmentDealDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
-                    putString(ARG_PRICE, price)
+                    putString(ARG_PRICE, price + "원")
                     putString(ARG_DATE, date)
                 }
             }
