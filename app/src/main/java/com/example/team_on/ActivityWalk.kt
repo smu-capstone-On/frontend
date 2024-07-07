@@ -159,7 +159,6 @@ class ActivityWalk : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     // 새 위치를 받을 때마다 카카오맵에 위치 업데이트
                     userPosition = LatLng.from(location.latitude, location.longitude)
-                    Log.d("distance", userPosition.toString())
                     showLabel(userPosition)
                     locationAble = true
                 }
@@ -295,6 +294,8 @@ class ActivityWalk : AppCompatActivity() {
             seconds = 0
             speedText.text = "0"
             distanceText.text = "0"
+            labelLayer.removeAll()
+            showLabel(userPosition)
             updateTimerText()
         }
 
@@ -369,5 +370,25 @@ class ActivityWalk : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    //화면 캡처
+    fun onButtonClicked(view: View) {
+        if (mapView == null) {
+            Toast.makeText(applicationContext, "지도가 준비되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        MapCapture.capture(this, mapView.surfaceView as GLSurfaceView, object : MapCapture.OnCaptureListener {
+            override fun onCaptured(isSucceed: Boolean, fileName: String) {
+                if (isSucceed) {
+                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: $fileName"
+                    Toast.makeText(applicationContext, "캡쳐가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: "
+                    Toast.makeText(applicationContext, "캡쳐에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }

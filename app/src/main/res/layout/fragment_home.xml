@@ -35,103 +35,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/home_text_find_mate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:text="산책메이트 찾으러 가기"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageButton
-                android:id="@+id/home_btn_find_mate"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="2dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/svg_chevron_right"
-                app:layout_constraintTop_toTopOf="@id/home_text_find_mate"
-                app:layout_constraintStart_toEndOf="@id/home_text_find_mate" />
-
 
             <ImageView
                 android:id="@+id/home_image_find_mate"
                 android:layout_width="360dp"
                 android:layout_height="180dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/radius_5_transparent"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
                 android:src="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/home_text_find_mate"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/home_text_save_walk_record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="산책 기록하기"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/home_image_find_mate"
-                app:layout_constraintStart_toStartOf="@id/home_text_find_mate" />
-
-            <ImageButton
-                android:id="@+id/home_btn_save_walk_record"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="2dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/svg_chevron_right"
-                app:layout_constraintTop_toTopOf="@id/home_text_save_walk_record"
-                app:layout_constraintStart_toEndOf="@id/home_text_save_walk_record" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_btn_go_mate" />
 
             <ImageView
                 android:id="@+id/home_image_save_walk_record"
                 android:layout_width="360dp"
                 android:layout_height="180dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/radius_10_solid_yellow"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/home_text_save_walk_record"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/home_text_popular_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="인기 게시글"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/home_image_save_walk_record"
-                app:layout_constraintStart_toStartOf="@id/home_text_save_walk_record" />
-
-            <ImageButton
-                android:id="@+id/home_btn_popular_post"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="2dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/svg_chevron_right"
-                app:layout_constraintTop_toTopOf="@id/home_text_popular_post"
-                app:layout_constraintStart_toEndOf="@id/home_text_popular_post" />
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_btn_go_walk" />
 
             <ImageView
                 android:id="@+id/home_view_popular_post1"
                 android:layout_width="360dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/radius_10_stroke_gray"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/home_text_popular_post"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_btn1" />
 
             <ImageView
                 android:id="@+id/home_view_popular_post2"
@@ -140,39 +77,148 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/radius_10_stroke_gray"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/home_view_popular_post1"
-                app:layout_constraintStart_toStartOf="parent" />
-            
-            <TextView
-                android:id="@+id/home_text_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="물품 거래"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/home_view_popular_post2"
-                app:layout_constraintStart_toStartOf="@id/home_text_popular_post" />
-
-            <ImageButton
-                android:id="@+id/home_btn_product"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="2dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/svg_chevron_right"
-                app:layout_constraintTop_toTopOf="@id/home_text_product"
-                app:layout_constraintStart_toEndOf="@id/home_text_product" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/home_view_popular_post1" />
 
             <RelativeLayout
                 android:layout_width="360dp"
                 android:layout_height="120dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/home_text_product"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_btn_go_deal" />
+
+            <Button
+                android:id="@+id/home_btn_go_walk"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:drawableRight="@drawable/svg_chevron_right"
+                android:text="산책 기록하기"
+                app:layout_constraintStart_toStartOf="@+id/home_btn_go_mate"
+                app:layout_constraintTop_toBottomOf="@+id/home_image_find_mate" />
+
+            <Button
+                android:id="@+id/home_btn_go_mate"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:drawableRight="@drawable/svg_chevron_right"
+                android:text="산책메이트 찾으러 가기"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/home_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:drawableRight="@drawable/svg_chevron_right"
+                android:text="인기 게시글"
+                app:layout_constraintStart_toStartOf="@+id/home_btn_go_walk"
+                app:layout_constraintTop_toBottomOf="@+id/home_image_save_walk_record" />
+
+            <Button
+                android:id="@+id/home_btn_go_deal"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:drawableRight="@drawable/svg_chevron_right"
+                android:text="물품 거래 하러가기"
+                app:layout_constraintStart_toStartOf="@+id/home_btn1"
+                app:layout_constraintTop_toBottomOf="@+id/home_view_popular_post2" />
+
+            <TextView
+                android:id="@+id/home_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:text="오늘의 기록"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/home_image_save_walk_record"
+                app:layout_constraintTop_toTopOf="@+id/home_image_save_walk_record" />
+
+            <ImageButton
+                android:id="@+id/home_btn_go_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/svg_calendar2"
+                app:layout_constraintEnd_toEndOf="@+id/home_image_save_walk_record"
+                app:layout_constraintTop_toTopOf="@+id/home_image_save_walk_record" />
+
+            <TextView
+                android:id="@+id/home_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="산책 시간"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/home_image_save_walk_record"
+                app:layout_constraintStart_toStartOf="@+id/home_image_save_walk_record"
+                app:layout_constraintTop_toBottomOf="@+id/home_text1" />
+
+            <TextView
+                android:id="@+id/home_text_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00 : 00 : 00"
+                android:textColor="@color/white"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/home_image_save_walk_record"
+                app:layout_constraintStart_toStartOf="@+id/home_image_save_walk_record"
+                app:layout_constraintTop_toBottomOf="@+id/home_text2" />
+
+            <TextView
+                android:id="@+id/home_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="총"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toStartOf="@+id/home_text_distance"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/home_image_save_walk_record"
+                app:layout_constraintTop_toBottomOf="@+id/home_text_time" />
+
+            <TextView
+                android:id="@+id/home_text_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="-5dp"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="@+id/home_text3"
+                app:layout_constraintEnd_toStartOf="@+id/home_text4"
+                app:layout_constraintStart_toEndOf="@+id/home_text3" />
+
+            <TextView
+                android:id="@+id/home_text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="걸었습니다."
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/home_text_distance"
+                app:layout_constraintEnd_toEndOf="@+id/home_image_save_walk_record"
+                app:layout_constraintStart_toEndOf="@+id/home_text_distance" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
