@@ -9,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.ActivityLoginBinding
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.kakao.sdk.user.UserApiClient
 
 class ActivityLogin : AppCompatActivity() {
 
@@ -66,6 +70,62 @@ class ActivityLogin : AppCompatActivity() {
                 })
             }
         }
-        binding.loginBtnKakao.setOnClickListener {  }
+
+        binding.loginBtnKakao.setOnClickListener {
+            val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+                if (error != null) {
+                    Log.e("Kakao", "카카오계정으로 로그인 실패", error)
+                } else if (token != null) {
+                    Log.e("Kakao", "카카오계정으로 로그인 성공")
+                }
+            }
+
+
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                    if (error != null) {
+                        Log.e("Kakao", "카카오톡으로 로그인 실패", error)
+
+                        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                            return@loginWithKakaoTalk
+                        }
+
+                        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                        UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+                    } else if (token != null) {
+                        Log.e("Kakao", "카카오계정으로 로그인 성공")
+                        UserApiClient.instance.me { user, error ->
+                            if (error != null) {
+                                Log.e("Kakao", "사용자 정보 요청 실패", error)
+                            }
+                            else if (user != null) {
+                                Log.i("Kakao", "사용자 정보 요청 성공" +
+                                        "\n닉네임: ${user.id}")
+                            }
+                            startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
+                        }
+                    }
+                }
+            } else {
+                UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+            }
+//            UserApiClient.instance.logout { error ->
+//                if (error != null) {
+//                    Log.e("Kakao", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+//                }
+//                else {
+//                    Log.i("Kakao", "로그아웃 성공. SDK에서 토큰 삭제됨")
+//                }
+//            }
+//            UserApiClient.instance.unlink { error ->
+//                if (error != null) {
+//                    Log.e("Kakao", "연결 끊기 실패", error)
+//                } else {
+//                    Log.i("Kakao", "연결 끊기 성공")
+//                }
+//            }
+        }
     }
 }

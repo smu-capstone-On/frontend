@@ -373,22 +373,22 @@ class ActivityWalk : AppCompatActivity() {
     }
 
     //화면 캡처
-    fun onButtonClicked(view: View) {
-        if (mapView == null) {
-            Toast.makeText(applicationContext, "지도가 준비되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        MapCapture.capture(this, mapView.surfaceView as GLSurfaceView, object : MapCapture.OnCaptureListener {
-            override fun onCaptured(isSucceed: Boolean, fileName: String) {
-                if (isSucceed) {
-                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: $fileName"
-                    Toast.makeText(applicationContext, "캡쳐가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-                } else {
-                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: "
-                    Toast.makeText(applicationContext, "캡쳐에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-    }
+//    fun onButtonClicked(view: View) {
+//        if (mapView == null) {
+//            Toast.makeText(applicationContext, "지도가 준비되지 않았습니다.", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//
+//        MapCapture.capture(this, mapView.surfaceView as GLSurfaceView, object : MapCapture.OnCaptureListener {
+//            override fun onCaptured(isSucceed: Boolean, fileName: String) {
+//                if (isSucceed) {
+//                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: $fileName"
+//                    Toast.makeText(applicationContext, "캡쳐가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: "
+//                    Toast.makeText(applicationContext, "캡쳐에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+//    }
 }

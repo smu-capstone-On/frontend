@@ -1,6 +1,7 @@
 package com.example.team_on
 
 import android.app.Application
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
 
 
@@ -10,5 +11,6 @@ class KakaoSDK : Application() {
         super.onCreate()
 
         KakaoMapSdk.init(this, KakaoKey.Key)
+        KakaoSdk.init(this, KakaoKey.Key)
     }
 }
