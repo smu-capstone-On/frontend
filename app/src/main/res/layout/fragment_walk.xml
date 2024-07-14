@@ -1,8 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentWalk">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fwalk_const"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/radius_5_stroke_gray"
+        app:layout_constraintEnd_toStartOf="@+id/fwalk_btn_search"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/fwalk_btn_attribute"
+            android:layout_width="25dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/svg_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/fwalk_edit_search"
+            android:layout_width="260dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@android:color/transparent"
+            android:ems="10"
+            android:hint="검색할 장소 또는 주소를 입력하세요"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:textColorHint="@color/gray"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/fwalk_btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/svg_search_yellow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fwalk_const"
+        app:layout_constraintTop_toTopOf="@+id/fwalk_const" />
+
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/fwalk_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.kakao.vectormap.MapView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -358,7 +358,7 @@ class ActivityWalk : AppCompatActivity() {
 
     //허용했을 때 로직
     private fun performLocationTask() {
-        mapView = binding.mapView
+        mapView = binding.awalkMap
         mapView.start(lifeCycleCallback, readyCallback)
     }
 
