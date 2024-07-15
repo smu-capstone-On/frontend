@@ -24,6 +24,7 @@ class ActivityAttribute : AppCompatActivity() {
         val editEnd = binding.attributeEditAge2
         val btnSave = binding.attributeBtnSave
         val btnReset = binding.attributeBtnReset
+        val btnBack = binding.attributeBtnBack
 
         if(age != null){
             val ageRange = age.split(" ")
@@ -43,6 +44,10 @@ class ActivityAttribute : AppCompatActivity() {
             groupGender.check(R.id.attribute_btn_m)
         }else if(gender == "여자"){
             groupGender.check(R.id.attribute_btn_w)
+        }
+
+        btnBack.setOnClickListener {
+            finish()
         }
 
         btnReset.setOnClickListener {
@@ -73,9 +78,11 @@ class ActivityAttribute : AppCompatActivity() {
             }
 
             if(editStart.text.isEmpty() && editEnd.text.isNotEmpty()){
-                Toast.makeText(this, "앞 뒤 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                val e = editEnd.text.toString()
+                editor.putString("age", "00 $e")
             }else if(editStart.text.isNotEmpty() && editEnd.text.isEmpty()){
-                Toast.makeText(this, "앞 뒤 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                val s = editStart.text.toString()
+                editor.putString("age", "$s 100")
             }else{
                 val s = editStart.text.toString()
                 val e = editEnd.text.toString()
