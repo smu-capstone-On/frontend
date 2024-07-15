@@ -17,7 +17,7 @@ interface DialogAlertInterface {
 
 class DialogAlert(
     dialogAlertInterface: DialogAlertInterface,
-    title: String, content: String?, buttonText: String
+    title: String, content: String?, buttonText: String, id: Int?
 ) :  DialogFragment() {
 
     private var _binding: DialogAlertBinding? = null
@@ -25,7 +25,8 @@ class DialogAlert(
 
     private var dialogAlertInterface: DialogAlertInterface? = null
 
-    private lateinit var btnEnd: Button
+    private lateinit var btnYes: Button
+    private lateinit var btnNo: Button
     private lateinit var textTitle: TextView
     private lateinit var textResponse: TextView
     private var title: String? = null
@@ -49,7 +50,8 @@ class DialogAlert(
         _binding = DialogAlertBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        btnEnd = binding.dialogBtnEnd
+        btnYes = binding.dialogYesBtn
+        btnNo = binding.dialogNoBtn
         textTitle = binding.dialogTvTitle
         textResponse = binding.dialogTvResponse
 
@@ -59,7 +61,7 @@ class DialogAlert(
         // 제목
         textTitle.text = title
         // 버튼 텍스트
-        btnEnd.text = buttonText
+        btnYes.text = buttonText
         // 내용(반환값)
         if (content == null) {
             textResponse.visibility = View.GONE
@@ -67,8 +69,17 @@ class DialogAlert(
             textResponse.text = content
         }
 
+        // 취소 버튼이 있는 알림
+        if (id == -1) {
+            btnNo.visibility = View.VISIBLE
+        }
+        // 취소 버튼 클릭
+        btnNo.setOnClickListener {
+            dismiss()
+        }
+
         // 확인 버튼 클릭
-        btnEnd.setOnClickListener {
+        btnYes.setOnClickListener {
             this.dialogAlertInterface?.onClickOkButton(id!!)
             dismiss()
         }

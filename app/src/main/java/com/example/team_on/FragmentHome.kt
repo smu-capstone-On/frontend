@@ -18,10 +18,10 @@ class FragmentHome : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
-        binding.testbutton.setOnClickListener {
-            val intent = Intent(requireContext(), ActivityWalk::class.java)
-            startActivity(intent)
-        }
+//        binding.testbutton.setOnClickListener {
+//            val intent = Intent(requireContext(), ActivityWalk::class.java)
+//            startActivity(intent)
+//        }
 
         return binding.root
     }

@@ -26,11 +26,11 @@
         android:text="내 프로필"
         android:textColor="@color/titleText"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/mypage_tv_nickname"
-        app:layout_constraintStart_toStartOf="@id/mypage_tv_nickname" />
+        app:layout_constraintBottom_toTopOf="@id/mypage_imageview_user_profile"
+        app:layout_constraintStart_toStartOf="@id/mypage_imageview_user_profile" />
 
     <TextView
-        android:id="@+id/mypage_tv_nickname"
+        android:id="@+id/mypage_imageview_user_profile"
         android:layout_width="match_parent"
         android:layout_height="122dp"
         android:layout_marginTop="55dp"
@@ -55,8 +55,8 @@
         android:textColor="@color/gray"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/mypage_tv_nickname"
-        app:layout_constraintTop_toTopOf="@id/mypage_tv_nickname" />
+        app:layout_constraintStart_toStartOf="@id/mypage_imageview_user_profile"
+        app:layout_constraintTop_toTopOf="@id/mypage_imageview_user_profile" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mypage_image_profile"
@@ -65,8 +65,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/svg_default_profile"
-        app:layout_constraintStart_toStartOf="@id/mypage_tv_nickname"
-        app:layout_constraintTop_toTopOf="@id/mypage_tv_nickname" />
+        app:layout_constraintStart_toStartOf="@id/mypage_imageview_user_profile"
+        app:layout_constraintTop_toTopOf="@id/mypage_imageview_user_profile" />
 
     <ImageButton
         android:id="@+id/mypage_btn_edit_profile"
@@ -75,8 +75,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="4dp"
         android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/mypage_tv_nickname"
-        app:layout_constraintBottom_toBottomOf="@id/mypage_tv_nickname"
+        app:layout_constraintEnd_toEndOf="@id/mypage_imageview_user_profile"
+        app:layout_constraintBottom_toBottomOf="@id/mypage_imageview_user_profile"
         app:srcCompat="@drawable/svg_edit_profile"/>
 
     <TextView
@@ -104,7 +104,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mypage_tv_nickname" />
+        app:layout_constraintTop_toBottomOf="@id/mypage_imageview_user_profile" />
 
     <TextView
         android:id="@+id/mypage_tv_comment"
