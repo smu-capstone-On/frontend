@@ -3,6 +3,7 @@ package com.example.team_on.connection
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -36,4 +37,9 @@ interface RetrofitAPI {
     //비밀번호 찾기
     @GET("/api/findPw")
     fun findPw(@Body request: Retrofit.RequestFindPw): Call<Retrofit.ResponseFindPw>
+    //카카오 검색
+    @GET("/v2/local/search/address.json")
+    fun kakaoSearch(
+        @Header("Authorization") apiKey: String,
+        @Query("query") query: String): Call<Retrofit.ResponseSearch>
 }
