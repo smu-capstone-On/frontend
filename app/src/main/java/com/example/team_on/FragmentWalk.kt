@@ -40,23 +40,17 @@ class FragmentWalk : Fragment() {
         btnSearch = binding.fwalkBtnSearch
 
         btnSearch.setOnClickListener {
-            val call = KakaoRetrofitObject.getRetrofitService.kakaoSearch(KakaoKey.Key)
-            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+            val query = binding.fwalkEditSearch.text.toString()
+            val call = KakaoRetrofitObject.getRetrofitService.kakaoSearch(KakaoKey.API_KEY, query)
+            call.enqueue(object : Callback<Retrofit.ResponseSearch> {
+                override fun onResponse(call: Call<Retrofit.ResponseSearch>, response: Response<Retrofit.ResponseSearch>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
-                        if(responseBody != null){
-                            if(responseBody.success) {
-                                startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
-                            }
-                        }
-                    }
-                    else{
-                        Toast.makeText(this@ActivityLogin,"입력하신 내용을 다시 확인해 주세요.",Toast.LENGTH_SHORT).show()
+
                     }
                 }
 
-                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<Retrofit.ResponseSearch>, t: Throwable) {
                     val errorMessage = "Call Failed: ${t.message}"
                     Log.d("Retrofit", errorMessage)
                 }
