@@ -70,7 +70,7 @@ class Retrofit {
         @SerializedName("pw")
         val pw: String
     )
-    //카카오 맵 검색 응답
+    //카카오 주소 검색 응답
     data class ResponseSearch(
         @SerializedName("documents")
         val documents : List<Documents>
@@ -82,5 +82,18 @@ class Retrofit {
         val longitude: String,
         @SerializedName("y")
         val latitude: String
+    )
+    //카카오 좌표 검색 응답
+    data class ResponseAddress(
+        @SerializedName("documents")
+        val documents: List<Document>
+    )
+    data class Document(
+        @SerializedName("road_address")
+        val roadAddress: RoadAddress
+    )
+    data class RoadAddress(
+        @SerializedName("address_name")
+        val addressName: String
     )
 }

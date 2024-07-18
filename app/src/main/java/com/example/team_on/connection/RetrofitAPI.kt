@@ -41,5 +41,12 @@ interface RetrofitAPI {
     @GET("/v2/local/search/address.json")
     fun kakaoSearch(
         @Header("Authorization") apiKey: String,
-        @Query("query") query: String): Call<Retrofit.ResponseSearch>
+        @Query("query") query: String,
+        @Query("analyze_type") type: String): Call<Retrofit.ResponseSearch>
+    //좌표 주소 변환
+    @GET("/v2/local/geo/coord2address.json")
+    fun kakaoAddress(
+        @Header("Authorization") apiKey: String,
+        @Query("x") longitude: String,
+        @Query("y") latitude: String): Call<Retrofit.ResponseAddress>
 }

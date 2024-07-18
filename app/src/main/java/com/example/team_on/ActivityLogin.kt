@@ -1,7 +1,10 @@
 package com.example.team_on
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -16,6 +19,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.kakao.sdk.user.UserApiClient
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class ActivityLogin : AppCompatActivity() {
 
@@ -23,10 +28,26 @@ class ActivityLogin : AppCompatActivity() {
     private lateinit var editId: EditText
     private lateinit var editPw: EditText
 
+    //키해시 얻는 법
+//    fun getKeyHash() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            val packageInfo = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+//            for (signature in packageInfo.signingInfo.apkContentsSigners) {
+//                try {
+//                    val md = MessageDigest.getInstance("SHA")
+//                    md.update(signature.toByteArray())
+//                    Log.d("getKeyHash", "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}")
+//                } catch (e: NoSuchAlgorithmException) {
+//                    Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
+//                }
+//            }
+//        }
+//    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+//        getKeyHash()
         editId = binding.loginEditId
         editPw = binding.loginEditPwd
 
