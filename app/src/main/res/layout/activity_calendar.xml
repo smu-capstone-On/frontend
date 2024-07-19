@@ -6,36 +6,203 @@
     android:layout_height="match_parent"
     tools:context=".ActivityCalendar">
 
+    <ImageButton
+        android:id="@+id/cal_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/svg_back" />
+
+    <TextView
+        android:id="@+id/cal_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="2024. 01. 15"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cal_btn_back" />
+
+    <ImageButton
+        android:id="@+id/cal_btn_cal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text_date"
+        app:layout_constraintStart_toEndOf="@+id/cal_text_date"
+        app:layout_constraintTop_toTopOf="@+id/cal_text_date"
+        app:srcCompat="@drawable/svg_calendar3" />
+
+    <TextView
+        android:id="@+id/cal_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="산책 시간"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/cal_text2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text_date" />
+
+    <TextView
+        android:id="@+id/cal_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 거리"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text1"
+        app:layout_constraintEnd_toStartOf="@+id/cal_text3"
+        app:layout_constraintStart_toEndOf="@+id/cal_text1" />
+
+    <TextView
+        android:id="@+id/cal_text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 속도"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cal_text2" />
+
+    <View
+        android:id="@+id/cal_view1"
+        android:layout_width="1dp"
+        android:layout_height="80dp"
+        android:background="@color/gray"
+        app:layout_constraintEnd_toStartOf="@+id/cal_text2"
+        app:layout_constraintStart_toEndOf="@+id/cal_text1"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text1" />
+
+    <View
+        android:id="@+id/cal_view2"
+        android:layout_width="1dp"
+        android:layout_height="80dp"
+        android:background="@color/gray"
+        app:layout_constraintEnd_toStartOf="@+id/cal_text3"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toEndOf="@+id/cal_text2"
+        app:layout_constraintTop_toTopOf="@+id/cal_view1" />
+
+    <TextView
+        android:id="@+id/cal_text_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="0"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text1"
+        app:layout_constraintStart_toStartOf="@+id/cal_text1"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text1" />
+
+    <TextView
+        android:id="@+id/cal_text_dis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text_hour"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text2"
+        app:layout_constraintStart_toStartOf="@+id/cal_text2" />
+
+    <TextView
+        android:id="@+id/cal_text_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text_hour"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text3"
+        app:layout_constraintStart_toStartOf="@+id/cal_text3" />
+
+    <TextView
+        android:id="@+id/cal_text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="분"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text1"
+        app:layout_constraintStart_toStartOf="@+id/cal_text1"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text_hour" />
+
+    <TextView
+        android:id="@+id/cal_text5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="km"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text4"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text2"
+        app:layout_constraintStart_toStartOf="@+id/cal_text2" />
+
+    <TextView
+        android:id="@+id/cal_text6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="km/h"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text5"
+        app:layout_constraintEnd_toEndOf="@+id/cal_text3"
+        app:layout_constraintStart_toStartOf="@+id/cal_text3" />
+
+    <ImageButton
+        android:id="@+id/cal_btn_graph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="40dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/svg_graph" />
+
+    <ImageView
+        android:id="@+id/cal_img_map"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/custom_image_radius_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text5"
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/calendar_const"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:id="@+id/cal_const"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="3dp"
         android:background="@drawable/shadow"
-        android:elevation="5dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/cal_text_date">
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="10dp"
+            android:id="@+id/cal_cal"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:mcv_selectionMode="range"
+            app:layout_constraintTop_toBottomOf="@+id/cal_btn_cal"
             app:mcv_selectionColor="#80FFC700"
             app:mcv_showOtherDates="all" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

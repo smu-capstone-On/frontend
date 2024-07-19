@@ -20,7 +20,7 @@ class AdapterProduct(private val products: MutableList<Retrofit.Product>,
             binding.productDate.text = product.createdTime.toString()
             //binding.productImage = product.postImage
 
-            if (product.isPreorder) {
+            if (product.isPreorder == true) {
                 binding.productPreorder.visibility = View.VISIBLE
             }
 
