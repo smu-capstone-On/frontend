@@ -103,7 +103,7 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
                                 val title = "아이디 찾기"
                                 val content = responseBody.id
 
-                                val dialog = DialogAlert(this@ActivityFindID, title, content, "로그인 하기")
+                                val dialog = DialogAlert(this@ActivityFindID, title, content, "로그인 하기", null)
                                 // 배경 클릭 막기
                                 dialog.isCancelable = false
                                 dialog.show(this@ActivityFindID.supportFragmentManager, "DialogAlert")

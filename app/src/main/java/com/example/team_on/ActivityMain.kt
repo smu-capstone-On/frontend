@@ -3,6 +3,7 @@ package com.example.team_on
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.example.team_on.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,6 +13,7 @@ class ActivityMain : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private lateinit var bnv : BottomNavigationView
+    private var backPressedTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +72,20 @@ class ActivityMain : AppCompatActivity() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
-                    finish()
+                    showExitConfirmationDialog()
                 }
             }
         })
+    }
+
+    private fun showExitConfirmationDialog() {
+        if (System.currentTimeMillis() - backPressedTime < 2000) {
+            finishAffinity()
+            return
+        }
+
+        backPressedTime = System.currentTimeMillis()
+        Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
     }
 
     fun hideBottomNavigation() {

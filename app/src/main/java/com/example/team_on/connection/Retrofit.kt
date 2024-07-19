@@ -1,6 +1,8 @@
 package com.example.team_on.connection
 
 import com.google.gson.annotations.SerializedName
+import java.io.File
+import java.util.Date
 
 class Retrofit {
 
@@ -95,5 +97,65 @@ class Retrofit {
     data class RoadAddress(
         @SerializedName("address_name")
         val addressName: String
+    )
+
+    //커뮤니티 게시글
+    data class Post(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("authorName")
+        val authorName: String,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("content")
+        val content: String,
+        @SerializedName("tags")
+        val tags: List<String>,
+        @SerializedName("createdTime")
+        val createdTime: Date,
+        @SerializedName("likeCount")
+        val likeCount: Int,
+        @SerializedName("commentCount")
+        val commentCount: Int,
+        @SerializedName("likeByUser")
+        val likeByUser: Boolean,
+        @SerializedName("postImage")
+        val postImage: File? = null,
+    )
+    //거래게시판 물품
+    data class Product(
+        @SerializedName("id")
+        val id: Long? = null,
+        @SerializedName("authorName")
+        val authorName: String,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("content")
+        val content: String,
+        @SerializedName("tags")
+        val tags: List<String>,
+        @SerializedName("createdTime")
+        val createdTime: Date,
+        @SerializedName("modifiedTime")
+        val modifiedTime: Date? = null,
+        @SerializedName("Price")
+        val price: Int,
+        @SerializedName("isPreorder")
+        val isPreorder: Boolean? = null,
+        @SerializedName("isSold")
+        val isSold: Boolean? = null,
+        @SerializedName("postImage")
+        val postImage: File? = null,
+    )
+    //게시판 댓글
+    data class Comment(
+        @SerializedName("userName")
+        val userName: String,
+        @SerializedName("comment")
+        val comment: String,
+        @SerializedName("Date")
+        val createdTime: Date,
+        @SerializedName("userImage")
+        val userImage: File? = null
     )
 }
