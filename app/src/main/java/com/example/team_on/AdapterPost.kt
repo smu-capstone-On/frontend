@@ -1,24 +1,19 @@
 package com.example.team_on
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewPostBinding
-import java.util.Date
 
-data class Post(val title: String, val content: String, val tags: List<String>,
-                val createdTime: Date, val likeCount: Int, val commentCount: Int,
-                val likeByUser: Boolean, val image: Image ?= null)
-
-class AdapterPost(private val posts: List<Post>,
-                  private val onItemClick: (Post) -> Unit
+class AdapterPost(private val posts: List<Retrofit.Post>,
+                  private val onItemClick: (Retrofit.Post) -> Unit
 ) : RecyclerView.Adapter<AdapterPost.PostViewHolder>() {
 
     inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Post) {
+        fun bind(post: Retrofit.Post) {
             binding.postTitle.text = post.title
             binding.postContent.text = post.content
             binding.postDate.text = post.createdTime.toString()

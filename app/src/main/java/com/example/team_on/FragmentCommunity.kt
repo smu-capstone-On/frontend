@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.FragmentCommunityBinding
 import java.util.Date
 import java.util.Locale
@@ -36,8 +37,8 @@ class FragmentCommunity : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var postAdapter: AdapterPost
-    private var postList = mutableListOf<Post>()
-    private var filteredList = mutableListOf<Post>()
+    private var postList = mutableListOf<Retrofit.Post>()
+    private var filteredList = mutableListOf<Retrofit.Post>()
     private var selectedTags = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,20 +76,34 @@ class FragmentCommunity : Fragment() {
         _binding = FragmentCommunityBinding.inflate(layoutInflater)
 
         postList = mutableListOf(
-            Post("Post Dog", "This is the content of post 1\ndog",
-                listOf("강아지"), Date(System.currentTimeMillis()-3),23, 43, false),
-            Post("Post Cat Question", "This is the content of post 2\ncat, question",
-                listOf("고양이", "질문"), Date(System.currentTimeMillis()-6),21, 36, false),
-            Post("Post Cat", "This is the content of post 3\ncat",
-                listOf("고양이"), Date(System.currentTimeMillis()-9),12, 33, true),
-            Post("Post Dog Question", "This is the content of post 4\ndog, question",
-                listOf("강아지", "질문"), Date(System.currentTimeMillis()-12),52, 34, false),
-            Post("Post Dog Cat Question", "This is the content of post 5\ndog, cat, question",
-                listOf("강아지","고양이","질문"), Date(System.currentTimeMillis()-15),32, 3, false),
-            Post("Post Small Animal ", "This is the content of post 6\nsmall",
-                listOf("소동물"), Date(System.currentTimeMillis()-18),22, 23, true),
-            Post("Post Reptile", "This is the content of post7\nreptile",
-                listOf("파충류"), Date(System.currentTimeMillis()-21),12, 13, true)
+            Retrofit.Post(
+                1, "user1", "Post Dog", "This is the content of post 1\ndog",
+                listOf("강아지"), Date(System.currentTimeMillis() - 3), 23, 43, false
+            ),
+            Retrofit.Post(
+                2, "user2", "Post Cat Question", "This is the content of post 2\ncat, question",
+                listOf("고양이", "질문"), Date(System.currentTimeMillis() - 6), 21, 36, false
+            ),
+            Retrofit.Post(
+                3, "user3", "Post Cat", "This is the content of post 3\ncat",
+                listOf("고양이"), Date(System.currentTimeMillis() - 9), 12, 33, true
+            ),
+            Retrofit.Post(
+                4, "user4", "Post Dog Question", "This is the content of post 4\ndog, question",
+                listOf("강아지", "질문"), Date(System.currentTimeMillis() - 12), 52, 34, false
+            ),
+            Retrofit.Post(
+                5, "user5", "Post Dog Cat Question", "This is the content of post 5\ndog, cat, question",
+                listOf("강아지", "고양이", "질문"), Date(System.currentTimeMillis() - 15), 32, 3, false
+            ),
+            Retrofit.Post(
+                6, "user6", "Post Small Animal ", "This is the content of post 6\nsmall",
+                listOf("소동물"), Date(System.currentTimeMillis() - 18), 22, 23, true
+            ),
+            Retrofit.Post(
+                7, "user7", "Post Reptile", "This is the content of post7\nreptile",
+                listOf("파충류"), Date(System.currentTimeMillis() - 21), 12, 13, true
+            )
         )
 
         filteredList.addAll(postList)

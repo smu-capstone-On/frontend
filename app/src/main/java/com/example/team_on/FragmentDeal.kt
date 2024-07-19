@@ -17,7 +17,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentDealBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Date
 import java.util.Locale
 
@@ -44,8 +49,8 @@ class FragmentDeal : Fragment() {
     private lateinit var layoutSearchCondition: ConstraintLayout
 
     private lateinit var productAdapter: AdapterProduct
-    private var productList = mutableListOf<Product>()
-    private var filteredList = mutableListOf<Product>()
+    private var productList = mutableListOf<Retrofit.Product>()
+    private var filteredList = mutableListOf<Retrofit.Product>()
     private var selectedTags = mutableListOf<String>()
     private var isPreOrderSelected: Boolean? = null
     private var sortCriteria: String? = null
@@ -90,18 +95,18 @@ class FragmentDeal : Fragment() {
         addDeal()
 
         productList = mutableListOf(
-            Product("Product1", 21000, Date(System.currentTimeMillis()), "Product1 sell", listOf("강아지")),
-            Product("Product2", 2200, Date(System.currentTimeMillis()), "Product2 sell", listOf("강아지")),
-            Product("Product3", 23000, Date(System.currentTimeMillis()), "Product3 sell", listOf("고양이")),
-            Product("Product4", 24000, Date(System.currentTimeMillis()), "Product4 sell", listOf("강아지")),
-            Product("Product5", 2500, Date(System.currentTimeMillis()), "Product5 sell", listOf("고양이")),
-            Product("Product6", 26000, Date(System.currentTimeMillis()), "Product6 sell", listOf("소동물")),
-            Product("Product7", 2700, Date(System.currentTimeMillis()), "Product7 sell", listOf("조류")),
-            Product("Product8", 2000, Date(System.currentTimeMillis()), "Product8 sell", listOf("파충류")),
-            Product("Product9", 29000, Date(System.currentTimeMillis()), "Product9 sell", listOf("소동물")),
-            Product("Product10", 1000, Date(System.currentTimeMillis()), "Product10 sell", listOf("조류")),
-            Product("Product11", 11000, Date(System.currentTimeMillis()), "Product11 sell", listOf("파충류")),
-            Product("Product12", 1200, Date(System.currentTimeMillis()), "Product12 sell", listOf("강아지"))
+            Retrofit.Product(1, "user1", "Product1", "Product1 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 21000, false),
+            Retrofit.Product(2, "user2", "Product2", "Product2 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 2200, false),
+            Retrofit.Product(3, "user3", "Product3", "Product3 sell", listOf("고양이"), Date(System.currentTimeMillis()), null, 23000, false),
+            Retrofit.Product(4, "user4", "Product4", "Product4 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 24000, true),
+            Retrofit.Product(5, "user5", "Product5", "Product5 sell", listOf("고양이"), Date(System.currentTimeMillis()), null, 2500, false),
+            Retrofit.Product(6, "user6", "Product6", "Product6 sell", listOf("소동물"), Date(System.currentTimeMillis()), null, 26000, false),
+            Retrofit.Product(7, "user7", "Product7", "Product7 sell", listOf("조류"), Date(System.currentTimeMillis()), null, 2700, true),
+            Retrofit.Product(8, "user8", "Product8", "Product8 sell", listOf("파충류"), Date(System.currentTimeMillis()), null, 2000, false),
+            Retrofit.Product(9, "user9", "Product9", "Product9 sell", listOf("소동물"), Date(System.currentTimeMillis()), null, 29000, true),
+            Retrofit.Product(10, "user10", "Product10", "Product10 sell", listOf("조류"), Date(System.currentTimeMillis()), null, 1000, true),
+            Retrofit.Product(11, "user11", "Product11", "Product11 sell", listOf("파충류"), Date(System.currentTimeMillis()), null, 11000, false),
+            Retrofit.Product(12, "user12", "Product12", "Product12 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 1200, false)
         )
 
         productAdapter = AdapterProduct(productList.toMutableList()) { product ->
@@ -188,9 +193,9 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareBy<Product> {it.createdTime}
-            "price" -> compareBy<Product> {it.price}
-            else -> compareBy<Product> {it.createdTime}
+            "new" -> compareBy<Retrofit.Product> {it.createdTime}
+            "price" -> compareBy {it.price}
+            else -> compareBy {it.createdTime}
         }
         comparator.let {
             filteredList.sortWith(it)
@@ -263,6 +268,33 @@ class FragmentDeal : Fragment() {
             transaction.commit()
         }
     }
+
+    // 물품 데이터 가져오기
+    private fun fetchProduct() {
+        val call = RetrofitObject.getRetrofitService.readProducts()
+        call.enqueue(object : Callback<List<Retrofit.Product>> {
+            override fun onResponse(call: Call<List<Retrofit.Product>>, response: Response<List<Retrofit.Product>>) {
+                if (response.isSuccessful) {
+                    val product = response.body()
+                    if (product != null) {
+                        // 성공
+                    } else {
+                        // 데이터가 없는 경우
+                    }
+                } else {
+                    // 실패한 경우
+                }
+            }
+
+            override fun onFailure(call: Call<List<Retrofit.Product>>, t: Throwable) {
+                // 네트워크 에러 등 실패
+            }
+
+        })
+    }
+
+    // 가져온 데이터 적용
+    fun display() {}
 
     override fun onDestroyView() {
         super.onDestroyView()

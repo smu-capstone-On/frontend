@@ -14,7 +14,20 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitAPI
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentAddDealBinding
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.util.Date
 
 class FragmentAddDeal : Fragment() {
 
@@ -75,6 +88,53 @@ class FragmentAddDeal : Fragment() {
 
         toolbar.setNavigationOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
+        }
+
+        btnAddDeal.setOnClickListener {
+            // 사용자 정보(이름) 받는 방법 수정 필요
+            val authorName = "user".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val title = editTextTitle.text.toString()
+            val content = editTextContent.text.toString()
+            val price= editTextPrice.text.toString()
+
+            val tag = selectedTags.map { tag ->
+                MultipartBody.Part.createFormData("tags", tag) }
+            val createdTime = Date().toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val isPreorder = "false".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val postImageFile = File("path_postImage") // 이미지 파일 경로
+            val postImage = MultipartBody.Part.createFormData("postImage", postImageFile.name,
+                postImageFile.asRequestBody("image/*".toMediaTypeOrNull()))
+
+            if (title.isEmpty()){
+                Toast.makeText(activity, "제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            } else if (content.isEmpty()){
+                Toast.makeText(activity, "내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            } else if (price.isEmpty()){
+                Toast.makeText(activity, "가격이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
+                val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
+                val pricePart = price.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val call = RetrofitObject.getRetrofitService.createProduct(
+                    null, authorName, titlePart, contentPart, tag, createdTime, pricePart, isPreorder, postImage)
+
+                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                        if (response.isSuccessful) {
+                            // 성공
+                        } else {
+                            // 실패
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+
+                    }
+                })
+            }
         }
     }
 

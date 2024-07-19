@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.FragmentPostDetailBinding
 import java.util.Date
 
@@ -30,7 +31,7 @@ class FragmentPostDetail : Fragment() {
     private lateinit var toolbar: Toolbar
 
     private lateinit var commentAdapter: AdapterComment
-    private var commentList = mutableListOf<Comment>()
+    private var commentList = mutableListOf<Retrofit.Comment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,11 +61,11 @@ class FragmentPostDetail : Fragment() {
         toolbar = binding.postDetailToolbar
 
         commentList = mutableListOf(
-            Comment("User1", "This is a comment."),
-            Comment("User2", "This is another comment."),
-            Comment("User3", "This is third comment."),
-            Comment("User4", "This is 4th comment."),
-            Comment("User5", "This is last comment.")
+            Retrofit.Comment("User1", "This is a comment.",  Date(System.currentTimeMillis() - 962)),
+            Retrofit.Comment("User2", "This is another comment.",  Date(System.currentTimeMillis() - 752)),
+            Retrofit.Comment("User3", "This is third comment.",  Date(System.currentTimeMillis() - 512)),
+            Retrofit.Comment("User4", "This is 4th comment.",  Date(System.currentTimeMillis() - 352)),
+            Retrofit.Comment("User5", "This is last comment.",  Date(System.currentTimeMillis() - 12))
         )
 
         commentAdapter = AdapterComment(commentList)
@@ -90,7 +91,7 @@ class FragmentPostDetail : Fragment() {
         btnSendComment.setOnClickListener {
             val newComment = editComment.text.toString()
             if (newComment.isNotBlank()) {
-                addComment(Comment("User", newComment))
+                addComment(Retrofit.Comment("User", newComment, Date(System.currentTimeMillis())))
                 editComment.text.clear()
             }
         }
@@ -102,7 +103,7 @@ class FragmentPostDetail : Fragment() {
     }
 
     // 댓글 등록 기능
-    private fun addComment(comment: Comment) {
+    private fun addComment(comment: Retrofit.Comment) {
         commentList.add(comment)
         commentAdapter.notifyItemInserted(commentList.size - 1)
         recyclerView.scrollToPosition(commentList.size - 1)
