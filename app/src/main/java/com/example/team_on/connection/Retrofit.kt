@@ -120,9 +120,7 @@ class Retrofit {
         @SerializedName("likeByUser")
         val likeByUser: Boolean,
         @SerializedName("postImage")
-        val postImage: File?= null,
-        @SerializedName("authorImage")
-        val authorImage: File?= null
+        val postImage: File? = null,
     )
     //거래게시판 물품
     data class Product(
@@ -143,11 +141,11 @@ class Retrofit {
         @SerializedName("Price")
         val price: Int,
         @SerializedName("isPreorder")
-        val isPreorder: Boolean,
+        val isPreorder: Boolean? = null,
+        @SerializedName("isSold")
+        val isSold: Boolean? = null,
         @SerializedName("postImage")
-        val postImage: File?= null,
-        @SerializedName("authorImage")
-        val authorImage: File?= null
+        val postImage: File? = null,
     )
     //게시판 댓글
     data class Comment(

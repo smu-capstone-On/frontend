@@ -67,7 +67,6 @@ interface RetrofitAPI {
         @Part("tags") tags: List<MultipartBody.Part>,
         @Part("createdTime") createdTime: RequestBody,
         @Part("price") price: RequestBody,
-        @Part("isPreorder") isPreorder: RequestBody,
         @Part postImage: MultipartBody.Part?
     ): Call<Retrofit.ResponseSuccess>
     //모든 제품 조회
