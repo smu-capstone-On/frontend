@@ -30,8 +30,8 @@
 
     <ImageButton
         android:id="@+id/cal_btn_cal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="10dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/cal_text_date"
@@ -194,11 +194,12 @@
             android:id="@+id/cal_cal"
             android:layout_width="280dp"
             android:layout_height="280dp"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cal_btn_cal"
+            app:layout_constraintTop_toTopOf="parent"
             app:mcv_selectionColor="#80FFC700"
             app:mcv_showOtherDates="all" />
 
