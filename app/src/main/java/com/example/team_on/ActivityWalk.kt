@@ -80,7 +80,6 @@ class ActivityWalk : AppCompatActivity() {
     private var lastLocation: Location? = null //마지막 위치
     private var totalDistance = 0f //총 이동 거리
 
-    private lateinit var testImg: ImageView
     //산책 시간
     private val runnable = object : Runnable {
         override fun run() {
@@ -94,7 +93,7 @@ class ActivityWalk : AppCompatActivity() {
     //산책 루트
     private val locationRunnable = object : Runnable {
         override fun run(){
-            locationHandler.postDelayed(this, 5000)
+            locationHandler.postDelayed(this, 2000)
             val newLocation = Location("newLocation").apply {
                 latitude = userPosition.latitude
                 longitude = userPosition.longitude
@@ -215,14 +214,6 @@ class ActivityWalk : AppCompatActivity() {
 
     // MapLifeCycleCallback 을 통해 지도의 LifeCycle 관련 이벤트를 수신할 수 있다.
     private val lifeCycleCallback: MapLifeCycleCallback = object : MapLifeCycleCallback() {
-        override fun onMapResumed() {
-            super.onMapResumed()
-        }
-
-        override fun onMapPaused() {
-            super.onMapPaused()
-        }
-
         override fun onMapDestroy() {
 
         }
@@ -244,8 +235,6 @@ class ActivityWalk : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        testImg = binding.testImg
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission() // 권한이 있을 경우 위치 정보 요청
@@ -307,11 +296,11 @@ class ActivityWalk : AppCompatActivity() {
                 if(databaseWalk.getOneData(date) == null){
                     databaseWalk.insertData(date, seconds.toString(), totalDistance.toString(), speed.toString(), onButtonClicked())
                     seconds = 0
-                    timeText.text = "00 : 00 : 00"
+                    updateTimerText()
                 }else{
                     databaseWalk.updateData(date, seconds.toString(), totalDistance.toString(), speed.toString(), onButtonClicked())
                     seconds = 0
-                    timeText.text = "00 : 00 : 00"
+                    updateTimerText()
                 }
             }, 50)
             val handler2 = Handler(Looper.getMainLooper())
@@ -327,7 +316,6 @@ class ActivityWalk : AppCompatActivity() {
             locationHandler.removeCallbacks(locationRunnable)
             speedText.text = "0"
             distanceText.text = "0"
-            updateTimerText()
         }
 
         //내 위치 이동
@@ -405,7 +393,6 @@ class ActivityWalk : AppCompatActivity() {
     //화면 캡처
     private fun onButtonClicked(): ByteArray {
         val bitmap: Bitmap = MapCapture.capture(mapView.surfaceView as com.kakao.vectormap.graphics.gl.GLSurfaceView)!!
-        testImg.setImageBitmap(bitmap)
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         return byteArrayOutputStream.toByteArray()
