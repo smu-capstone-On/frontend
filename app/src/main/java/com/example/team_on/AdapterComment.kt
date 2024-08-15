@@ -4,18 +4,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewCommentBinding
 
-data class Comment(val user: String, val content: String)
-
 class AdapterComment (
-    private val comments: List<Comment>
+    private val comments: List<Retrofit.Comment>
 ) : RecyclerView.Adapter<AdapterComment.CommentViewHolder>() {
 
     inner class CommentViewHolder(private val binding: ItemViewCommentBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: Comment) {
-            binding.commentUserId.text = comment.user
-            binding.commentContent.text = comment.content
+        fun bind(comment: Retrofit.Comment) {
+            binding.commentUserId.text = comment.userName
+            binding.commentContent.text = comment.comment
+            binding.commentDate.text = comment.createdTime.toString()
+            //binding.commentUserProfile = comment.userImage
         }
     }
 

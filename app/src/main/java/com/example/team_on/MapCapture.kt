@@ -5,32 +5,34 @@ import android.graphics.Bitmap
 import android.opengl.GLException
 import com.kakao.vectormap.graphics.gl.GLSurfaceView
 import java.nio.IntBuffer
+import java.util.concurrent.CountDownLatch
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLContext
 import javax.microedition.khronos.opengles.GL10
 
 object MapCapture {
 
-    interface OnCaptureListener {
-        fun onCaptured(isSucceed: Boolean, fileName: String)
-    }
-
-    fun capture(activity: Activity, surfaceView: GLSurfaceView, listener: OnCaptureListener) {
-        val fileName = "MapCapture_${System.currentTimeMillis()}.jpg"
+    fun capture(surfaceView: GLSurfaceView): Bitmap? {
+        var bitmap: Bitmap? = null
+        val latch = CountDownLatch(1)
 
         surfaceView.queueEvent {
             val egl = EGL10::class.java.cast(EGLContext.getEGL())
             val gl = GL10::class.java.cast(egl!!.eglGetCurrentContext().gl)
-            val bitmap = gl?.let {
+            bitmap = gl?.let {
                 createBitmapFromGLSurface(0, 0, surfaceView.width,
                     surfaceView.height, it
                 )
             }
-
-            activity.runOnUiThread {
-                listener.onCaptured(true, fileName) // 이 부분에서 항상 성공으로 가정하고 서버에 전송 성공을 알리도록 수정
-            }
+            latch.countDown()
         }
+        try {
+            latch.await()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+
+        return bitmap
     }
 
     private fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10): Bitmap? {

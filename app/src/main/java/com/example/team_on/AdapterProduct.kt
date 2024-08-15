@@ -1,24 +1,28 @@
 package com.example.team_on
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewProductBinding
 import java.util.Date
 
-data class Product(val title: String, val price: Int, val createdTime: Date,
-                   val content: String? = null, val tags: List<String>? = null, val isPreorder: Boolean? = null)
-
-class AdapterProduct(private val products: MutableList<Product>,
-                     private val onItemClick: (Product) -> Unit
+class AdapterProduct(private val products: MutableList<Retrofit.Product>,
+                     private val onItemClick: (Retrofit.Product) -> Unit
 ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() {
 
     inner class ProductViewHolder(private val binding: ItemViewProductBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product) {
+        fun bind(product: Retrofit.Product) {
             binding.productName.text = product.title
             binding.productPrice.text = product.price.toString() + "원"
             binding.productDate.text = product.createdTime.toString()
+            //binding.productImage = product.postImage
+
+            if (product.isPreorder == true) {
+                binding.productPreorder.visibility = View.VISIBLE
+            }
 
             itemView.setOnClickListener {
                 onItemClick(product)
@@ -39,7 +43,7 @@ class AdapterProduct(private val products: MutableList<Product>,
     override fun getItemCount() = products.size
 
 
-    fun filterList(filteredProducts: List<Product>) {
+    fun filterList(filteredProducts: List<Retrofit.Product>) {
         val oldSize = products.size
         products.clear()
         notifyItemRangeRemoved(0, oldSize)

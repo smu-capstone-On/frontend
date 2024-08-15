@@ -92,6 +92,7 @@
         android:ems="10"
         android:inputType="number"
         android:paddingStart="5dp"
+        android:text="0"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/attribute_text3"
         app:layout_constraintTop_toBottomOf="@+id/attribute_text3" />
@@ -116,6 +117,7 @@
         android:ems="10"
         android:inputType="number"
         android:paddingStart="5dp"
+        android:text="100"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/attribute_edit_age1"
         app:layout_constraintStart_toEndOf="@+id/attribute_text4" />

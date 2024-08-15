@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityCalendarV2">
+
+    <ImageButton
+        android:id="@+id/cal2_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/svg_back" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cal2_const_cal"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/cal2_btn_back"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/cal2_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:text="날짜 선택"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/cal2_cal"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_text1"
+            app:mcv_selectionColor="#80FFC700"
+            app:mcv_showOtherDates="all" />
+
+        <Button
+            android:id="@+id/cal2_btn_end"
+            android:layout_width="87dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/radius_10_solid_yellow"
+            android:text="선택 완료"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cal2_const_date"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cal2_btn_back"
+        app:layout_constraintStart_toEndOf="@+id/cal2_btn_back"
+        app:layout_constraintTop_toTopOf="@+id/cal2_btn_back">
+
+        <TextView
+            android:id="@+id/cal2_text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2000/02/25 ~ 2024/08/01"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/cal2_btn_cal"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cal2_text_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/svg_chart" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cal2_const_graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cal2_const_date"
+        tools:layout_editor_absoluteX="1dp">
+
+        <TextView
+            android:id="@+id/cal2_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="36dp"
+            android:text="날짜별 산책 거리"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_text2">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/cal2_chart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/cal2_text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="평균 산책 시간"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/cal2_text4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
+        <TextView
+            android:id="@+id/cal2_text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="평균 산책 거리"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text3"
+            app:layout_constraintEnd_toStartOf="@+id/cal2_text5"
+            app:layout_constraintStart_toEndOf="@+id/cal2_text3" />
+
+        <TextView
+            android:id="@+id/cal2_text5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="평균 산책 속도"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cal2_text4" />
+
+        <View
+            android:id="@+id/cal2_view1"
+            android:layout_width="1dp"
+            android:layout_height="80dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toStartOf="@+id/cal2_text4"
+            app:layout_constraintStart_toEndOf="@+id/cal2_text3"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_text3" />
+
+        <View
+            android:id="@+id/cal2_view2"
+            android:layout_width="1dp"
+            android:layout_height="80dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toStartOf="@+id/cal2_text5"
+            app:layout_constraintStart_toEndOf="@+id/cal2_text4"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_text5" />
+
+        <TextView
+            android:id="@+id/cal2_text_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_view1"
+            app:layout_constraintEnd_toEndOf="@+id/cal2_text3"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text3"
+            app:layout_constraintTop_toTopOf="@+id/cal2_view1" />
+
+        <TextView
+            android:id="@+id/cal2_text_dist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text_time"
+            app:layout_constraintEnd_toStartOf="@+id/cal2_view2"
+            app:layout_constraintStart_toEndOf="@+id/cal2_view1"
+            app:layout_constraintTop_toTopOf="@+id/cal2_text_time" />
+
+        <TextView
+            android:id="@+id/cal2_text_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text_dist"
+            app:layout_constraintEnd_toEndOf="@+id/cal2_text5"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text5"
+            app:layout_constraintTop_toTopOf="@+id/cal2_text_time" />
+
+        <TextView
+            android:id="@+id/cal2_text6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="분"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/cal2_text_time"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text_time"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_view1" />
+
+        <TextView
+            android:id="@+id/cal2_text7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Km"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text6"
+            app:layout_constraintEnd_toEndOf="@+id/cal2_text_dist"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text_dist" />
+
+        <TextView
+            android:id="@+id/cal2_text8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Km/h"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cal2_text7"
+            app:layout_constraintEnd_toEndOf="@+id/cal2_text_speed"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text_speed" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

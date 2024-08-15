@@ -7,7 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
+import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentDealDetailBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FragmentDealDetail : Fragment() {
 
@@ -49,6 +54,30 @@ class FragmentDealDetail : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
+    // 해당 물품 데이터 가져오기
+    private fun fetchProduct() {
+        val call = RetrofitObject.getRetrofitService.readProduct(1) // 물품 아이디 가져오는 법 수정
+        call.enqueue(object : Callback<Retrofit.Product> {
+            override fun onResponse(call: Call<Retrofit.Product>, response: Response<Retrofit.Product>) {
+                if (response.isSuccessful) {
+                    val product = response.body()
+                    if (product != null) {
+                        // 성공
+                    } else {
+                        // 데이터가 없는 경우
+                    }
+                } else {
+                    // 실패한 경우
+                }
+            }
+
+            override fun onFailure(call: Call<Retrofit.Product>, t: Throwable) {
+                // 네트워크 에러 등의 실패
+            }
+
+        })
+    }
+
     private fun sendChat() {
         btnchatting.setOnClickListener {
 

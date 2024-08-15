@@ -120,7 +120,7 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
                             // 아이디 변경 성공 시 팝업
                             if (responseBody != null) {
                                 val title = "아이디 변경\n 완료"
-                                val dialog = DialogAlert(this@FragmentChangeId, title, null, "확인")
+                                val dialog = DialogAlert(this@FragmentChangeId, title, null, "확인", null)
                                 dialog.isCancelable = false
                                 activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
                             }

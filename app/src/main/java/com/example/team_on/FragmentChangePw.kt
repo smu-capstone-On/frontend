@@ -99,7 +99,7 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
                             // 비밀번호 변경 성공 시 팝업
                             if (responseBody != null) {
                                 val title = "비밀번호 변경\n 완료"
-                                val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인")
+                                val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인", null)
                                 dialog.isCancelable = false
                                 activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
                             }

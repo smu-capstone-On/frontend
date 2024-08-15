@@ -104,7 +104,7 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
                                 val title = "비밀번호 찾기"
                                 val content = responseBody.pw
 
-                                val dialog = DialogAlert(this@ActivityFindPW, title, content, "로그인 하기")
+                                val dialog = DialogAlert(this@ActivityFindPW, title, content, "로그인 하기", null)
                                 // 배경 클릭 막기
                                 dialog.isCancelable = false
                                 dialog.show(this@ActivityFindPW.supportFragmentManager, "DialogAlert")

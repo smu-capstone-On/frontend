@@ -4,6 +4,7 @@ package com.example.team_on
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +13,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -30,6 +32,7 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
@@ -71,6 +74,7 @@ class ActivityWalk : AppCompatActivity() {
     private var lastLocation: Location? = null //마지막 위치
     private var totalDistance = 0f //총 이동 거리
 
+    private lateinit var testImg: ImageView
     //산책 시간
     private val runnable = object : Runnable {
         override fun run() {
@@ -233,6 +237,8 @@ class ActivityWalk : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        testImg = binding.testImg
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission() // 권한이 있을 경우 위치 정보 요청
         } else {
@@ -285,6 +291,17 @@ class ActivityWalk : AppCompatActivity() {
 
         //종료 버튼
         btnWrite.setOnClickListener {
+            map.moveCamera(CameraUpdateFactory.newCenterPosition(userPosition))
+            map.moveCamera(CameraUpdateFactory.zoomTo(17))
+            val handler1 = Handler(Looper.getMainLooper())
+            handler1.postDelayed({
+                onButtonClicked()
+            }, 50)
+            val handler2 = Handler(Looper.getMainLooper())
+            handler2.postDelayed({
+                labelLayer.removeAll()
+                showLabel(userPosition)
+            }, 100)
             btnPause.visibility = View.GONE
             btnPlay.visibility = View.GONE
             btnWrite.visibility = View.GONE
@@ -294,8 +311,6 @@ class ActivityWalk : AppCompatActivity() {
             seconds = 0
             speedText.text = "0"
             distanceText.text = "0"
-            labelLayer.removeAll()
-            showLabel(userPosition)
             updateTimerText()
         }
 
@@ -373,22 +388,8 @@ class ActivityWalk : AppCompatActivity() {
     }
 
     //화면 캡처
-//    fun onButtonClicked(view: View) {
-//        if (mapView == null) {
-//            Toast.makeText(applicationContext, "지도가 준비되지 않았습니다.", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//
-//        MapCapture.capture(this, mapView.surfaceView as GLSurfaceView, object : MapCapture.OnCaptureListener {
-//            override fun onCaptured(isSucceed: Boolean, fileName: String) {
-//                if (isSucceed) {
-//                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: $fileName"
-//                    Toast.makeText(applicationContext, "캡쳐가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    findViewById<TextView>(R.id.tv_capture_file_name).text = "FileName: "
-//                    Toast.makeText(applicationContext, "캡쳐에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
-//    }
+    fun onButtonClicked() {
+        val bitmap: Bitmap = MapCapture.capture(mapView.surfaceView as com.kakao.vectormap.graphics.gl.GLSurfaceView)!!
+        testImg.setImageBitmap(bitmap)
+    }
 }

@@ -1,11 +1,17 @@
 package com.example.team_on.connection
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitAPI {
@@ -41,5 +47,48 @@ interface RetrofitAPI {
     @GET("/v2/local/search/address.json")
     fun kakaoSearch(
         @Header("Authorization") apiKey: String,
-        @Query("query") query: String): Call<Retrofit.ResponseSearch>
+        @Query("query") query: String,
+        @Query("analyze_type") type: String): Call<Retrofit.ResponseSearch>
+    //좌표 주소 변환
+    @GET("/v2/local/geo/coord2address.json")
+    fun kakaoAddress(
+        @Header("Authorization") apiKey: String,
+        @Query("x") longitude: String,
+        @Query("y") latitude: String): Call<Retrofit.ResponseAddress>
+
+    //물품 생성
+    @Multipart
+    @POST
+    fun createProduct(
+        @Part("id") id: RequestBody?,
+        @Part("authorName") authorName: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("tags") tags: List<MultipartBody.Part>,
+        @Part("createdTime") createdTime: RequestBody,
+        @Part("price") price: RequestBody,
+        @Part postImage: MultipartBody.Part?
+    ): Call<Retrofit.ResponseSuccess>
+    //모든 제품 조회
+    @GET("/api/products")
+    fun readProducts(): Call<List<Retrofit.Product>>
+    //물품 조회
+    @GET("/api/products/{id}")
+    fun readProduct(@Path("id") id: Long): Call<Retrofit.Product>
+    //물품 삭제
+    @DELETE("/api/products/{id}")
+    fun deleteProduct(@Path("id") id: Long): Call<Retrofit.ResponseSuccess>
+    //물품 수정
+    @PATCH("/api/products/{id}")
+    fun updateProduct(
+        @Part("id") id: RequestBody?,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("tags") tags: List<MultipartBody.Part>,
+        @Part("modifiedTime") modifiedTime: RequestBody,
+        @Part("price") price: RequestBody,
+        @Part("isPreorder") isPreorder: RequestBody,
+        @Part("isSold") isSold: RequestBody,
+        @Part postImage: MultipartBody.Part?
+    ): Call<Retrofit.ResponseSuccess>
 }

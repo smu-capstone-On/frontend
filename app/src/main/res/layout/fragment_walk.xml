@@ -6,12 +6,83 @@
     android:layout_height="match_parent"
     tools:context=".FragmentWalk">
 
+    <com.kakao.vectormap.MapView
+        android:id="@+id/fwalk_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.kakao.vectormap.MapView>
+
+    <ImageButton
+        android:id="@+id/fwalk_btn_change_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/svg_circle_search"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fwalk_btn_join"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fwalk_btn_join" />
+
+    <Button
+        android:id="@+id/fwalk_btn_join"
+        android:layout_width="140dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/radius_20_solid_yellow"
+        android:text="현위치에 등록"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/fwalk_btn_change_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/svg_plus"
+        app:layout_constraintBottom_toBottomOf="@+id/fwalk_btn_map_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fwalk_btn_map_search" />
+
+    <Button
+        android:id="@+id/fwalk_btn_map_search"
+        android:layout_width="140dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/radius_20_solid_yellow"
+        android:text="현지도에서 검색"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/fwalk_img_loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/svg_map_loc"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fwalk_const"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/radius_5_stroke_gray"
+        android:background="@drawable/radius_5_stroke_gray_solid_white"
         app:layout_constraintEnd_toStartOf="@+id/fwalk_btn_search"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,17 +125,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fwalk_const"
         app:layout_constraintTop_toTopOf="@+id/fwalk_const" />
-
-
-    <com.kakao.vectormap.MapView
-        android:id="@+id/fwalk_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.kakao.vectormap.MapView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

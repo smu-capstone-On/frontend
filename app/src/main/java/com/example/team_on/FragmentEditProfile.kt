@@ -1,11 +1,10 @@
 package com.example.team_on
 
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -17,9 +16,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.result.PickVisualMediaRequest
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -28,12 +26,9 @@ import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentEditProfileBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.hdodenhof.circleimageview.CircleImageView
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class FragmentEditProfile : Fragment() {
 
@@ -42,7 +37,6 @@ class FragmentEditProfile : Fragment() {
 
     private lateinit var changeProfileImage: ImageButton
     private lateinit var profile: CircleImageView
-    private lateinit var mediaType: MediaType
     private lateinit var editNick: EditText
     private lateinit var btnCheckNick: Button
     private lateinit var btnSave: Button
@@ -51,33 +45,28 @@ class FragmentEditProfile : Fragment() {
     private lateinit var toolbar: Toolbar
     private var checkNick = false
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val path = getRealPathFromUri(uri)
-            val file = File(path)
-            mediaType = "image/*".toMediaType()
-            changeProfile(uri, file)
+    // 이미지 선택을 위한 ActivityResultLauncher
+    private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            changeProfile(it)
         }
     }
 
+    // 권한 요청을 위한 ActivityResultLauncher
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            getImage.launch("image/*")
         } else {
-            showPermissionContextPopup()
+            Toast.makeText(activity, "프로필 이미지를 설정하려면 권한이 필요합니다. 설정에서 권한을 허용해주세요.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //닉네임 중복 체크
     private val checkNickWatcherListener = object : TextWatcher {
-
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             checkNick = false
             textCheckNick.visibility = View.INVISIBLE
         }
-
         override fun afterTextChanged(s: Editable?) {}
     }
 
@@ -107,17 +96,7 @@ class FragmentEditProfile : Fragment() {
         editNick.addTextChangedListener(checkNickWatcherListener)
 
         changeProfileImage.setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED -> {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
-
-                shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                    showPermissionContextPopup()
-                }
-
-                else -> requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
+            buildVersion()
         }
 
         btnCheckNick.setOnClickListener {
@@ -128,20 +107,19 @@ class FragmentEditProfile : Fragment() {
                     btnCheckNick.isEnabled = true
                     if (response.isSuccessful) {
                         val responseBody = response.body()
-                        if(responseBody != null){
+                        if (responseBody != null) {
                             textCheckNick.visibility = View.VISIBLE
-                            if(responseBody.success) {
+                            if (responseBody.success) {
                                 textCheckNick.text = "사용할 수 있는 닉네임입니다."
                                 textCheckNick.setTextColor(Color.BLACK)
                                 checkNick = true
-                            }else{
+                            } else {
                                 textCheckNick.text = "이미 존재하는 닉네임입니다."
                                 textCheckNick.setTextColor(Color.RED)
                             }
                         }
                     }
                 }
-
                 override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
                     btnCheckNick.isEnabled = true
                     val errorMessage = "Call Failed: ${t.message}"
@@ -152,7 +130,7 @@ class FragmentEditProfile : Fragment() {
 
         btnSave.setOnClickListener {
             if (checkNick) {
-
+                // 닉네임 중복 확인
             }
         }
 
@@ -160,35 +138,44 @@ class FragmentEditProfile : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
-
-    // 이미지 저장 주소 가져오기
-    private fun getRealPathFromUri(uri: Uri): String? {
-        val contentResolver = requireContext().contentResolver
-        val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                return it.getString(columnIndex)
-            }
+    // 버전 확인
+    private fun buildVersion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermission(android.Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            requestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        return null
     }
 
-    // 권한 요청
-    private fun showPermissionContextPopup() {
+    private fun requestPermission(permission: String) {
+        when {
+            ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
+                getImage.launch("image/*")
+            }
+            shouldShowRequestPermissionRationale(permission) -> {
+                showPermission(permission)
+            }
+            else -> {
+                requestPermissionLauncher.launch(permission)
+            }
+        }
+    }
+    // 접근 권한이 필요한 경우 알림
+    private fun showPermission(permission: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("권한이 필요합니다.")
             .setMessage("프로필 이미지를 설정하기 위해서는 갤러리 접근 권한이 필요합니다.")
             .setPositiveButton("동의하기") { _, _ ->
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestPermissionLauncher.launch(permission)
             }
-            .setNegativeButton("취소하기") { _, _ -> }
+            .setNegativeButton("취소하기") { dialog, _ ->
+                dialog.dismiss()
+            }
             .create()
             .show()
     }
-
-
-    private fun changeProfile(uri: Uri, file: File) {
+    // 이미지 변경
+    private fun changeProfile(uri: Uri) {
         Glide.with(this)
             .load(uri)
             .into(profile)
