@@ -1,7 +1,9 @@
 
 package com.example.team_on
 
+import DatabaseWalk
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -39,6 +41,9 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.TrackingManager
+import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 
 class ActivityWalk : AppCompatActivity() {
@@ -64,6 +69,7 @@ class ActivityWalk : AppCompatActivity() {
 
     private lateinit var timeText: TextView //시간 text
     private var seconds = 0 //시간
+    private var speed = 0f //속도
 
     private val handler = Handler(Looper.getMainLooper()) //시간 헨들러
     private val locationHandler = Handler(Looper.getMainLooper()) //유저 루트 헨들러
@@ -98,7 +104,7 @@ class ActivityWalk : AppCompatActivity() {
             distanceText.text = totalDistance.toInt().toString()
             lastLocation = newLocation
             if(seconds != 0){
-                val speed = (totalDistance/seconds)
+                speed = (totalDistance/seconds)
                 speedText.text = String.format("%.2f", speed)
             }
             rootLabel(userPosition,(seconds).toString()+"user")
@@ -233,6 +239,8 @@ class ActivityWalk : AppCompatActivity() {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
+    private val databaseWalk: DatabaseWalk by lazy{ DatabaseWalk.getInstance(applicationContext) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -295,7 +303,16 @@ class ActivityWalk : AppCompatActivity() {
             map.moveCamera(CameraUpdateFactory.zoomTo(17))
             val handler1 = Handler(Looper.getMainLooper())
             handler1.postDelayed({
-                onButtonClicked()
+                val date = getCurrentDate()
+                if(databaseWalk.getOneData(date) == null){
+                    databaseWalk.insertData(date, seconds.toString(), totalDistance.toString(), speed.toString(), onButtonClicked())
+                    seconds = 0
+                    timeText.text = "00 : 00 : 00"
+                }else{
+                    databaseWalk.updateData(date, seconds.toString(), totalDistance.toString(), speed.toString(), onButtonClicked())
+                    seconds = 0
+                    timeText.text = "00 : 00 : 00"
+                }
             }, 50)
             val handler2 = Handler(Looper.getMainLooper())
             handler2.postDelayed({
@@ -308,7 +325,6 @@ class ActivityWalk : AppCompatActivity() {
             btnStart.visibility = View.VISIBLE
             handler.removeCallbacks(runnable)
             locationHandler.removeCallbacks(locationRunnable)
-            seconds = 0
             speedText.text = "0"
             distanceText.text = "0"
             updateTimerText()
@@ -330,7 +346,6 @@ class ActivityWalk : AppCompatActivity() {
             handler.removeCallbacks(runnable)
             locationHandler.removeCallbacks(locationRunnable)
             fusedLocationClient.removeLocationUpdates(locationCallback)
-            finish()
         }
 
         //뒤로가기 버튼
@@ -388,8 +403,19 @@ class ActivityWalk : AppCompatActivity() {
     }
 
     //화면 캡처
-    fun onButtonClicked() {
+    private fun onButtonClicked(): ByteArray {
         val bitmap: Bitmap = MapCapture.capture(mapView.surfaceView as com.kakao.vectormap.graphics.gl.GLSurfaceView)!!
         testImg.setImageBitmap(bitmap)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        return byteArrayOutputStream.toByteArray()
+    }
+
+    //날짜 가져오기
+    @SuppressLint("SimpleDateFormat")
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd")
+        return dateFormat.format(calendar.time)
     }
 }

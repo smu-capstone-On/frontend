@@ -14,7 +14,6 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
         private const val COLUMN_DATE = "date"
         private const val COLUMN_TIME = "time"
         private const val COLUMN_DIS = "distance"
-        private const val COLUMN_SPEED = "speed"
         private const val COLUMN_IMG = "img"
 
         @Volatile
@@ -29,9 +28,10 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val createTableQuery = "CREATE TABLE $TABLE_NAME ($COLUMN_DATE TEXT PRIMARY KEY, $COLUMN_TIME TEXT, $COLUMN_DIS TEXT, $COLUMN_SPEED TEXT, $COLUMN_IMG BLOB)"
+        val createTableQuery = "CREATE TABLE $TABLE_NAME ($COLUMN_DATE TEXT PRIMARY KEY, $COLUMN_TIME TEXT, $COLUMN_DIS TEXT, $COLUMN_IMG BLOB)"
         db.execSQL(createTableQuery)
     }
+    //거리는 m단위 날짜는 xxxx.xx.xx 속도는 m/s 시간은 초단위
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // 데이터베이스 업그레이드 처리
@@ -43,7 +43,6 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
             put(COLUMN_DATE, date)
             put(COLUMN_TIME, time)
             put(COLUMN_DIS, distance)
-            put(COLUMN_SPEED, speed)
             put(COLUMN_IMG, img)
         }
         db.insert(TABLE_NAME, null, contentValues)
@@ -55,19 +54,16 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
         val db = this.writableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATE = ?", arrayOf(date))
         var newTime = 0
-        var newDistance = 0
-        var newSpeed = 0
+        var newDistance = 0f
         if (cursor.moveToFirst()) {
             newTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)).toInt() + time.toInt()
-            newDistance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS)).toInt() + distance.toInt()
-            newSpeed = newDistance/newTime
+            newDistance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS)).toFloat() + distance.toFloat()
         }
 
         val contentValues = ContentValues().apply{
             put(COLUMN_DATE, date)
             put(COLUMN_TIME, newTime)
             put(COLUMN_DIS, newDistance)
-            put(COLUMN_SPEED, newSpeed)
             put(COLUMN_IMG, img)
         }
 
@@ -85,10 +81,9 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
         if (cursor.moveToFirst()) {
             val time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME))
             val distance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS))
-            val speed = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SPEED))
             val img = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMG))
 
-            walkData = Retrofit.WalkData(time, distance, speed, img)
+            walkData = Retrofit.WalkData(time, distance, img)
         }
 
         cursor.close()
@@ -109,9 +104,8 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
             do {
                 val time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME))
                 val distance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS))
-                val speed = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SPEED))
 
-                dataList.add(Retrofit.WalkData(time, distance, speed, null))
+                dataList.add(Retrofit.WalkData(time, distance, null))
             } while (cursor.moveToNext())
         }
 
