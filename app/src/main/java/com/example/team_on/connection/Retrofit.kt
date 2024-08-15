@@ -83,4 +83,11 @@ class Retrofit {
         @SerializedName("y")
         val latitude: String
     )
+
+    data class WalkData(
+        val time: String,
+        val distance: String,
+        val speed: String,
+        val img: ByteArray?
+    )
 }
