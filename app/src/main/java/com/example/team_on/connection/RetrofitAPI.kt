@@ -1,5 +1,7 @@
 package com.example.team_on.connection
 
+import com.google.android.gms.common.api.Response
+import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

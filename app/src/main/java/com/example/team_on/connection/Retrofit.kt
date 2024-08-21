@@ -6,6 +6,16 @@ import java.util.Date
 
 class Retrofit {
 
+    //회원가입
+    data class RequestSignup(
+        @SerializedName("loginId")
+        val id: String,
+        @SerializedName("password")
+        val pw: String,
+        @SerializedName("email")
+        val email: String
+    )
+
     //로그인 요청
     data class RequestSignIn(
         @SerializedName("id")

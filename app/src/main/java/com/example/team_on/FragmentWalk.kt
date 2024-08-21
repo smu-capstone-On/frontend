@@ -26,15 +26,13 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.camera.CameraUpdate
+import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.System.exit
 
 
 class FragmentWalk : Fragment() {
@@ -49,6 +47,7 @@ class FragmentWalk : Fragment() {
     private lateinit var btnChangeSearch: ImageButton
     private lateinit var imgLoc: ImageView
     private lateinit var textAddName: TextView
+    private lateinit var cameraPos: CameraPosition
 
     private lateinit var mapView: MapView
     private lateinit var map: KakaoMap
@@ -93,6 +92,7 @@ class FragmentWalk : Fragment() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -159,34 +159,59 @@ class FragmentWalk : Fragment() {
         }
 
         btnJoin.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext(),R.style.CustomAlertDialog)
-            val view = LayoutInflater.from(context).inflate(
-                R.layout.custom_dialog_fwalk,
-                null
-            )
+            cameraPos = map.cameraPosition!!
+            val latitude = String.format("%.3f", cameraPos.position.latitude)
+            val longitude = String.format("%.3f", cameraPos.position.longitude)
+            Log.d("latitudelongitude", latitude+" "+longitude)
+            val key = KakaoKey.API_KEY
+            var roadAdd = "알 수 없음"
+            val call = KakaoRetrofitObject.getRetrofitService.kakaoAddress("KakaoAK $key", longitude, latitude)
+            call.enqueue(object : Callback<Retrofit.ResponseAddress> {
+                override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
+                    if (response.isSuccessful) {
+                        Log.d("latitudelongitude", response.body().toString())
+                        val arr = response.body()?.documents!![0].roadAddress
+                        if(arr != null){
+                            roadAdd = arr.addressName
+                        }
+                        val builder = AlertDialog.Builder(requireContext(),R.style.CustomAlertDialog)
+                        val view = LayoutInflater.from(context).inflate(
+                            R.layout.custom_dialog_fwalk,
+                            null
+                        )
 
-            // 다이얼로그 텍스트 설정
-            builder.setView(view)
-            val hour1 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_h1)
-            val minute1 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_m1)
-            val minute2 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_m2)
-            val addressName = view.findViewById<TextView>(R.id.fwalk_d_text_address)
-            val post = view.findViewById<EditText>(R.id.fwalk_d_edit_post)
+                        // 다이얼로그 텍스트 설정
+                        builder.setView(view)
+                        val hour1 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_h1)
+                        val minute1 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_m1)
+                        val minute2 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_m2)
+                        val addressName = view.findViewById<TextView>(R.id.fwalk_d_text_address)
+                        val post = view.findViewById<EditText>(R.id.fwalk_d_edit_post)
+                        val button = view.findViewById<Button>(R.id.fwalk_d_btn_save)
 
-            hour1.minValue = 0
-            hour1.maxValue = 23
-            minute1.minValue = 0
-            minute2.minValue = 0
-            minute1.maxValue = 59
-            minute2.maxValue = 120
+                        hour1.minValue = 0
+                        hour1.maxValue = 23
+                        minute1.minValue = 0
+                        minute2.minValue = 0
+                        minute1.maxValue = 59
+                        minute2.maxValue = 120
+                        addressName.text = roadAdd
 
-            post.movementMethod = ScrollingMovementMethod.getInstance()
+                        post.movementMethod = ScrollingMovementMethod.getInstance()
 
-            val alertDialog = builder.create()
+                        val alertDialog = builder.create()
 
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(0)) // 50% 투명도 검정색
+                        alertDialog.window?.setBackgroundDrawable(ColorDrawable(0)) // 50% 투명도 검정색
 
-            alertDialog.show()
+                        alertDialog.show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Retrofit.ResponseAddress>, t: Throwable) {
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
+                }
+            })
         }
 
         btnAttribute.setOnClickListener {
