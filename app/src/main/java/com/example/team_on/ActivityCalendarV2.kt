@@ -1,6 +1,5 @@
 package com.example.team_on
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.databinding.ActivityCalendarV2Binding

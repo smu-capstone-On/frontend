@@ -157,12 +157,4 @@
         app:layout_constraintTop_toBottomOf="@+id/awalk_text_speed"
         app:srcCompat="@drawable/svg_calendar" />
 
-    <ImageView
-        android:id="@+id/test_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/pic_cat" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

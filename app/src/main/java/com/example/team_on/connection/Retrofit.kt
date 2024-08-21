@@ -95,6 +95,13 @@ class Retrofit {
         @SerializedName("y")
         val latitude: String
     )
+
+    //산책 기록
+    data class WalkData(
+        val time: String,
+        val distance: String,
+        val img: ByteArray?
+    )
     //카카오 좌표 검색 응답
     data class ResponseAddress(
         @SerializedName("documents")
