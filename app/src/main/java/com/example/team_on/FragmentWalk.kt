@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.team_on.connection.KakaoRetrofitObject
 import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentWalkBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -29,6 +30,9 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -160,11 +164,10 @@ class FragmentWalk : Fragment() {
 
         btnJoin.setOnClickListener {
             cameraPos = map.cameraPosition!!
-            val latitude = String.format("%.3f", cameraPos.position.latitude)
-            val longitude = String.format("%.3f", cameraPos.position.longitude)
-            Log.d("latitudelongitude", latitude+" "+longitude)
             val key = KakaoKey.API_KEY
             var roadAdd = "알 수 없음"
+            val longitude = cameraPos.position.longitude.toString()
+            val latitude = cameraPos.position.latitude.toString()
             val call = KakaoRetrofitObject.getRetrofitService.kakaoAddress("KakaoAK $key", longitude, latitude)
             call.enqueue(object : Callback<Retrofit.ResponseAddress> {
                 override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
@@ -202,6 +205,25 @@ class FragmentWalk : Fragment() {
                         val alertDialog = builder.create()
 
                         alertDialog.window?.setBackgroundDrawable(ColorDrawable(0)) // 50% 투명도 검정색
+
+                        button.setOnClickListener {
+                            val call2 = RetrofitObject.getRetrofitService.walkPut(Retrofit.RequestWalkPut(1,"MALE",25,true, latitude, longitude, "18:30", "30", "메모1"))
+                            call2.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                                    if (response.isSuccessful) {
+                                        if(response.body()!!.success){
+                                            alertDialog.dismiss()
+                                            Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                                    val errorMessage = "Call Failed: ${t.message}"
+                                    Log.d("Retrofit", errorMessage)
+                                }
+                            })
+                        }
 
                         alertDialog.show()
                     }

@@ -116,6 +116,28 @@ class Retrofit {
         val addressName: String
     )
 
+    //산책 등록
+    data class RequestWalkPut(
+        @SerializedName("memberId")
+        val memberId: Int,
+        @SerializedName("sexType")
+        val sexType: String,
+        @SerializedName("age")
+        val age: Int,
+        @SerializedName("hasPet")
+        val hasPet: Boolean,
+        @SerializedName("latitude")
+        val latitude: String,
+        @SerializedName("longitude")
+        val longitude: String,
+        @SerializedName("startDateTime")
+        val sTime: String,
+        @SerializedName("walkTime")
+        val wTime: String,
+        @SerializedName("memo")
+        val memo: String?
+    )
+
     //커뮤니티 게시글
     data class Post(
         @SerializedName("id")
@@ -137,7 +159,7 @@ class Retrofit {
         @SerializedName("likeByUser")
         val likeByUser: Boolean,
         @SerializedName("postImage")
-        val postImage: File? = null,
+        val postImage: File? = null
     )
     //거래게시판 물품
     data class Product(

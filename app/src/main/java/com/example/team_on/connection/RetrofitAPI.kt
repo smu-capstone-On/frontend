@@ -57,7 +57,9 @@ interface RetrofitAPI {
         @Header("Authorization") apiKey: String,
         @Query("x") longitude: String,
         @Query("y") latitude: String): Call<Retrofit.ResponseAddress>
-
+    //산책 등록
+    @POST("/walkmate")
+    fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<Retrofit.ResponseSuccess>
     //물품 생성
     @Multipart
     @POST
