@@ -1,22 +1,35 @@
 package com.example.team_on
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewCommentBinding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class AdapterComment (
-    private val comments: List<Retrofit.Comment>
+    private val loadComments: List<Retrofit.LoadComment>
 ) : RecyclerView.Adapter<AdapterComment.CommentViewHolder>() {
 
     inner class CommentViewHolder(private val binding: ItemViewCommentBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: Retrofit.Comment) {
-            binding.commentUserId.text = comment.userName
-            binding.commentContent.text = comment.comment
-            binding.commentDate.text = comment.createdTime.toString()
+        fun bind(loadComment: Retrofit.LoadComment) {
+            binding.commentUserId.text = loadComment.userId.toString()
+            binding.commentContent.text = loadComment.comment
             //binding.commentUserProfile = comment.userImage
+
+            binding.commentDate.text = formatPostTime(loadComment.createdTime)
+        }
+
+        fun formatPostTime(dateString: String): String {
+            // 문자열을 LocalDateTime 객체로 파싱
+            val dateTime = LocalDateTime.parse(dateString)
+
+            // 원하는 형식으로 변환하기 위한 포맷
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd   HH:mm")
+
+            // 포맷팅된 문자열 반환
+            return dateTime.format(formatter)
         }
     }
 
@@ -26,8 +39,8 @@ class AdapterComment (
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.bind(comments[position])
+        holder.bind(loadComments[position])
     }
 
-    override fun getItemCount() = comments.size
+    override fun getItemCount() = loadComments.size
 }

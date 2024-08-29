@@ -10,13 +10,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentCommunityBinding
-import java.util.Date
+import retrofit2.Response
 import java.util.Locale
 
 class FragmentCommunity : Fragment() {
@@ -35,11 +38,12 @@ class FragmentCommunity : Fragment() {
     private lateinit var btnAddPost: ImageButton
     private lateinit var editTextSearch: EditText
     private lateinit var recyclerView: RecyclerView
-
     private lateinit var postAdapter: AdapterPost
     private var postList = mutableListOf<Retrofit.Post>()
     private var filteredList = mutableListOf<Retrofit.Post>()
     private var selectedTags = mutableListOf<String>()
+    private var isRefreshing = false
+    private lateinit var coordinatorLayout: CoordinatorLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,49 +71,22 @@ class FragmentCommunity : Fragment() {
         btnAddPost = binding.communityBtnPost
         editTextSearch = binding.communityEditSearch
         recyclerView = binding.communityRecyclerview
+        coordinatorLayout = binding.communityCoordinatorlayout
 
         setSearchFun()
         stopSearchFun()
         setTagBtn()
         addPost()
+        loadItems()
 
         _binding = FragmentCommunityBinding.inflate(layoutInflater)
 
-        postList = mutableListOf(
-            Retrofit.Post(
-                1, "user1", "Post Dog", "This is the content of post 1\ndog",
-                listOf("강아지"), Date(System.currentTimeMillis() - 3), 23, 43, false
-            ),
-            Retrofit.Post(
-                2, "user2", "Post Cat Question", "This is the content of post 2\ncat, question",
-                listOf("고양이", "질문"), Date(System.currentTimeMillis() - 6), 21, 36, false
-            ),
-            Retrofit.Post(
-                3, "user3", "Post Cat", "This is the content of post 3\ncat",
-                listOf("고양이"), Date(System.currentTimeMillis() - 9), 12, 33, true
-            ),
-            Retrofit.Post(
-                4, "user4", "Post Dog Question", "This is the content of post 4\ndog, question",
-                listOf("강아지", "질문"), Date(System.currentTimeMillis() - 12), 52, 34, false
-            ),
-            Retrofit.Post(
-                5, "user5", "Post Dog Cat Question", "This is the content of post 5\ndog, cat, question",
-                listOf("강아지", "고양이", "질문"), Date(System.currentTimeMillis() - 15), 32, 3, false
-            ),
-            Retrofit.Post(
-                6, "user6", "Post Small Animal ", "This is the content of post 6\nsmall",
-                listOf("소동물"), Date(System.currentTimeMillis() - 18), 22, 23, true
-            ),
-            Retrofit.Post(
-                7, "user7", "Post Reptile", "This is the content of post7\nreptile",
-                listOf("파충류"), Date(System.currentTimeMillis() - 21), 12, 13, true
-            )
-        )
+        postList = mutableListOf()
 
         filteredList.addAll(postList)
 
         postAdapter = AdapterPost(filteredList) { post ->
-            val fragment = FragmentPostDetail.newInstance(post.title, post.content)
+            val fragment = FragmentPostDetail.newInstance(post.title, post.content, post.like, post.tag, post.imgUrl, post.time, post.postNum)
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -121,6 +98,18 @@ class FragmentCommunity : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = postAdapter
         }
+
+        // 화면 드래그 시 게시글 새로고침
+//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && !isRefreshing && dy < 0) {
+//                    loadItems()
+//                }
+//            }
+//        })
     }
 
     // 검색 버튼 클릭 시
@@ -161,7 +150,7 @@ class FragmentCommunity : Fragment() {
         val filteredPosts = postList.filter { post ->
             val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) ||
                     post.content.lowercase(Locale.ROOT).contains(searchText)
-            val matchesTags = selectedTags.isEmpty() || post.tags.any { it in selectedTags }
+            val matchesTags = selectedTags.isEmpty() || post.tag.any { it in selectedTags }
             matchesText && matchesTags
         }
         filteredList.clear()
@@ -171,7 +160,35 @@ class FragmentCommunity : Fragment() {
 
     // 아이템 목록 최신화
     private fun loadItems() {
-        filter(editTextSearch.text.toString())
+        val call = RetrofitObject.getRetrofitService.getAllPosts()
+        call.enqueue(object : retrofit2.Callback<Retrofit.ResponsePost> {
+            override fun onResponse(call: retrofit2.Call<Retrofit.ResponsePost>, response: Response<Retrofit.ResponsePost>) {
+                if (response.isSuccessful && response.body()?.success == true) {
+                    val posts = response.body()?.data ?: emptyList()
+
+                    val sortedPosts = posts.sortedByDescending { it.time }
+
+                    // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
+                    postList.clear()
+                    postList.addAll(sortedPosts)
+
+                    // 필터 리스트도 동일하게 갱신
+                    filteredList.clear()
+                    filteredList.addAll(postList)
+
+                    // RecyclerView 갱신
+                    postAdapter.notifyDataSetChanged()
+
+                    Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<Retrofit.ResponsePost>, t: Throwable) {
+                Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     // 태그 클릭 시 색 변환

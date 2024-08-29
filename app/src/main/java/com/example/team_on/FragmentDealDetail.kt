@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
-import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import androidx.core.net.toUri
+import com.bumptech.glide.Glide
 import com.example.team_on.databinding.FragmentDealDetailBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class FragmentDealDetail : Fragment() {
 
@@ -22,8 +21,28 @@ class FragmentDealDetail : Fragment() {
     private lateinit var btnchatting: Button
     private lateinit var toolbar: Toolbar
 
+    private var title: String? = null
+    private var body: String? = null
+    private var tag: List<String>? = null
+    private var imgUrl: String? = null
+    private var time: String? = null
+    private var productId: Int? = null
+    private var reservationStatus: Boolean? = null
+    private var price: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            title = it.getString(ARG_TITLE)
+            body = it.getString(ARG_BODY)
+            tag = it.getStringArrayList(ARG_TAG)
+            imgUrl = it.getString(ARG_IMGURL)
+            time = it.getString(ARG_TIME)
+            productId = it.getInt(ARG_PRODUCTID)
+            reservationStatus = it.getBoolean(ARG_RESERVATIONSTATUS)
+            price = it.getString(ARG_PRICE)
+        }
     }
 
     override fun onCreateView(
@@ -37,16 +56,40 @@ class FragmentDealDetail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val title = arguments?.getString(ARG_TITLE)
-        val price = arguments?.getString(ARG_PRICE)
-        val date = arguments?.getString(ARG_DATE)
-
         binding.dealDetailTitle.text = title
+        binding.dealDetailContent.text = body
+        binding.dealDetailDate.text = time?.let { formatPostTime(it) }
         binding.dealDetailPrice.text = price
-        binding.dealDetailDate.text = date
 
         btnchatting = binding.dealDetailBtnChatting
         toolbar = binding.dealDetailToolbar
+
+        val tags = tag
+        val productTags = listOf(binding.dealDetailTag1, binding.dealDetailTag2, binding.dealDetailTag3)
+
+        if (tags != null) {
+            for (i in tags.indices) {
+                if (i < tags.size) {
+                    productTags[i].text = tags[i]
+                    productTags[i].visibility = View.VISIBLE
+                } else {
+                    productTags[i].text = ""
+                    productTags[i].visibility = View.GONE
+                }
+            }
+        }
+
+        imgUrl?.let { url ->
+            val uri = url.toUri().buildUpon().scheme("https").build()
+            Glide.with(binding.dealDetailImageview.context)
+                .load(uri) // URL을 URI로 변환하여 로드
+                .error(R.drawable.svg_camera)
+                .into(binding.dealDetailImageview) // 이미지가 로드될 ImageView
+        }
+
+        if (reservationStatus == true) {
+            binding.dealDetailPreorder.visibility = View.VISIBLE
+        }
 
         sendChat()
 
@@ -54,35 +97,24 @@ class FragmentDealDetail : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
-    // 해당 물품 데이터 가져오기
-    private fun fetchProduct() {
-        val call = RetrofitObject.getRetrofitService.readProduct(1) // 물품 아이디 가져오는 법 수정
-        call.enqueue(object : Callback<Retrofit.Product> {
-            override fun onResponse(call: Call<Retrofit.Product>, response: Response<Retrofit.Product>) {
-                if (response.isSuccessful) {
-                    val product = response.body()
-                    if (product != null) {
-                        // 성공
-                    } else {
-                        // 데이터가 없는 경우
-                    }
-                } else {
-                    // 실패한 경우
-                }
-            }
-
-            override fun onFailure(call: Call<Retrofit.Product>, t: Throwable) {
-                // 네트워크 에러 등의 실패
-            }
-
-        })
-    }
 
     private fun sendChat() {
         btnchatting.setOnClickListener {
 
         }
     }
+
+    fun formatPostTime(dateString: String): String {
+        // 문자열을 LocalDateTime 객체로 파싱
+        val dateTime = LocalDateTime.parse(dateString)
+
+        // 원하는 형식으로 변환하기 위한 포맷
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd   HH:mm")
+
+        // 포맷팅된 문자열 반환
+        return dateTime.format(formatter)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         (activity as? ActivityMain)?.showBottomNaviagtion()
@@ -91,15 +123,25 @@ class FragmentDealDetail : Fragment() {
 
     companion object {
         private const val ARG_TITLE = "title"
+        private const val ARG_BODY = "body"
+        private const val ARG_TAG = "tag"
+        private const val ARG_IMGURL = "imgUrl"
+        private const val ARG_TIME = "time"
+        private const val ARG_PRODUCTID = "productId"
+        private const val ARG_RESERVATIONSTATUS = "reservationStatus"
         private const val ARG_PRICE = "price"
-        private const val ARG_DATE = "date"
 
-        fun newInstance(title: String, price: String, date: String) =
+        fun newInstance(title: String, body: String, tag: List<String>, imgUrl: String?, time: String, productId: Int, reservationStatus: Boolean, price: String) =
             FragmentDealDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
+                    putString(ARG_BODY, body)
+                    putStringArrayList(ARG_TAG, ArrayList(tag))
+                    putString(ARG_IMGURL, imgUrl)
+                    putString(ARG_TIME, time)
+                    putInt(ARG_PRODUCTID, productId)
+                    putBoolean(ARG_RESERVATIONSTATUS, reservationStatus)
                     putString(ARG_PRICE, price + "원")
-                    putString(ARG_DATE, date)
                 }
             }
     }

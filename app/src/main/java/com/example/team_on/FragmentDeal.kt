@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
@@ -23,7 +23,6 @@ import com.example.team_on.databinding.FragmentDealBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Date
 import java.util.Locale
 
 class FragmentDeal : Fragment() {
@@ -87,30 +86,10 @@ class FragmentDeal : Fragment() {
         recyclerView = binding.dealRecyclerview
         layoutSearchCondition = binding.dealLayoutSearchCondition
 
-        setTagBtn()
-        setSearchFun()
-        setSearchCondition()
-        setSortBtn()
-        stopSearchFun()
-        addDeal()
+        productList = mutableListOf()
 
-        productList = mutableListOf(
-            Retrofit.Product(1, "user1", "Product1", "Product1 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 21000, false),
-            Retrofit.Product(2, "user2", "Product2", "Product2 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 2200, false),
-            Retrofit.Product(3, "user3", "Product3", "Product3 sell", listOf("고양이"), Date(System.currentTimeMillis()), null, 23000, false),
-            Retrofit.Product(4, "user4", "Product4", "Product4 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 24000, true),
-            Retrofit.Product(5, "user5", "Product5", "Product5 sell", listOf("고양이"), Date(System.currentTimeMillis()), null, 2500, false),
-            Retrofit.Product(6, "user6", "Product6", "Product6 sell", listOf("소동물"), Date(System.currentTimeMillis()), null, 26000, false),
-            Retrofit.Product(7, "user7", "Product7", "Product7 sell", listOf("조류"), Date(System.currentTimeMillis()), null, 2700, true),
-            Retrofit.Product(8, "user8", "Product8", "Product8 sell", listOf("파충류"), Date(System.currentTimeMillis()), null, 2000, false),
-            Retrofit.Product(9, "user9", "Product9", "Product9 sell", listOf("소동물"), Date(System.currentTimeMillis()), null, 29000, true),
-            Retrofit.Product(10, "user10", "Product10", "Product10 sell", listOf("조류"), Date(System.currentTimeMillis()), null, 1000, true),
-            Retrofit.Product(11, "user11", "Product11", "Product11 sell", listOf("파충류"), Date(System.currentTimeMillis()), null, 11000, false),
-            Retrofit.Product(12, "user12", "Product12", "Product12 sell", listOf("강아지"), Date(System.currentTimeMillis()), null, 1200, false)
-        )
-
-        productAdapter = AdapterProduct(productList.toMutableList()) { product ->
-            val fragment = FragmentDealDetail.newInstance(product.title, product.price.toString(), product.createdTime.toString())
+        productAdapter = AdapterProduct(productList) { product ->
+            val fragment = FragmentDealDetail.newInstance(product.title, product.body, product.tags, product.imgUrl, product.time, product.productId, product.reservationStatus, product.price.toString())
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -122,7 +101,15 @@ class FragmentDeal : Fragment() {
             layoutManager = GridLayoutManager(context, 3)
             adapter = productAdapter
         }
-        
+
+        fetchProduct()
+        setTagBtn()
+        setSearchFun()
+        setSearchCondition()
+        setSortBtn()
+        stopSearchFun()
+        addDeal()
+
     }
 
     // 검색 활성화
@@ -182,7 +169,7 @@ class FragmentDeal : Fragment() {
         val filteredProducts = productList.filter { product ->
             val matchesText = product.title.lowercase(Locale.ROOT).contains(searchText)
             val matchesTag = selectedTags.isEmpty() || product.tags!!.any { it in selectedTags }
-            val matchesPreorder = isPreOrderSelected == null || product.isPreorder == isPreOrderSelected
+            val matchesPreorder = isPreOrderSelected == null || product.reservationStatus == isPreOrderSelected
             matchesText && matchesTag && matchesPreorder
         }
         filteredList.clear()
@@ -193,9 +180,9 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareBy<Retrofit.Product> {it.createdTime}
+            "new" -> compareBy<Retrofit.Product> {it.time}
             "price" -> compareBy {it.price}
-            else -> compareBy {it.createdTime}
+            else -> compareBy {it.time}
         }
         comparator.let {
             filteredList.sortWith(it)
@@ -271,30 +258,34 @@ class FragmentDeal : Fragment() {
 
     // 물품 데이터 가져오기
     private fun fetchProduct() {
-        val call = RetrofitObject.getRetrofitService.readProducts()
-        call.enqueue(object : Callback<List<Retrofit.Product>> {
-            override fun onResponse(call: Call<List<Retrofit.Product>>, response: Response<List<Retrofit.Product>>) {
-                if (response.isSuccessful) {
-                    val product = response.body()
-                    if (product != null) {
-                        // 성공
-                    } else {
-                        // 데이터가 없는 경우
-                    }
+        val call = RetrofitObject.getRetrofitService.getAllProducts()
+        call.enqueue(object : Callback<Retrofit.ResponseProduct> {
+            override fun onResponse(call: Call<Retrofit.ResponseProduct>, response: Response<Retrofit.ResponseProduct>) {
+                if (response.isSuccessful && response.body()?.success == true) {
+                    val products = response.body()?.data ?: emptyList()
+
+                    val sortedProducts = products.sortedByDescending { it.time }
+
+                    productList.clear()
+                    productList.addAll(sortedProducts)
+
+                    filteredList.clear()
+                    filteredList.addAll(productList)
+
+                    productAdapter.notifyDataSetChanged() // 데이터가 변경되었음을 어댑터에 알림
+
+                    Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    // 실패한 경우
+                    Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<List<Retrofit.Product>>, t: Throwable) {
-                // 네트워크 에러 등 실패
+            override fun onFailure(call: Call<Retrofit.ResponseProduct>, t: Throwable) {
+                Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
             }
-
         })
     }
 
-    // 가져온 데이터 적용
-    fun display() {}
 
     override fun onDestroyView() {
         super.onDestroyView()

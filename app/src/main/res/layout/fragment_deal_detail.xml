@@ -82,7 +82,7 @@
         android:text="예약"
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/deal_detail_title"
         app:layout_constraintTop_toTopOf="@id/deal_detail_title" />
 
@@ -119,6 +119,7 @@
         android:text="Tag1"
         android:textColor="@color/hint"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/deal_detail_tag_list"
         app:layout_constraintTop_toTopOf="@id/deal_detail_tag_list" />
 
@@ -132,8 +133,23 @@
         android:text="Tag2"
         android:textColor="@color/hint"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/deal_detail_tag1"
         app:layout_constraintTop_toTopOf="@id/deal_detail_tag1" />
+
+    <TextView
+        android:id="@+id/deal_detail_tag3"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/radius_10_stroke_gray"
+        android:gravity="center"
+        android:text="Tag3"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/deal_detail_tag2"
+        app:layout_constraintTop_toTopOf="@id/deal_detail_tag2" />
     
     <Button
         android:id="@+id/deal_detail_btn_chatting"

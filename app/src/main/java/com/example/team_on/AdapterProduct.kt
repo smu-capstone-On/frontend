@@ -1,26 +1,41 @@
 package com.example.team_on
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewProductBinding
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-class AdapterProduct(private val products: MutableList<Retrofit.Product>,
-                     private val onItemClick: (Retrofit.Product) -> Unit
+class AdapterProduct(
+    private var products: MutableList<Retrofit.Product>,
+    private val onItemClick: (Retrofit.Product) -> Unit
 ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() {
+
+    private var originalProducts: MutableList<Retrofit.Product> = products.toMutableList()
 
     inner class ProductViewHolder(private val binding: ItemViewProductBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Retrofit.Product) {
             binding.productName.text = product.title
             binding.productPrice.text = product.price.toString() + "원"
-            binding.productDate.text = product.createdTime.toString()
-            //binding.productImage = product.postImage
+            binding.productDate.text = formatPostTime(product.time)
 
-            if (product.isPreorder == true) {
+            product.imgUrl?.let { url ->
+                Glide.with(binding.productImage.context)
+                    .load(url.toUri())
+                    .error(R.drawable.svg_camera)
+                    .into(binding.productImage)
+            }
+
+            Log.d("AdapterPost", "product: ${product}")
+
+            if (product.reservationStatus) {
                 binding.productPreorder.visibility = View.VISIBLE
             }
 
@@ -29,6 +44,11 @@ class AdapterProduct(private val products: MutableList<Retrofit.Product>,
             }
         }
 
+        private fun formatPostTime(dateString: String): String {
+            val dateTime = LocalDateTime.parse(dateString)
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd   HH:mm")
+            return dateTime.format(formatter)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -42,13 +62,12 @@ class AdapterProduct(private val products: MutableList<Retrofit.Product>,
 
     override fun getItemCount() = products.size
 
-
     fun filterList(filteredProducts: List<Retrofit.Product>) {
-        val oldSize = products.size
-        products.clear()
-        notifyItemRangeRemoved(0, oldSize)
-        products.addAll(filteredProducts)
-        notifyItemRangeInserted(0, filteredProducts.size)
+        products = if (filteredProducts.isEmpty()) {
+            originalProducts.toMutableList()
+        } else {
+            filteredProducts.toMutableList()
+        }
+        notifyDataSetChanged()
     }
-
 }

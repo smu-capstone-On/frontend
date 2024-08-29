@@ -1,8 +1,6 @@
 package com.example.team_on.connection
 
 import com.google.gson.annotations.SerializedName
-import java.io.File
-import java.util.Date
 
 class Retrofit {
 
@@ -101,61 +99,112 @@ class Retrofit {
 
     //커뮤니티 게시글
     data class Post(
-        @SerializedName("id")
-        val id: Long,
-        @SerializedName("authorName")
-        val authorName: String,
         @SerializedName("title")
         val title: String,
         @SerializedName("content")
         val content: String,
-        @SerializedName("tags")
-        val tags: List<String>,
-        @SerializedName("createdTime")
-        val createdTime: Date,
-        @SerializedName("likeCount")
-        val likeCount: Int,
-        @SerializedName("commentCount")
-        val commentCount: Int,
-        @SerializedName("likeByUser")
-        val likeByUser: Boolean,
-        @SerializedName("postImage")
-        val postImage: File? = null,
+        @SerializedName("postNum")
+        val postNum: Int,
+        @SerializedName("like")
+        val like: Int,
+        @SerializedName("comment")
+        val comment: Int,
+        @SerializedName("userId")
+        val userId: Int,
+        @SerializedName("tag")
+        val tag: List<String>,
+        @SerializedName("flag")
+        val flag: Int,
+        @SerializedName("imgUrl")
+        val imgUrl: String?,
+        @SerializedName("time")
+        val time: String
     )
-    //거래게시판 물품
+    //커뮤니티 게시글 응답
+    data class ResponsePost(
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("data")
+        val data: List<Post>
+    )
+    //커뮤니티 게시글 작성
+    data class AddPost(
+        @SerializedName("userId")
+        val userId: Int,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("body")
+        val body: String,
+        @SerializedName("tagTypes")
+        val tagTypes: String
+    )
+    //커뮤니티 게시글 작성 응답
+    data class ResponseChatImage(
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("data")
+        val data: List<Post>
+    )
+    //거래게시판 물품 전체 조회
     data class Product(
-        @SerializedName("id")
-        val id: Long? = null,
-        @SerializedName("authorName")
-        val authorName: String,
         @SerializedName("title")
         val title: String,
-        @SerializedName("content")
-        val content: String,
-        @SerializedName("tags")
+        @SerializedName("body")
+        val body: String,
+        @SerializedName("ProductId")
+        val productId: Int,
+        @SerializedName("reservationStatus")
+        val reservationStatus: Boolean,
+        @SerializedName("saleStatus")
+        val saleStatus: Boolean,
+        @SerializedName("userId")
+        val userId: Int,
+        @SerializedName("tag")
         val tags: List<String>,
-        @SerializedName("createdTime")
-        val createdTime: Date,
-        @SerializedName("modifiedTime")
-        val modifiedTime: Date? = null,
-        @SerializedName("Price")
-        val price: Int,
-        @SerializedName("isPreorder")
-        val isPreorder: Boolean? = null,
-        @SerializedName("isSold")
-        val isSold: Boolean? = null,
-        @SerializedName("postImage")
-        val postImage: File? = null,
+        @SerializedName("imgUrl")
+        val imgUrl: String?,
+        @SerializedName("time")
+        val time: String,
+        @SerializedName("price")
+        val price: Int
     )
-    //게시판 댓글
-    data class Comment(
-        @SerializedName("userName")
-        val userName: String,
+    // 거래게시판 물품 조회 반응
+    data class ResponseProduct(
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("data")
+        val data: List<Product>
+    )
+    //게시판 댓글 불러오기
+    data class LoadComment(
+        @SerializedName("userId")
+        val userId: Int,
         @SerializedName("comment")
         val comment: String,
-        @SerializedName("Date")
-        val createdTime: Date,
-        @SerializedName("userImage")
-        val userImage: File? = null
+        @SerializedName("time")
+        val createdTime: String
+    )
+    //댓글 불러오기 응답
+    data class ResponseLoadComment(
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("data")
+        val data: List<LoadComment>
+    )
+    //게시판 댓글 저장
+    data class SaveComment(
+        @SerializedName("boardId")
+        val boardId: Int,
+        @SerializedName("userId")
+        val userId: Int,
+        @SerializedName("body")
+        val body: String
+    )
+    // 댓글 저장 응답
+    data class ResponseSaveComment(
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("data")
+        val data: SaveComment
     )
 }

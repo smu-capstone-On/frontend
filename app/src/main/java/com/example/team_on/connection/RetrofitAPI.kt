@@ -70,11 +70,10 @@ interface RetrofitAPI {
         @Part postImage: MultipartBody.Part?
     ): Call<Retrofit.ResponseSuccess>
     //모든 제품 조회
-    @GET("/api/products")
-    fun readProducts(): Call<List<Retrofit.Product>>
+    @GET("products")
+    fun getAllProducts(): Call<Retrofit.ResponseProduct>
     //물품 조회
-    @GET("/api/products/{id}")
-    fun readProduct(@Path("id") id: Long): Call<Retrofit.Product>
+
     //물품 삭제
     @DELETE("/api/products/{id}")
     fun deleteProduct(@Path("id") id: Long): Call<Retrofit.ResponseSuccess>
@@ -91,4 +90,20 @@ interface RetrofitAPI {
         @Part("isSold") isSold: RequestBody,
         @Part postImage: MultipartBody.Part?
     ): Call<Retrofit.ResponseSuccess>
+
+    //게시글 전체 조회
+    @GET("board")
+    fun getAllPosts(): Call<Retrofit.ResponsePost>
+    //게시글 상세 조회
+    @GET("board/{boardId}")
+    fun getPost(@Path("boardId") boardId: Int): Call<Retrofit.ResponseLoadComment>
+    //댓글 저장
+    @POST("comments")
+    fun saveComment(@Body comment:Retrofit.SaveComment): Call<Retrofit.ResponseSaveComment>
+    //게시글 저장
+    @Multipart
+    @POST("board")
+    fun chatImage(
+        @Part file: MultipartBody.Part,
+        @Part("info") info: RequestBody): Call<Retrofit.ResponseChatImage>
 }
