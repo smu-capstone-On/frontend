@@ -93,7 +93,7 @@
         app:layout_constraintTop_toTopOf="@+id/cal_view1" />
 
     <TextView
-        android:id="@+id/cal_text_hour"
+        android:id="@+id/cal_text_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cal_text_hour"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text_time"
         app:layout_constraintEnd_toEndOf="@+id/cal_text2"
         app:layout_constraintStart_toStartOf="@+id/cal_text2" />
 
@@ -119,7 +119,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cal_text_hour"
+        app:layout_constraintBottom_toBottomOf="@+id/cal_text_time"
         app:layout_constraintEnd_toEndOf="@+id/cal_text3"
         app:layout_constraintStart_toStartOf="@+id/cal_text3" />
 
@@ -133,7 +133,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/cal_text1"
         app:layout_constraintStart_toStartOf="@+id/cal_text1"
-        app:layout_constraintTop_toBottomOf="@+id/cal_text_hour" />
+        app:layout_constraintTop_toBottomOf="@+id/cal_text_time" />
 
     <TextView
         android:id="@+id/cal_text5"
@@ -157,6 +157,16 @@
         app:layout_constraintEnd_toEndOf="@+id/cal_text3"
         app:layout_constraintStart_toStartOf="@+id/cal_text3" />
 
+    <TextView
+        android:id="@+id/cal_text_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="해당 날짜의 산책기록이 없습니다."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cal_text5" />
+
     <ImageButton
         android:id="@+id/cal_btn_graph"
         android:layout_width="wrap_content"
@@ -171,13 +181,14 @@
     <ImageView
         android:id="@+id/cal_img_map"
         android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:background="@drawable/custom_image_radius_10"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cal_text5"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:srcCompat="@drawable/svg_emptybox" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cal_const"

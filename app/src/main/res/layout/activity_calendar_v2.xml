@@ -19,53 +19,6 @@
         app:srcCompat="@drawable/svg_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cal2_const_cal"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/cal2_btn_back"
-        tools:layout_editor_absoluteX="0dp">
-
-        <TextView
-            android:id="@+id/cal2_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="30dp"
-            android:text="날짜 선택"
-            android:textColor="@color/hint"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/cal2_cal"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cal2_text1"
-            app:mcv_selectionColor="#80FFC700"
-            app:mcv_showOtherDates="all" />
-
-        <Button
-            android:id="@+id/cal2_btn_end"
-            android:layout_width="87dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/radius_10_solid_yellow"
-            android:text="선택 완료"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cal2_const_date"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
@@ -78,7 +31,7 @@
             android:id="@+id/cal2_text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2000/02/25 ~ 2024/08/01"
+            android:text="날짜를 선택해 주세요."
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -120,10 +73,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+            android:id="@+id/cal2_scroll"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:layout_marginTop="28dp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,7 +104,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/cal2_text4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+            app:layout_constraintTop_toBottomOf="@+id/cal2_scroll" />
 
         <TextView
             android:id="@+id/cal2_text4"
@@ -258,6 +212,44 @@
             app:layout_constraintBottom_toBottomOf="@+id/cal2_text7"
             app:layout_constraintEnd_toEndOf="@+id/cal2_text_speed"
             app:layout_constraintStart_toStartOf="@+id/cal2_text_speed" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cal2_const"
+            android:layout_width="300dp"
+            android:layout_height="340dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shadow"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/cal2_calendar"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_marginTop="6dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mcv_selectionColor="#80FFC700"
+                app:mcv_selectionMode="range"
+                app:mcv_showOtherDates="all" />
+
+            <Button
+                android:id="@+id/cal2_btn_select"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/radius_10_solid_yellow"
+                android:text="선택"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

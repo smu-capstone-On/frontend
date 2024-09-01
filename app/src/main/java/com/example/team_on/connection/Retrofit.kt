@@ -4,6 +4,16 @@ import com.google.gson.annotations.SerializedName
 
 class Retrofit {
 
+    //회원가입
+    data class RequestSignup(
+        @SerializedName("loginId")
+        val id: String,
+        @SerializedName("password")
+        val pw: String,
+        @SerializedName("email")
+        val email: String
+    )
+
     //로그인 요청
     data class RequestSignIn(
         @SerializedName("id")
@@ -83,6 +93,14 @@ class Retrofit {
         @SerializedName("y")
         val latitude: String
     )
+
+    //산책 기록
+    data class WalkData(
+        val date: String?,
+        val time: String,
+        val distance: String,
+        val img: ByteArray?
+    )
     //카카오 좌표 검색 응답
     data class ResponseAddress(
         @SerializedName("documents")
@@ -95,6 +113,28 @@ class Retrofit {
     data class RoadAddress(
         @SerializedName("address_name")
         val addressName: String
+    )
+
+    //산책 등록
+    data class RequestWalkPut(
+        @SerializedName("memberId")
+        val memberId: Int,
+        @SerializedName("sexType")
+        val sexType: String,
+        @SerializedName("age")
+        val age: Int,
+        @SerializedName("hasPet")
+        val hasPet: Boolean,
+        @SerializedName("latitude")
+        val latitude: String,
+        @SerializedName("longitude")
+        val longitude: String,
+        @SerializedName("startDateTime")
+        val sTime: String,
+        @SerializedName("walkTime")
+        val wTime: String,
+        @SerializedName("memo")
+        val memo: String?
     )
 
     //커뮤니티 게시글
@@ -134,7 +174,7 @@ class Retrofit {
         @SerializedName("data")
         val data: List<Post>
     )
-    //거래게시판 물품 전체 조회
+    //거래게시판 물품
     data class Product(
         @SerializedName("title")
         val title: String,

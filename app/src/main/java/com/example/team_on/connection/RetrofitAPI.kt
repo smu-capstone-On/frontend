@@ -1,5 +1,7 @@
 package com.example.team_on.connection
 
+import com.google.android.gms.common.api.Response
+import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -55,6 +57,10 @@ interface RetrofitAPI {
         @Header("Authorization") apiKey: String,
         @Query("x") longitude: String,
         @Query("y") latitude: String): Call<Retrofit.ResponseAddress>
+
+    //산책 등록
+    @POST("/walkmate")
+    fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<Retrofit.ResponseSuccess>
 
     //물품 등록
     @Multipart

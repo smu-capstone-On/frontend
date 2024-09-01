@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitObject {
+object RetrofitObject2 {
     private val getRetrofit by lazy {
 
         val clientBuilder = OkHttpClient.Builder()
@@ -12,11 +12,11 @@ object RetrofitObject {
         val client = clientBuilder.build()
 
         Retrofit.Builder()
-            .baseUrl("https://2480c2ce-3ee9-431e-b378-3ba6553a66bf.mock.pstmn.io/")
+            .baseUrl("http://34.231.37.92:8080/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val getRetrofitService: RetrofitAPI by lazy { getRetrofit.create(RetrofitAPI::class.java) }
+    val getRetrofitService : RetrofitAPI by lazy { getRetrofit.create(RetrofitAPI::class.java) }
 }
