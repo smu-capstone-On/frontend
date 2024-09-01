@@ -133,48 +133,7 @@ class FragmentEditDeal : Fragment() {
     // 등록 버튼 클릭 시
     private fun saveEditDeal() {
         btnSaveEditDeal.setOnClickListener {
-            val title = binding.editDealTitle.text.toString()
-            val content = binding.editDealContent.text.toString()
-            val price = binding.editDealEditPrice.text.toString()
 
-            val tag = selectedTags.map { tag ->
-                MultipartBody.Part.createFormData("tags", tag) }
-            val modifiedTime = Date().toString().toRequestBody("text/plain".toMediaTypeOrNull())
-            val isPreorder = isSelectedPreorder.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-            val isSold = isSelectedSold.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-
-            val postImageFile = File("path_postImage") // 이미지 파일 경로
-            val postImage = MultipartBody.Part.createFormData("postImage", postImageFile.name,
-                postImageFile.asRequestBody("image/*".toMediaTypeOrNull()))
-
-            if (title.isEmpty()) {
-                Toast.makeText(activity, "제목이 입력되지 않았습니다.",Toast.LENGTH_SHORT).show()
-            } else if (content.isEmpty()) {
-                Toast.makeText(activity, "내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            } else if (price.isEmpty()) {
-                Toast.makeText(activity, "가격이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
-                val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
-                val pricePart = price.toRequestBody("text/plain".toMediaTypeOrNull())
-
-                val call = RetrofitObject.getRetrofitService.updateProduct(
-                    null, titlePart, contentPart, tag, modifiedTime, pricePart, isPreorder, isSold, postImage)
-
-                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                    override fun onResponse(
-                        call: Call<Retrofit.ResponseSuccess>,
-                        response: Response<Retrofit.ResponseSuccess>
-                    ) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-            }
         }
     }
 

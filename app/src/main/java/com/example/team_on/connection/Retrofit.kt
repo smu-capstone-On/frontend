@@ -127,17 +127,6 @@ class Retrofit {
         @SerializedName("data")
         val data: List<Post>
     )
-    //커뮤니티 게시글 작성
-    data class AddPost(
-        @SerializedName("userId")
-        val userId: Int,
-        @SerializedName("title")
-        val title: String,
-        @SerializedName("body")
-        val body: String,
-        @SerializedName("tagTypes")
-        val tagTypes: String
-    )
     //커뮤니티 게시글 작성 응답
     data class ResponseChatImage(
         @SerializedName("success")

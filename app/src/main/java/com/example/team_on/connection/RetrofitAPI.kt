@@ -56,54 +56,37 @@ interface RetrofitAPI {
         @Query("x") longitude: String,
         @Query("y") latitude: String): Call<Retrofit.ResponseAddress>
 
-    //물품 생성
+    //물품 등록
     @Multipart
     @POST
-    fun createProduct(
-        @Part("id") id: RequestBody?,
-        @Part("authorName") authorName: RequestBody,
-        @Part("title") title: RequestBody,
-        @Part("content") content: RequestBody,
-        @Part("tags") tags: List<MultipartBody.Part>,
-        @Part("createdTime") createdTime: RequestBody,
-        @Part("price") price: RequestBody,
-        @Part postImage: MultipartBody.Part?
-    ): Call<Retrofit.ResponseSuccess>
-    //모든 제품 조회
-    @GET("products")
+    fun addProduct(
+        @Part file: MultipartBody.Part?,
+        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
+    //모든 물품 조회
+    @GET("/products")
     fun getAllProducts(): Call<Retrofit.ResponseProduct>
-    //물품 조회
-
     //물품 삭제
     @DELETE("/api/products/{id}")
     fun deleteProduct(@Path("id") id: Long): Call<Retrofit.ResponseSuccess>
     //물품 수정
     @PATCH("/api/products/{id}")
     fun updateProduct(
-        @Part("id") id: RequestBody?,
-        @Part("title") title: RequestBody,
-        @Part("content") content: RequestBody,
-        @Part("tags") tags: List<MultipartBody.Part>,
-        @Part("modifiedTime") modifiedTime: RequestBody,
-        @Part("price") price: RequestBody,
-        @Part("isPreorder") isPreorder: RequestBody,
-        @Part("isSold") isSold: RequestBody,
-        @Part postImage: MultipartBody.Part?
-    ): Call<Retrofit.ResponseSuccess>
+        @Part postImage: MultipartBody.Part?,
+        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
 
     //게시글 전체 조회
-    @GET("board")
+    @GET("/board")
     fun getAllPosts(): Call<Retrofit.ResponsePost>
-    //게시글 상세 조회
-    @GET("board/{boardId}")
+    //댓글 조회
+    @GET("/board/{boardId}")
     fun getPost(@Path("boardId") boardId: Int): Call<Retrofit.ResponseLoadComment>
     //댓글 저장
-    @POST("comments")
+    @POST("/comments")
     fun saveComment(@Body comment:Retrofit.SaveComment): Call<Retrofit.ResponseSaveComment>
     //게시글 저장
     @Multipart
-    @POST("board")
-    fun chatImage(
-        @Part file: MultipartBody.Part,
+    @POST("/board")
+    fun addPost(
+        @Part file: MultipartBody.Part?,
         @Part("info") info: RequestBody): Call<Retrofit.ResponseChatImage>
 }

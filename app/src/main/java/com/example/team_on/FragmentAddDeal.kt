@@ -1,5 +1,7 @@
 package com.example.team_on
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,25 +11,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitAPI
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentAddDealBinding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import java.util.Date
+import java.io.FileOutputStream
 
 class FragmentAddDeal : Fragment() {
 
@@ -96,13 +96,18 @@ class FragmentAddDeal : Fragment() {
 
         btns.forEach { button ->
             button.setOnClickListener {
-                button.isSelected = !button.isSelected
-                if (button.isSelected) {
-                    button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
-                    selectedTags.add(button.text.toString())
-                } else {
-                    button.setTextColor(ContextCompat.getColor(button.context, R.color.hint))
-                    selectedTags.remove(button.text.toString())
+                if (selectedTags.size == 3 && !button.isSelected) {
+                    Toast.makeText(activity, "태그는 최대 3개까지 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    button.isSelected = !button.isSelected
+                    if (button.isSelected) {
+                        button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
+                        selectedTags.add(button.text.toString())
+                    } else {
+                        button.setTextColor(ContextCompat.getColor(button.context, R.color.hint))
+                        selectedTags.remove(button.text.toString())
+                    }
                 }
             }
         }
@@ -119,49 +124,74 @@ class FragmentAddDeal : Fragment() {
     private fun addDeal() {
         btnAddDeal.setOnClickListener {
             // 사용자 정보(이름) 받는 방법 수정 필요
-            val authorName = "user".toRequestBody("text/plain".toMediaTypeOrNull())
 
             val title = editTextTitle.text.toString()
-            val content = editTextContent.text.toString()
-            val price= editTextPrice.text.toString()
+            val body = editTextContent.text.toString()
+            val tagList = selectedTags
+            val price= editTextPrice.text.toString().toInt()
 
-            val tag = selectedTags.map { tag ->
-                MultipartBody.Part.createFormData("tags", tag) }
-            val createdTime = Date().toString().toRequestBody("text/plain".toMediaTypeOrNull())
-
-            val postImageFile = File("path_postImage") // 이미지 파일 경로
-            val postImage = MultipartBody.Part.createFormData("postImage", postImageFile.name,
-                postImageFile.asRequestBody("image/*".toMediaTypeOrNull()))
-
-            if (title.isEmpty()){
-                Toast.makeText(activity, "제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            } else if (content.isEmpty()){
-                Toast.makeText(activity, "내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            } else if (price.isEmpty()){
-                Toast.makeText(activity, "가격이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
-                val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
-                val pricePart = price.toRequestBody("text/plain".toMediaTypeOrNull())
-
-                val call = RetrofitObject.getRetrofitService.createProduct(
-                    null, authorName, titlePart, contentPart, tag, createdTime, pricePart, postImage)
-
-                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                        if (response.isSuccessful) {
-                            // 성공
-                        } else {
-                            // 실패
-                        }
-                    }
-
-                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-
-                    }
-                })
+            if (title.isEmpty()) {
+                Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
             }
+
+            if (body.isEmpty()) {
+                Toast.makeText(activity, "게시글 내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+            if (editTextPrice.text.isEmpty()) {
+                Toast.makeText(activity, "가격이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+            val data = JSONObject().apply {
+                put("userId", 1)
+                put("title", title)
+                put("price", price)
+                put("body", body)
+                put("tagTypes", tagList)
+                put("reservationStatus", false)
+                put("saleStatus", false)
+            }
+
+            val requestBody = data.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            var imagePart: MultipartBody.Part? = null
+
+            btnAddImage?.let { uri ->
+                val bitmap = (btnAddImage.drawable as BitmapDrawable).bitmap
+                val file = File(requireContext().cacheDir, "image.jpg")
+                val outputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream.flush()
+                outputStream.close()
+
+                val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+            }
+
+            uploadDeal(imagePart, requestBody)
         }
+    }
+
+    private fun uploadDeal(imagePart: MultipartBody.Part?, requestBody: okhttp3.RequestBody) {
+        val call = if (imagePart != null) {
+            RetrofitObject.getRetrofitService.addProduct(imagePart, requestBody)
+        } else {
+            RetrofitObject.getRetrofitService.addProduct(null, requestBody)
+        }
+
+        call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+            override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(activity, "게시글이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
+                    requireActivity().supportFragmentManager.popBackStack()
+                } else {
+                    Toast.makeText(activity, "업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                Toast.makeText(activity, "업로드 중 오류 발생: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onDestroyView() {

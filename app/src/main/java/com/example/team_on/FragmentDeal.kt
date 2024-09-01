@@ -169,7 +169,11 @@ class FragmentDeal : Fragment() {
         val filteredProducts = productList.filter { product ->
             val matchesText = product.title.lowercase(Locale.ROOT).contains(searchText)
             val matchesTag = selectedTags.isEmpty() || product.tags!!.any { it in selectedTags }
-            val matchesPreorder = isPreOrderSelected == null || product.reservationStatus == isPreOrderSelected
+            val matchesPreorder = when (isPreOrderSelected) {
+                true -> true // preorder가 true인 경우, 모든 reservationStatus 포함
+                false -> product.reservationStatus == false // preorder가 false인 경우, reservationStatus가 false인 것만 포함
+                else -> true // preorder가 선택되지 않은 경우, 모든 제품 포함
+            }
             matchesText && matchesTag && matchesPreorder
         }
         filteredList.clear()
@@ -180,9 +184,9 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareBy<Retrofit.Product> {it.time}
-            "price" -> compareBy {it.price}
-            else -> compareBy {it.time}
+            "new" -> compareByDescending<Retrofit.Product> { it.time }
+            "price" -> compareBy { it.price }  // 가격에 따른 오름차순 정렬
+            else -> compareByDescending { it.time }
         }
         comparator.let {
             filteredList.sortWith(it)
@@ -262,19 +266,21 @@ class FragmentDeal : Fragment() {
         call.enqueue(object : Callback<Retrofit.ResponseProduct> {
             override fun onResponse(call: Call<Retrofit.ResponseProduct>, response: Response<Retrofit.ResponseProduct>) {
                 if (response.isSuccessful && response.body()?.success == true) {
-                    val products = response.body()?.data ?: emptyList()
+                    requireActivity().runOnUiThread {
+                        val products = response.body()?.data ?: emptyList()
 
-                    val sortedProducts = products.sortedByDescending { it.time }
+                        val sortedProducts = products.sortedByDescending { it.time }
 
-                    productList.clear()
-                    productList.addAll(sortedProducts)
+                        productList.clear()
+                        productList.addAll(sortedProducts)
 
-                    filteredList.clear()
-                    filteredList.addAll(productList)
+                        filteredList.clear()
+                        filteredList.addAll(productList)
 
-                    productAdapter.notifyDataSetChanged() // 데이터가 변경되었음을 어댑터에 알림
+                        productAdapter.notifyDataSetChanged()
 
-                    Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
@@ -285,7 +291,6 @@ class FragmentDeal : Fragment() {
             }
         })
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
