@@ -98,6 +98,7 @@ class Retrofit {
 
     //산책 기록
     data class WalkData(
+        val date: String?,
         val time: String,
         val distance: String,
         val img: ByteArray?

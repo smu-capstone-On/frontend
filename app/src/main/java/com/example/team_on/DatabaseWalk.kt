@@ -31,13 +31,13 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
         val createTableQuery = "CREATE TABLE $TABLE_NAME ($COLUMN_DATE TEXT PRIMARY KEY, $COLUMN_TIME TEXT, $COLUMN_DIS TEXT, $COLUMN_IMG BLOB)"
         db.execSQL(createTableQuery)
     }
-    //거리는 m단위 날짜는 xxxx.xx.xx 속도는 m/s 시간은 초단위
+    //거리는 m단위 날짜는 xxxx.xx.xx 시간은 초단위
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // 데이터베이스 업그레이드 처리
     }
 
-    fun insertData(date: String, time: String, distance: String, speed: String, img: ByteArray) {
+    fun insertData(date: String, time: String, distance: String, img: ByteArray?) {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply{
             put(COLUMN_DATE, date)
@@ -50,7 +50,7 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
     }
 
     @SuppressLint("Recycle")
-    fun updateData(date: String, time: String, distance: String, speed: String, img: ByteArray){
+    fun updateData(date: String, time: String, distance: String, img: ByteArray?){
         val db = this.writableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATE = ?", arrayOf(date))
         var newTime = 0
@@ -73,7 +73,7 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
         db.close()
     }
 
-    fun getOneData(date: String): Retrofit.WalkData? {
+    fun getData(date: String): Retrofit.WalkData? {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATE = ?", arrayOf(date))
 
@@ -83,35 +83,11 @@ class DatabaseWalk private constructor(context: Context) : SQLiteOpenHelper(cont
             val distance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS))
             val img = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMG))
 
-            walkData = Retrofit.WalkData(time, distance, img)
+            walkData = Retrofit.WalkData(null, time, distance, img)
         }
 
         cursor.close()
         db.close()
         return walkData
-    }
-
-    @SuppressLint("Recycle")
-    fun getData(date: String): Array<Retrofit.WalkData>{
-        val startDate = date.split(" ")[0]
-        val endDate = date.split(" ")[1]
-
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATE BETWEEN ? AND ?", arrayOf(startDate, endDate))
-
-        val dataList = mutableListOf<Retrofit.WalkData>()
-        if (cursor.moveToFirst()) {
-            do {
-                val time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME))
-                val distance = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIS))
-
-                dataList.add(Retrofit.WalkData(time, distance, null))
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-
-        return dataList.toTypedArray()
     }
 }

@@ -18,5 +18,5 @@ object RetrofitObject {
             .build()
     }
 
-    val getRetrofitService : RetrofitAPI by lazy { getRetrofit.create(RetrofitAPI::class.java) }
+    val getRetrofitService: RetrofitAPI by lazy { getRetrofit.create(RetrofitAPI::class.java) }
 }

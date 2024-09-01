@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -56,25 +55,24 @@ class ActivityCalendar : AppCompatActivity() {
 
         val today = getCurrentDate()
         calTextDate.text = today
-        val currentData = databaseWalk.getOneData(today)
+        val currentData = databaseWalk.getData(today)
         if(currentData !=null){
             val time = currentData.time.toInt()
             calTextTime.text = (time/60).toString()
             val distanceInKm = currentData.distance.toFloat() / 1000
             val distance = String.format("%.2f", distanceInKm)
             calTextDistance.text = distance
-            val Speed = distanceInKm/ (time.toDouble()/3600)
+            val Speed = distanceInKm.toDouble()/(time.toDouble()/3600)
             val newSpeed = String.format("%.2f", Speed)
-            Log.d("speed", time.toString()+"  "+distanceInKm)
             calTextSpeed.text = newSpeed
-            val widthPx = dpToPx(this, 300)
-            Glide.with(this)
-                .load(currentData.img)
-                .override(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT)  // 가로를 300dp로 제한
-                .transform(FitCenter())  // 세로 비율 유지
-                .into(calImg)
-            calImg.clipToOutline = true
-            calImg.visibility = View.VISIBLE
+//            val widthPx = dpToPx(this, 300)
+//            Glide.with(this)
+//                .load(currentData.img)
+//                .override(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT)  // 가로를 300dp로 제한
+//                .transform(FitCenter())  // 세로 비율 유지
+//                .into(calImg)
+//            calImg.clipToOutline = true
+//            calImg.visibility = View.VISIBLE
         }
 
         btnCal.setOnClickListener {
@@ -91,7 +89,7 @@ class ActivityCalendar : AppCompatActivity() {
             // 날짜가 선택되었을 때 호출되는 부분
             val selectedDate = date.date.toString()
             val dateText = selectedDate.replace("-",".")
-            val info = databaseWalk.getOneData(dateText)
+            val info = databaseWalk.getData(dateText)
             if(info == null){
                 calTextTime.text = "0"
                 calTextDistance.text = "0"
@@ -101,10 +99,10 @@ class ActivityCalendar : AppCompatActivity() {
                 val time = info.time.toInt()
                 calTextTime.text = (time/60).toString()
                 val distanceInKm = info.distance.toFloat() / 1000
-                val distance = String.format("%.1f", distanceInKm)
+                val distance = String.format("%.2f", distanceInKm)
                 calTextDistance.text = distance
-                val Speed = distance.toFloat() / (time/60)
-                val newSpeed = String.format("%.1f", Speed)
+                val Speed = distance.toFloat() / (time.toFloat()/3600)
+                val newSpeed = String.format("%.2f", Speed)
                 calTextSpeed.text = newSpeed
                 val widthPx = dpToPx(this, 300)
                 Glide.with(this)
