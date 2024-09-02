@@ -1,5 +1,6 @@
 package com.example.team_on.connection
 
+import android.content.SharedPreferences
 import com.google.gson.annotations.SerializedName
 
 class Retrofit {
@@ -225,7 +226,7 @@ class Retrofit {
         @SerializedName("boardId")
         val boardId: Int,
         @SerializedName("userId")
-        val userId: Int,
+        val userId: Long,
         @SerializedName("body")
         val body: String
     )
@@ -235,5 +236,12 @@ class Retrofit {
         val success: Boolean,
         @SerializedName("data")
         val data: SaveComment
+    )
+    //좋아요 여부 전송
+    data class EditLikeStatus(
+        @SerializedName("memberId")
+        val memberId: Long,
+        @SerializedName("boardId")
+        val boardId: Int
     )
 }

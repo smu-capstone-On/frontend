@@ -95,4 +95,7 @@ interface RetrofitAPI {
     fun addPost(
         @Part file: MultipartBody.Part?,
         @Part("info") info: RequestBody): Call<Retrofit.ResponseChatImage>
+    //게시글 좋아요
+    @POST("/likes")
+    fun editLike(@Body data: Retrofit.EditLikeStatus): Call<Retrofit.ResponseSuccess>
 }

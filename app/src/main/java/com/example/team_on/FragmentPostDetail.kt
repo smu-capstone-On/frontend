@@ -120,23 +120,7 @@ class FragmentPostDetail : Fragment() {
 
         // 좋아요 버튼 클릭
         btnLike.setOnClickListener {
-            btnLike.isSelected = !btnLike.isSelected
-
-            if (btnLike.isSelected) {
-                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.yellow))
-                // 좋아요 수 증가
-                like = (like ?: 0) + 1
-                binding.postDetailTextLike.text = like.toString()
-                // 종아요 여부 전송
-                updateLikeStatus(postNum, true)
-            } else {
-                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.hint))
-                // 좋아요 수 감소
-                like = (like ?: 0) - 1
-                binding.postDetailTextLike.text = like.toString()
-                // 좋아요 여부 전송
-                updateLikeStatus(postNum, false)
-            }
+            updateLikeStatus(postNum)
         }
 
         // 댓글 버튼 클릭
@@ -186,9 +170,9 @@ class FragmentPostDetail : Fragment() {
 
     // 댓글 등록 기능
     private fun addCommentToServer(comment: String) {
-        val userId = 1
+        val userId = MySharedPreference.user.getLong("userId", 0L)
 
-        val commentRequest = postNum?.let { Retrofit.SaveComment(userId, it, comment) }
+        val commentRequest = postNum?.let { Retrofit.SaveComment(it, userId, comment) }
 
         val call = commentRequest?.let { RetrofitObject.getRetrofitService.saveComment(it) }
         call?.enqueue(object : Callback<Retrofit.ResponseSaveComment> {
@@ -230,9 +214,36 @@ class FragmentPostDetail : Fragment() {
     }
 
     // 좋아요 여부 전송
-    private fun updateLikeStatus(postNum: Int?, isLiked: Boolean) {
+    private fun updateLikeStatus(postNum: Int?) {
         postNum?.let {
+            val userId = MySharedPreference.user.getLong("userId", 0L)
+            val data = Retrofit.EditLikeStatus(userId, postNum)
 
+            val call = RetrofitObject.getRetrofitService.editLike(data)
+            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                    if (response.isSuccessful) {
+                        btnLike.isSelected = !btnLike.isSelected
+
+                        if (btnLike.isSelected) {
+                            btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.yellow))
+                            // 좋아요 수 증가
+                            like = (like ?: 0) + 1
+                            binding.postDetailTextLike.text = like.toString()
+                        } else {
+                            btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.hint))
+                            // 좋아요 수 감소
+                            like = (like ?: 0) - 1
+                            binding.postDetailTextLike.text = like.toString()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
+            })
         }
     }
 
