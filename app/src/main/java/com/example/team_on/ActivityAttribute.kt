@@ -2,24 +2,22 @@ package com.example.team_on
 
 import android.os.Bundle
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.databinding.ActivityAttributeBinding
-import com.kakao.sdk.common.KakaoSdk
 
 class ActivityAttribute : AppCompatActivity() {
 
     private val binding: ActivityAttributeBinding by lazy { ActivityAttributeBinding.inflate(layoutInflater) }
-    private val attribute = KakaoSDK.searchAttribute
-    private val editor = attribute.edit()
+    private val sharedPreference = MySharedPreference.user
+    private val editor = sharedPreference.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val pet = attribute.getString("pet", "")
-        val gender = attribute.getString("gender", "")
-        val age = attribute.getString("age", null)
+        val pet = sharedPreference.getString("pet", "")
+        val gender = sharedPreference.getString("gender", "")
+        val age = sharedPreference.getString("age", null)
         val editStart = binding.attributeEditAge1
         val editEnd = binding.attributeEditAge2
         val btnSave = binding.attributeBtnSave
