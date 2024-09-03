@@ -30,13 +30,9 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.System.exit
 
 
 class FragmentWalk : Fragment() {
@@ -162,6 +158,11 @@ class FragmentWalk : Fragment() {
             imgLoc.visibility = View.VISIBLE
         }
 
+        //현재 지도에서 찾기 눌렀을 때 데모
+        btnMapSearch.setOnClickListener {
+            
+        }
+
         btnJoin.setOnClickListener {
             cameraPos = map.cameraPosition!!
             val key = KakaoKey.API_KEY
@@ -172,7 +173,6 @@ class FragmentWalk : Fragment() {
             call.enqueue(object : Callback<Retrofit.ResponseAddress> {
                 override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
                     if (response.isSuccessful) {
-                        Log.d("latitudelongitude", response.body().toString())
                         val arr = response.body()?.documents!![0].roadAddress
                         if(arr != null){
                             roadAdd = arr.addressName
