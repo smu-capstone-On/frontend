@@ -8,7 +8,7 @@ import com.example.team_on.databinding.ActivityAttributeBinding
 class ActivityAttribute : AppCompatActivity() {
 
     private val binding: ActivityAttributeBinding by lazy { ActivityAttributeBinding.inflate(layoutInflater) }
-    private val sharedPreference = MySharedPreference.user
+    private val sharedPreference = KakaoSDK.user
     private val editor = sharedPreference.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
