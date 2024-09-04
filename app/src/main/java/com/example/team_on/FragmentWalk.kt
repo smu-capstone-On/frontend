@@ -17,11 +17,13 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.team_on.connection.KakaoRetrofitObject
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.databinding.FragmentWalkBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -36,7 +38,6 @@ import com.kakao.vectormap.label.LabelStyles
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.System.exit
 
 
 class FragmentWalk : Fragment() {
@@ -52,6 +53,7 @@ class FragmentWalk : Fragment() {
     private lateinit var imgLoc: ImageView
     private lateinit var textAddName: TextView
     private lateinit var cameraPos: CameraPosition
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private lateinit var mapView: MapView
     private lateinit var map: KakaoMap
@@ -110,6 +112,28 @@ class FragmentWalk : Fragment() {
         btnChangeJoin = binding.fwalkBtnChangeJoin
         btnJoin = binding.fwalkBtnJoin
         imgLoc = binding.fwalkImgLoc
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.fwalkBottomSheet)
+
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        // BottomSheet가 완전히 펼쳐졌을 때
+                        btnMapSearch.visibility = View.GONE
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        // BottomSheet가 축소되었을 때
+                        btnMapSearch.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // 슬라이드 진행 중 처리할 동작
+            }
+        })
 
         mapView = binding.fwalkMap
         mapView.start(lifeCycleCallback, readyCallback)
@@ -162,6 +186,15 @@ class FragmentWalk : Fragment() {
             imgLoc.visibility = View.VISIBLE
         }
 
+        //현재 지도에서 찾기 눌렀을 때 데모
+        btnMapSearch.setOnClickListener {
+            val LabelStyle = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon).setAnchorPoint(0.5f,1f)))
+
+            labelLayer.addLabel(LabelOptions.from("1", LatLng.from(37.599669844990906,126.95765567311638)).setStyles(LabelStyle))
+            labelLayer.addLabel(LabelOptions.from("2", LatLng.from(37.60149068988,126.95531178715)).setStyles(LabelStyle))
+            labelLayer.addLabel(LabelOptions.from("3", LatLng.from(37.601923289543194,126.95699815251602)).setStyles(LabelStyle))
+        }
+
         btnJoin.setOnClickListener {
             cameraPos = map.cameraPosition!!
             val key = KakaoKey.API_KEY
@@ -172,7 +205,6 @@ class FragmentWalk : Fragment() {
             call.enqueue(object : Callback<Retrofit.ResponseAddress> {
                 override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
                     if (response.isSuccessful) {
-                        Log.d("latitudelongitude", response.body().toString())
                         val arr = response.body()?.documents!![0].roadAddress
                         if(arr != null){
                             roadAdd = arr.addressName
