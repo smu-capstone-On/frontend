@@ -80,10 +80,11 @@ class FragmentDealDetail : Fragment() {
         }
 
         imgUrl?.let { url ->
+            binding.dealDetailImageview.visibility = View.VISIBLE
             val uri = url.toUri().buildUpon().scheme("https").build()
             Glide.with(binding.dealDetailImageview.context)
                 .load(uri) // URL을 URI로 변환하여 로드
-                .error(R.drawable.svg_camera)
+                .error(R.drawable.svg_camera_error)
                 .into(binding.dealDetailImageview) // 이미지가 로드될 ImageView
         }
 

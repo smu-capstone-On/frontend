@@ -64,7 +64,7 @@ interface RetrofitAPI {
 
     //물품 등록
     @Multipart
-    @POST
+    @POST("/products")
     fun addProduct(
         @Part file: MultipartBody.Part?,
         @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
@@ -83,7 +83,7 @@ interface RetrofitAPI {
     //게시글 전체 조회
     @GET("/board")
     fun getAllPosts(): Call<Retrofit.ResponsePost>
-    //댓글 조회
+    //게시글 상세 조회(댓글 조회)
     @GET("/board/{boardId}")
     fun getPost(@Path("boardId") boardId: Int): Call<Retrofit.ResponseLoadComment>
     //댓글 저장

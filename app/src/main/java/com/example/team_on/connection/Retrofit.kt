@@ -226,7 +226,7 @@ class Retrofit {
         @SerializedName("boardId")
         val boardId: Int,
         @SerializedName("userId")
-        val userId: Long,
+        val userId: Int,
         @SerializedName("body")
         val body: String
     )

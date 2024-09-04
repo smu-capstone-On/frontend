@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:src="@drawable/svg_camera"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/deal_detail_toolbar" />
@@ -51,7 +51,7 @@
         android:id="@+id/deal_detail_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:text="nn/nn 00:00"
         android:textColor="@color/gray"
         android:textSize="12sp"

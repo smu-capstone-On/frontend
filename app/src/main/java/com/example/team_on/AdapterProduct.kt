@@ -29,7 +29,7 @@ class AdapterProduct(
             product.imgUrl?.let { url ->
                 Glide.with(binding.productImage.context)
                     .load(url.toUri())
-                    .error(R.drawable.svg_camera)
+                    .error(R.drawable.svg_camera_error)
                     .into(binding.productImage)
             }
 
@@ -46,7 +46,7 @@ class AdapterProduct(
 
         private fun formatPostTime(dateString: String): String {
             val dateTime = LocalDateTime.parse(dateString)
-            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd   HH:mm")
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd  HH:mm")
             return dateTime.format(formatter)
         }
     }

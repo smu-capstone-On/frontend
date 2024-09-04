@@ -24,6 +24,7 @@
         android:maxWidth="100sp"
         android:maxHeight="15sp"
         android:maxLines="1"
+        android:layout_marginTop="2dp"
         android:text="product_name"
         android:textColor="@color/black"
         android:textSize="12sp"

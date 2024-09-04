@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="75dp"
+    android:minHeight="85dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <de.hdodenhof.circleimageview.CircleImageView
@@ -31,7 +31,7 @@
         android:id="@+id/comment_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="mm/dd hh:mm"
         android:textColor="@color/gray"
         android:textSize="11sp"

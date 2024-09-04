@@ -96,10 +96,11 @@ class FragmentPostDetail : Fragment() {
         }
 
         imgUrl?.let { url ->
+            binding.postDetailImage.visibility = View.VISIBLE
             val uri = url.toUri().buildUpon().scheme("https").build()
             Glide.with(binding.postDetailImage.context)
                 .load(uri) // URL을 URI로 변환하여 로드
-                .error(R.drawable.svg_camera)
+                .error(R.drawable.svg_camera_error)
                 .into(binding.postDetailImage) // 이미지가 로드될 ImageView
         }
 
@@ -120,7 +121,21 @@ class FragmentPostDetail : Fragment() {
 
         // 좋아요 버튼 클릭
         btnLike.setOnClickListener {
-            updateLikeStatus(postNum)
+            // updateLikeStatus(postNum)
+            // 임시
+            btnLike.isSelected = !btnLike.isSelected
+
+            if (btnLike.isSelected) {
+                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.yellow))
+                // 좋아요 수 증가
+                like = (like ?: 0) + 1
+                binding.postDetailTextLike.text = like.toString()
+            } else {
+                btnLike.setColorFilter(ContextCompat.getColor(btnLike.context, R.color.hint))
+                // 좋아요 수 감소
+                like = (like ?: 0) - 1
+                binding.postDetailTextLike.text = like.toString()
+            }
         }
 
         // 댓글 버튼 클릭
@@ -170,9 +185,10 @@ class FragmentPostDetail : Fragment() {
 
     // 댓글 등록 기능
     private fun addCommentToServer(comment: String) {
-        val userId = MySharedPreference.user.getLong("userId", 0L)
+//        val userId = MySharedPreference.user.getLong("userId", 0L)
+        val user = 99
 
-        val commentRequest = postNum?.let { Retrofit.SaveComment(it, userId, comment) }
+        val commentRequest = postNum?.let { Retrofit.SaveComment(it, user, comment) }
 
         val call = commentRequest?.let { RetrofitObject.getRetrofitService.saveComment(it) }
         call?.enqueue(object : Callback<Retrofit.ResponseSaveComment> {
@@ -180,7 +196,7 @@ class FragmentPostDetail : Fragment() {
                 if (response.isSuccessful && response.body()?.success == true) {
                     Toast.makeText(context, "댓글 작성에 성공했습니다.", Toast.LENGTH_SHORT).show()
 
-                    val loadComment = Retrofit.LoadComment(99, comment, LocalDateTime.now().toString())
+                    val loadComment = Retrofit.LoadComment(user, comment, LocalDateTime.now().toString())
 
                     // 댓글 리스트 갱신
                     loadCommentList.addAll(listOf(loadComment))
