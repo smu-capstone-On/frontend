@@ -277,9 +277,9 @@ class FragmentDeal : Fragment() {
                         filteredList.clear()
                         filteredList.addAll(productList)
 
-                        productAdapter.notifyDataSetChanged()
+                        productAdapter.filterList(filteredList)
 
-                        Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()

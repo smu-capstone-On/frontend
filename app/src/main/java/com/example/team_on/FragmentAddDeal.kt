@@ -181,7 +181,7 @@ class FragmentAddDeal : Fragment() {
         call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
             override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(activity, "게시글이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "물품이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
                 } else {
                     Toast.makeText(activity, "업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()

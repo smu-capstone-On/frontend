@@ -28,10 +28,11 @@ class AdapterPost(private val posts: List<Retrofit.Post>,
 
             // 이미지 URL을 받아서 ImageView에 로드
             post.imgUrl?.let { url ->
+                binding.postImage.visibility = View.VISIBLE
                 val uri = url.toUri().buildUpon().scheme("https").build()
                 Glide.with(binding.postImage.context)
                     .load(uri) // URL을 URI로 변환하여 로드
-                    .error(R.drawable.svg_camera)
+                    .error(R.drawable.svg_camera_error)
                     .into(binding.postImage) // 이미지가 로드될 ImageView
             }
 

@@ -147,7 +147,7 @@
     
     <EditText
         android:id="@+id/add_deal_edit_price"
-        android:layout_width="350dp"
+        android:layout_width="330dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:background="#F6F6F6"
@@ -157,7 +157,8 @@
         android:textColorHint="@color/gray"
         android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@id/add_deal_text_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_deal_text_price" />
 
     <ImageView
@@ -184,21 +185,21 @@
         android:id="@+id/add_deal_tag_dog"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
         android:text="강아지"
         android:textColor="@color/hint"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/add_deal_tag_list"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_deal_tag_list" />
 
     <Button
         android:id="@+id/add_deal_tag_cat"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
         android:text="고양이"
@@ -211,7 +212,7 @@
         android:id="@+id/add_deal_tag_small"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
         android:text="소동물"
@@ -224,7 +225,7 @@
         android:id="@+id/add_deal_tag_reptile"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
         android:text="파충류"
@@ -237,7 +238,7 @@
         android:id="@+id/add_deal_tag_bird"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
         android:text="조류"
