@@ -12,7 +12,7 @@ object RetrofitObject {
         val client = clientBuilder.build()
 
         Retrofit.Builder()
-            .baseUrl("https://2480c2ce-3ee9-431e-b378-3ba6553a66bf.mock.pstmn.io/")
+            .baseUrl("https://ee10b2a8-7452-4ceb-be77-3ae52bb90552.mock.pstmn.io/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

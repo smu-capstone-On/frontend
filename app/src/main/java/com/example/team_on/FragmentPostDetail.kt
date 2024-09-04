@@ -232,7 +232,7 @@ class FragmentPostDetail : Fragment() {
     // 좋아요 여부 전송
     private fun updateLikeStatus(postNum: Int?) {
         postNum?.let {
-            val userId = MySharedPreference.user.getLong("userId", 0L)
+            val userId = KakaoSDK.user.getLong("userId", 0L)
             val data = Retrofit.EditLikeStatus(userId, postNum)
 
             val call = RetrofitObject.getRetrofitService.editLike(data)

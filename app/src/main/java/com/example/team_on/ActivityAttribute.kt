@@ -51,8 +51,8 @@ class ActivityAttribute : AppCompatActivity() {
         btnReset.setOnClickListener {
             groupPet.clearCheck()
             groupGender.clearCheck()
-            editStart.setText("")
-            editEnd.setText("")
+            editStart.setText("0")
+            editEnd.setText("100")
         }
 
         btnSave.setOnClickListener {
