@@ -274,6 +274,11 @@ class FragmentDeal : Fragment() {
                         productList.clear()
                         productList.addAll(sortedProducts)
 
+                        filteredList.clear()
+                        filteredList.addAll(productList)
+
+                        productAdapter.filterList(filteredList)
+
                         Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
