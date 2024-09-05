@@ -289,17 +289,19 @@ class ActivityWalk : AppCompatActivity() {
         //종료 버튼
         btnWrite.setOnClickListener {
             map.moveCamera(CameraUpdateFactory.newCenterPosition(userPosition))
-            map.moveCamera(CameraUpdateFactory.zoomTo(15))
+            map.moveCamera(CameraUpdateFactory.zoomTo(16))
             val handler1 = Handler(Looper.getMainLooper())
             handler1.postDelayed({
                 val date = getCurrentDate()
                 if(databaseWalk.getData(date) == null){
                     databaseWalk.insertData(date, seconds.toString(), totalDistance.toString(), onButtonClicked())
                     seconds = 0
+                    totalDistance = 0f
                     updateTimerText()
                 }else{
                     databaseWalk.updateData(date, seconds.toString(), totalDistance.toString(), onButtonClicked())
                     seconds = 0
+                    totalDistance = 0f
                     updateTimerText()
                 }
             }, 50)

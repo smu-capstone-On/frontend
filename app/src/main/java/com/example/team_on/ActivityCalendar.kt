@@ -65,14 +65,14 @@ class ActivityCalendar : AppCompatActivity() {
             val Speed = distanceInKm.toDouble()/(time.toDouble()/3600)
             val newSpeed = String.format("%.2f", Speed)
             calTextSpeed.text = newSpeed
-//            val widthPx = dpToPx(this, 300)
-//            Glide.with(this)
-//                .load(currentData.img)
-//                .override(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT)  // 가로를 300dp로 제한
-//                .transform(FitCenter())  // 세로 비율 유지
-//                .into(calImg)
-//            calImg.clipToOutline = true
-//            calImg.visibility = View.VISIBLE
+            val widthPx = dpToPx(this, 300)
+            Glide.with(this)
+                .load(currentData.img)
+                .override(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT)  // 가로를 300dp로 제한
+                .transform(FitCenter())  // 세로 비율 유지
+                .into(calImg)
+            calImg.clipToOutline = true
+            calImg.visibility = View.VISIBLE
         }
 
         btnCal.setOnClickListener {
