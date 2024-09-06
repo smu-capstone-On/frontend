@@ -12,7 +12,7 @@ class ActivityMain : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private lateinit var bnv : BottomNavigationView
+    lateinit var bnv : BottomNavigationView
     private var backPressedTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {

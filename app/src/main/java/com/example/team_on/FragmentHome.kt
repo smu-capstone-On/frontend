@@ -15,6 +15,8 @@ class FragmentHome : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var btnGoWalk: Button
     private lateinit var btnGoCalendar: ImageButton
+    private lateinit var btnGoCommunity: Button
+    private lateinit var btnGoDeal: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +26,8 @@ class FragmentHome : Fragment() {
         
         btnGoWalk = binding.homeBtnGoWalk
         btnGoCalendar = binding.homeBtnGoCalendar
+        btnGoCommunity = binding.homeBtnGoCommunity
+        btnGoDeal = binding.homeBtnGoDeal
 
         btnGoWalk.setOnClickListener{
             val intent = Intent(requireContext(), ActivityWalk::class.java)
@@ -33,6 +37,14 @@ class FragmentHome : Fragment() {
         btnGoCalendar.setOnClickListener{
             val intent = Intent(requireContext(), ActivityCalendar::class.java)
             startActivity(intent)
+        }
+
+        btnGoCommunity.setOnClickListener {
+            (activity as ActivityMain).bnv.selectedItemId = R.id.nav_bottom_community
+        }
+
+        btnGoDeal.setOnClickListener {
+            (activity as ActivityMain).bnv.selectedItemId = R.id.nav_bottom_deal
         }
         return binding.root
     }
