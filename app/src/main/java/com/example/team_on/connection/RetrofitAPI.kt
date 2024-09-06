@@ -22,8 +22,8 @@ interface RetrofitAPI {
     @POST("/api/login")
     fun signIn(@Body request: Retrofit.RequestSignIn): Call<Retrofit.ResponseSuccess>
     //아이디 중복 확인
-    @GET("/api/checkId")
-    fun checkId(@Query("id") id: String): Call<Retrofit.ResponseSuccess>
+    @GET("/member/join/loginid{loginId}")
+    fun checkId(@Query("loginId") id: String): Call<Retrofit.ResponseSuccess>
     //인증 메일 발송
     @POST("/api/mail")
     fun sendMail(@Body request: Retrofit.RequestMail): Call<Retrofit.ResponseSuccess>

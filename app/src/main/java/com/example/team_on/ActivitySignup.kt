@@ -106,7 +106,6 @@ class ActivitySignup : AppCompatActivity() {
             val call = RetrofitObject.getRetrofitService.checkId(id)
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                    btnCheckId.isEnabled = true
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
@@ -121,6 +120,7 @@ class ActivitySignup : AppCompatActivity() {
                             }
                         }
                     }
+                    btnCheckId.isEnabled = true
                 }
 
                 override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
