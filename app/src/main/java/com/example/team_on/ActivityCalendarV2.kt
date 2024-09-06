@@ -127,7 +127,10 @@ class ActivityCalendarV2 : AppCompatActivity() {
 
             val aTime = (totalTime.toFloat()/total)/3600
             val aDist = totalDistance.toFloat()/total/1000
-            val aSpeed = aDist/aTime
+            var aSpeed = 0f
+            if(aTime != 0f && aDist != 0f){
+                aSpeed = aDist/aTime
+            }
             binding.cal2TextTime.text = (totalTime/total/60).toString()
             binding.cal2TextDist.text = String.format("%.2f", aDist)
             binding.cal2TextSpeed.text = String.format("%.2f", aSpeed)

@@ -2,6 +2,7 @@ package com.example.team_on
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -51,7 +52,6 @@ class FragmentWalk : Fragment() {
     private lateinit var btnMapSearch: Button
     private lateinit var btnChangeSearch: ImageButton
     private lateinit var imgLoc: ImageView
-    private lateinit var textAddName: TextView
     private lateinit var cameraPos: CameraPosition
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
@@ -60,7 +60,7 @@ class FragmentWalk : Fragment() {
 
     private lateinit var labelLayer: LabelLayer //라벨
 
-    private val startZoomLevel = 17 //시작 카메라 레벨
+    private val startZoomLevel = 16 //시작 카메라 레벨
 
     private val startLocation = LatLng.from(37.602638,126.955252) //시작 위치
 
@@ -114,7 +114,7 @@ class FragmentWalk : Fragment() {
         imgLoc = binding.fwalkImgLoc
         bottomSheetBehavior = BottomSheetBehavior.from(binding.fwalkBottomSheet)
 
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -179,20 +179,25 @@ class FragmentWalk : Fragment() {
 
         //위치 등록으로 넘어갈 때
         btnChangeJoin.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             btnChangeJoin.visibility = View.GONE
             btnMapSearch.visibility = View.GONE
             btnChangeSearch.visibility = View.VISIBLE
             btnJoin.visibility = View.VISIBLE
             imgLoc.visibility = View.VISIBLE
+            labelLayer.removeAll()
         }
 
         //현재 지도에서 찾기 눌렀을 때 데모
         btnMapSearch.setOnClickListener {
-            val LabelStyle = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon).setAnchorPoint(0.5f,1f)))
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            val LabelStyle = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon)
+                .setTextStyles(45, Color.parseColor("#000000"))
+                .setAnchorPoint(0.5f,1f)))
 
-            labelLayer.addLabel(LabelOptions.from("1", LatLng.from(37.599669844990906,126.95765567311638)).setStyles(LabelStyle))
-            labelLayer.addLabel(LabelOptions.from("2", LatLng.from(37.60149068988,126.95531178715)).setStyles(LabelStyle))
-            labelLayer.addLabel(LabelOptions.from("3", LatLng.from(37.601923289543194,126.95699815251602)).setStyles(LabelStyle))
+            labelLayer.addLabel(LabelOptions.from("1", LatLng.from(37.599669844990906,126.95765567311638)).setStyles(LabelStyle).setTexts("1"))
+            labelLayer.addLabel(LabelOptions.from("2", LatLng.from(37.60149068988,126.95531178715)).setStyles(LabelStyle).setTexts("2"))
+            labelLayer.addLabel(LabelOptions.from("3", LatLng.from(37.601923289543194,126.95699815251602)).setStyles(LabelStyle).setTexts("3"))
         }
 
         btnJoin.setOnClickListener {
