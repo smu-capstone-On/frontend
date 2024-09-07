@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityLoginBinding
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -27,6 +28,8 @@ class ActivityLogin : AppCompatActivity() {
     private val binding: ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private lateinit var editId: EditText
     private lateinit var editPw: EditText
+    private val sharedPreference = KakaoSDK.user
+    private val editor = sharedPreference.edit()
 
     //키해시 얻는 법
 //    fun getKeyHash() {
@@ -68,14 +71,16 @@ class ActivityLogin : AppCompatActivity() {
             }else if(pw.isEmpty()){
                 Toast.makeText(this@ActivityLogin,"비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             }else{
-                val call = RetrofitObject.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
-                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
+                call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
+                    override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if(responseBody != null){
                                 if(responseBody.success) {
                                     startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
+                                    editor.putString("userId", responseBody.data.userId.toString())
+                                    editor.apply()
                                 }
                             }
                         }
@@ -84,7 +89,7 @@ class ActivityLogin : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                    override fun onFailure(call: Call<Retrofit.ResponseSignIn>, t: Throwable) {
                         val errorMessage = "Call Failed: ${t.message}"
                         Log.d("Retrofit", errorMessage)
                     }

@@ -19,8 +19,8 @@ import retrofit2.http.Query
 interface RetrofitAPI {
 
     //로그인
-    @POST("/api/login")
-    fun signIn(@Body request: Retrofit.RequestSignIn): Call<Retrofit.ResponseSuccess>
+    @POST("/member/login")
+    fun signIn(@Body request: Retrofit.RequestSignIn): Call<Retrofit.ResponseSignIn>
     //아이디 중복 확인
     @GET("/member/join/loginid{loginId}")
     fun checkId(@Query("loginId") id: String): Call<Retrofit.ResponseSuccess>

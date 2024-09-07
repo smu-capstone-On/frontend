@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.team_on.databinding.ActivityChatBinding
@@ -22,6 +23,7 @@ class ActivityChat : AppCompatActivity() {
     private lateinit var chatEdit : EditText
     private lateinit var const: ConstraintLayout
     private lateinit var chatConst: ConstraintLayout
+    private lateinit var btnSend: ImageButton
 
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
@@ -118,10 +120,20 @@ class ActivityChat : AppCompatActivity() {
         chatEdit = binding.chatEdit
         const = binding.chatMainConst
         chatConst = binding.chatConst
+        btnSend = binding.chatBtnSend
 
         chatEdit.addTextChangedListener(chatline)
 
+        // 웹소켓 연결
+        connectWebSocket(1)
 
+        btnSend.setOnClickListener {
+            val message = chatEdit.text.toString()
+            if (message.isNotBlank()) {
+                sendMessage(message, 1, 2)
+                chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
+            }
+        }
     }
 
     fun Int.dpToPx(): Int {
