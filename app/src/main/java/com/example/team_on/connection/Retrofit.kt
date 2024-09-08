@@ -32,7 +32,7 @@ class Retrofit {
 
     data class SignIn(
         @SerializedName("id")
-        val userId: Boolean
+        val id: Int
     )
     //이메일 인증 요청
     data class RequestMail(

@@ -79,7 +79,7 @@ class ActivityLogin : AppCompatActivity() {
                             if(responseBody != null){
                                 if(responseBody.success) {
                                     startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
-                                    editor.putString("userId", responseBody.data.userId.toString())
+                                    editor.putString("userId", responseBody.data.id.toString())
                                     editor.apply()
                                 }
                             }
