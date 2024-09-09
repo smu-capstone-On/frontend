@@ -46,7 +46,7 @@
                 android:id="@+id/login_edit_id"
                 android:layout_width="288dp"
                 android:layout_height="33dp"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="70dp"
                 android:background="@drawable/radius_5_stroke_gray"
                 android:ems="10"
                 android:imeOptions="actionNext"
@@ -56,7 +56,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             <TextView
                 android:id="@+id/login_text_pwd"
@@ -183,16 +183,15 @@
                 app:layout_constraintStart_toStartOf="@id/login_btn_signin"
                 app:layout_constraintTop_toBottomOf="@id/login_btn_signin" />
 
-            <CheckBox
-                android:id="@+id/login_auto_signin"
+            <ImageView
+                android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/custom_checkbox"
-                android:paddingStart="3dp"
-                android:text="자동 로그인"
-                app:layout_constraintBottom_toBottomOf="@+id/login_find_id"
-                app:layout_constraintStart_toStartOf="@+id/login_edit_pwd"
-                app:layout_constraintTop_toTopOf="@+id/login_find_id" />
+                android:layout_marginTop="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/petstory60" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

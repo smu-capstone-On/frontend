@@ -1,16 +1,12 @@
 package com.example.team_on
 
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityLoginBinding
 import com.kakao.sdk.auth.model.OAuthToken
@@ -20,8 +16,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.kakao.sdk.user.UserApiClient
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 class ActivityLogin : AppCompatActivity() {
 
@@ -31,26 +25,10 @@ class ActivityLogin : AppCompatActivity() {
     private val sharedPreference = KakaoSDK.user
     private val editor = sharedPreference.edit()
 
-    //키해시 얻는 법
-//    fun getKeyHash() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            val packageInfo = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-//            for (signature in packageInfo.signingInfo.apkContentsSigners) {
-//                try {
-//                    val md = MessageDigest.getInstance("SHA")
-//                    md.update(signature.toByteArray())
-//                    Log.d("getKeyHash", "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}")
-//                } catch (e: NoSuchAlgorithmException) {
-//                    Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
-//                }
-//            }
-//        }
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-//        getKeyHash()
+
         editId = binding.loginEditId
         editPw = binding.loginEditPwd
 
@@ -137,21 +115,6 @@ class ActivityLogin : AppCompatActivity() {
             } else {
                 UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
-//            UserApiClient.instance.logout { error ->
-//                if (error != null) {
-//                    Log.e("Kakao", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-//                }
-//                else {
-//                    Log.i("Kakao", "로그아웃 성공. SDK에서 토큰 삭제됨")
-//                }
-//            }
-//            UserApiClient.instance.unlink { error ->
-//                if (error != null) {
-//                    Log.e("Kakao", "연결 끊기 실패", error)
-//                } else {
-//                    Log.i("Kakao", "연결 끊기 성공")
-//                }
-//            }
         }
     }
 }
