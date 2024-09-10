@@ -29,8 +29,10 @@ interface RetrofitAPI {
     @GET("/member/sendCodeOnlyEmail")
     fun sendMail(@Query("email") email: String): Call<ResponseBody>
     //인증 번호 확인
-    @POST("/api/mail/auth")
-    fun checkAuth(@Body request: Retrofit.RequestAuth): Call<Retrofit.ResponseSuccess>
+    @GET("/member/confirm-email")
+    fun checkAuth(
+        @Query("email") email: String,
+        @Query("emailCode") code: Int): Call<ResponseBody>
     //닉네임 중복 확인
     @GET("/api/checkNick")
     fun checkNick(@Query("nick") nick: String): Call<Retrofit.ResponseSuccess>

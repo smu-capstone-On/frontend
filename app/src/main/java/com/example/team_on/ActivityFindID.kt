@@ -67,9 +67,9 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
             btnAuth.isEnabled = false
             mail = editMail.text.toString()
             auth = editAuth.text.toString()
-            val call = RetrofitObject.getRetrofitService.checkAuth(Retrofit.RequestAuth(mail, auth))
-            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+            val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         // 메일 인증 성공 시
@@ -80,7 +80,7 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
                     }
                 }
                 // 메일 인증 실패 시
-                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(this@ActivityFindID, "메일 인증에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                     btnAuth.isEnabled = true
                 }

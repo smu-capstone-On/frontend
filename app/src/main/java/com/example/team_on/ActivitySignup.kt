@@ -163,27 +163,24 @@ class ActivitySignup : AppCompatActivity() {
         btnAuth.setOnClickListener {
             btnAuth.isEnabled = false
             val auth = editAuth.text.toString()
-            val call = RetrofitObject.getRetrofitService.checkAuth(Retrofit.RequestAuth(mail, auth))
-            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+            val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    Log.d("이메일 확인", response.toString())
                     if (response.isSuccessful) {
-                        val responseBody = response.body()
-                        if(responseBody != null){
-                            textCheckId.visibility = View.VISIBLE
-                            if(responseBody.success) {
-                                btnMail.visibility = View.GONE
-                                btnAuth.visibility = View.GONE
-                                editAuth.visibility = View.GONE
-                                textAuth.visibility = View.VISIBLE
-                                checkAuth = true
-                            }else{
-                                btnAuth.isEnabled = true
-                                Toast.makeText(this@ActivitySignup,"인증 번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show()
-                            }
-                        }
+                        textCheckId.visibility = View.VISIBLE
+                        btnMail.visibility = View.GONE
+                        btnAuth.visibility = View.GONE
+                        editAuth.visibility = View.GONE
+                        textAuth.visibility = View.VISIBLE
+                        checkAuth = true
+
+                    }else{
+                        Toast.makeText(this@ActivitySignup,"인증 번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show()
                     }
+                    btnAuth.isEnabled = true
                 }
-                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     val errorMessage = "Call Failed: ${t.message}"
                     Log.d("Retrofit", errorMessage)
                 }
