@@ -14,8 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityProfileBinding
 import com.example.team_on.databinding.ActivitySignupBinding
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -103,9 +105,10 @@ class ActivitySignup : AppCompatActivity() {
         btnCheckId.setOnClickListener {
             btnCheckId.isEnabled = false
             id = editId.text.toString()
-            val call = RetrofitObject.getRetrofitService.checkId(id)
+            val call = RetrofitObject2.getRetrofitService.checkId(id)
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                    Log.d("아이디 확인", response.toString())
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
@@ -133,26 +136,26 @@ class ActivitySignup : AppCompatActivity() {
         btnMail.setOnClickListener {
             btnMail.isEnabled = false
             mail = editMail.text.toString()
-            val call = RetrofitObject.getRetrofitService.sendMail(Retrofit.RequestMail(mail))
-            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                    btnMail.isEnabled = true
+            val call = RetrofitObject.getRetrofitService.sendMail(mail)
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
                             textCheckId.visibility = View.VISIBLE
-                            if(responseBody.success) {
-                                Toast.makeText(this@ActivitySignup,"메일이 발송되었습니다.",Toast.LENGTH_SHORT).show()
-                                btnAuth.isEnabled = true
-                                btnAuth.alpha = 1f
-                            }
+                            Toast.makeText(this@ActivitySignup,"메일이 발송되었습니다.",Toast.LENGTH_SHORT).show()
+                            btnAuth.isEnabled = true
+                            btnAuth.alpha = 1f
                         }
+                    }else{
+                        Toast.makeText(this@ActivitySignup,"메일 양식을 확인해주세요.",Toast.LENGTH_SHORT).show()
                     }
+                    btnMail.isEnabled = true
                 }
-                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                    btnCheckId.isEnabled = true
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     val errorMessage = "Call Failed: ${t.message}"
                     Log.d("Retrofit", errorMessage)
+                    btnMail.isEnabled = true
                 }
             })
         }

@@ -22,23 +22,17 @@ class Retrofit {
         @SerializedName("password")
         val pw: String,
     )
-
     data class ResponseSignIn(
         @SerializedName("success")
         val success: Boolean,
         @SerializedName("data")
         val data: SignIn
     )
-
     data class SignIn(
         @SerializedName("id")
         val id: Int
     )
-    //이메일 인증 요청
-    data class RequestMail(
-        @SerializedName("mail")
-        val mail: String,
-    )
+
     //인증 번호 확인 요청
     data class RequestAuth(
         @SerializedName("mail")

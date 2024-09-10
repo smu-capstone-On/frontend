@@ -8,7 +8,9 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityFindPwBinding
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,9 +44,9 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
         btnMail.setOnClickListener {
             btnMail.isEnabled = false
             mail = editMail.text.toString()
-            val call = RetrofitObject.getRetrofitService.sendMail(Retrofit.RequestMail(mail))
-            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+            val call = RetrofitObject2.getRetrofitService.sendMail(mail)
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         // 인증 번호 전송 성공 시
@@ -56,7 +58,7 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
                     }
                 }
                 // 인증 번호 전송 실패 시
-                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(this@ActivityFindPW, "인증 번호 전송에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                     btnMail.isEnabled = true
                 }

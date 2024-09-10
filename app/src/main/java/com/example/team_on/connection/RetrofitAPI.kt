@@ -4,6 +4,7 @@ import com.google.android.gms.common.api.Response
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -22,11 +23,11 @@ interface RetrofitAPI {
     @POST("/member/login")
     fun signIn(@Body request: Retrofit.RequestSignIn): Call<Retrofit.ResponseSignIn>
     //아이디 중복 확인
-    @GET("/member/join/loginid{loginId}")
+    @GET("/member/join/loginid")
     fun checkId(@Query("loginId") id: String): Call<Retrofit.ResponseSuccess>
     //인증 메일 발송
-    @POST("/api/mail")
-    fun sendMail(@Body request: Retrofit.RequestMail): Call<Retrofit.ResponseSuccess>
+    @GET("/member/sendCodeOnlyEmail")
+    fun sendMail(@Query("email") email: String): Call<ResponseBody>
     //인증 번호 확인
     @POST("/api/mail/auth")
     fun checkAuth(@Body request: Retrofit.RequestAuth): Call<Retrofit.ResponseSuccess>
