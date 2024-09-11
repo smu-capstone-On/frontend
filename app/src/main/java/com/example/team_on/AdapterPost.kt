@@ -12,17 +12,20 @@ import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.ItemViewPostBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
-class AdapterPost(private val posts: List<Retrofit.Post>,
+class AdapterPost(private var posts: MutableList<Retrofit.Post>,
                   private val onItemClick: (Retrofit.Post) -> Unit
 ) : RecyclerView.Adapter<AdapterPost.PostViewHolder>() {
 
+    private val originalPosts: MutableList<Retrofit.Post> = posts.toMutableList()
     inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Retrofit.Post) {
             binding.postTitle.text = post.title
             binding.postContent.text = post.content
             binding.postCountLike.text = post.like.toString()
             binding.postCountComment.text = post.comment.toString()
+            binding.postImage.setImageResource(0)
 
             binding.postDate.text = formatPostTime(post.time)
 
@@ -85,4 +88,13 @@ class AdapterPost(private val posts: List<Retrofit.Post>,
     }
 
     override fun getItemCount() = posts.size
+
+    fun filterList(filterPosts: List<Retrofit.Post>) {
+        posts = if (filterPosts.isEmpty()) {
+            originalPosts.toMutableList()
+        } else {
+            filterPosts.toMutableList()
+        }
+        notifyDataSetChanged()
+    }
 }

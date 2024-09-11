@@ -25,6 +25,7 @@ class AdapterProduct(
             binding.productName.text = product.title
             binding.productPrice.text = product.price.toString() + "원"
             binding.productDate.text = formatPostTime(product.time)
+            binding.productImage.setImageResource(0)
 
             product.imgUrl?.let { url ->
                 Glide.with(binding.productImage.context)

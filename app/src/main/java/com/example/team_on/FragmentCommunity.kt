@@ -155,7 +155,7 @@ class FragmentCommunity : Fragment() {
         }
         filteredList.clear()
         filteredList.addAll(filteredPosts)
-        postAdapter.notifyDataSetChanged()
+        postAdapter.filterList(filteredList)
     }
 
     // 아이템 목록 최신화
@@ -177,7 +177,7 @@ class FragmentCommunity : Fragment() {
                     filteredList.addAll(postList)
 
                     // RecyclerView 갱신
-                    postAdapter.notifyDataSetChanged()
+                    postAdapter.filterList(filteredList)
 
                     Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
