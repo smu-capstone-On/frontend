@@ -54,6 +54,7 @@ class FragmentWalk : Fragment() {
     private lateinit var imgLoc: ImageView
     private lateinit var cameraPos: CameraPosition
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var editSearch: EditText
 
     private lateinit var mapView: MapView
     private lateinit var map: KakaoMap
@@ -112,6 +113,7 @@ class FragmentWalk : Fragment() {
         btnChangeJoin = binding.fwalkBtnChangeJoin
         btnJoin = binding.fwalkBtnJoin
         imgLoc = binding.fwalkImgLoc
+        editSearch = binding.fwalkEditSearch
         bottomSheetBehavior = BottomSheetBehavior.from(binding.fwalkBottomSheet)
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -140,12 +142,12 @@ class FragmentWalk : Fragment() {
 
         btnSearchAddress.setOnClickListener {
             val key = KakaoKey.API_KEY
-            val query = binding.fwalkEditSearch.text.toString()
+            val query = editSearch.text.toString()
             val call = KakaoRetrofitObject.getRetrofitService.kakaoSearch("KakaoAK $key", query, "exact")
             call.enqueue(object : Callback<Retrofit.ResponseSearch> {
                 override fun onResponse(call: Call<Retrofit.ResponseSearch>, response: Response<Retrofit.ResponseSearch>) {
                     if (response.isSuccessful) {
-                        Log.d("AddressRes", response.body().toString())
+                        editSearch.text.clear()
                         val responseBody = response.body()
                         addressList = responseBody!!.documents.toMutableList()
                         if(addressList.size == 0){
@@ -153,10 +155,8 @@ class FragmentWalk : Fragment() {
                         }else{
                             val longitude = addressList[0].longitude //경도
                             val latitude = addressList[0].latitude //위도
-                            val addressName = addressList[0].addressName
 
                             map.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(latitude.toDouble(), longitude.toDouble())))
-                            Log.d("camera pos", map.cameraPosition.toString())
                         }
                     }
                 }

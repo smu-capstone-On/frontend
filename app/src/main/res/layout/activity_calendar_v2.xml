@@ -73,10 +73,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <HorizontalScrollView
-            android:id="@+id/cal2_scroll"
+            android:id="@+id/cal2_scroll1"
             android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="28dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
@@ -88,7 +88,41 @@
                 android:layout_height="match_parent">
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/cal2_chart"
+                    android:id="@+id/cal2_chart_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/cal2_text9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="날짜별 산책 시간"
+            android:textColor="@color/hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/cal2_text2"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_scroll1" />
+
+        <HorizontalScrollView
+            android:id="@+id/cal2_scroll2"
+            android:layout_width="300dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cal2_text9">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/cal2_chart_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -98,13 +132,13 @@
             android:id="@+id/cal2_text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="20dp"
             android:text="평균 산책 시간"
             android:textColor="@color/hint"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/cal2_text4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cal2_scroll" />
+            app:layout_constraintTop_toBottomOf="@+id/cal2_scroll2" />
 
         <TextView
             android:id="@+id/cal2_text4"
@@ -250,7 +284,6 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
