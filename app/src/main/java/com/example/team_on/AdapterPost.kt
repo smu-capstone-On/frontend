@@ -4,7 +4,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -13,35 +12,37 @@ import com.example.team_on.databinding.ItemViewPostBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class AdapterPost(private val posts: List<Retrofit.Post>,
-                  private val onItemClick: (Retrofit.Post) -> Unit
+class AdapterPost(private var posts: MutableList<Retrofit.Post2>,
+                  private val onItemClick: (Retrofit.Post2) -> Unit
 ) : RecyclerView.Adapter<AdapterPost.PostViewHolder>() {
 
-    inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Retrofit.Post) {
-            binding.postTitle.text = post.title
-            binding.postContent.text = post.content
-            binding.postCountLike.text = post.like.toString()
-            binding.postCountComment.text = post.comment.toString()
+    private val originalPosts: MutableList<Retrofit.Post2> = posts.toMutableList()
 
-            binding.postDate.text = formatPostTime(post.time)
+    inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(post: Retrofit.Post2) {
+            binding.postTitle.text = post.title
+            binding.postContent.text = post.body
+            binding.postCountLike.text = post.likeCount.toString()
+            binding.postCountComment.text = post.comments.size.toString()
+            binding.postImage.setImageResource(0)
+
+//            binding.postDate.text = formatPostTime(post.time)
 
             // 이미지 URL을 받아서 ImageView에 로드
-            post.imgUrl?.let { url ->
+            post.fileInfo?.fileUrl?.let { url ->
                 binding.postImage.visibility = View.VISIBLE
-                val uri = url.toUri().buildUpon().scheme("https").build()
                 Glide.with(binding.postImage.context)
-                    .load(uri) // URL을 URI로 변환하여 로드
+                    .load(url.toUri()) // URL을 URI로 변환하여 로드
                     .error(R.drawable.svg_camera_error)
                     .into(binding.postImage) // 이미지가 로드될 ImageView
             }
 
             Log.d("AdapterPost", "post: ${post}")
 
-            val tags = post.tag
+            val tags = post.boardTags
             val postTags = listOf(binding.postTag1, binding.postTag2, binding.postTag3)
 
-            for (i in tags.indices) {
+            for (i in postTags.indices) {
                 if (i < tags.size) {
                     postTags[i].text = tags[i]
                     postTags[i].visibility = View.VISIBLE
@@ -51,12 +52,12 @@ class AdapterPost(private val posts: List<Retrofit.Post>,
                 }
             }
 
-            // 유저의 좋아요 여부
-            if (post.flag == 1) {
-                binding.postImageLike.setColorFilter(ContextCompat.getColor(binding.postImageLike.context, R.color.yellow))
-            } else {
-                binding.postImageLike.setColorFilter(ContextCompat.getColor(binding.postImageLike.context, R.color.hint))
-            }
+//            // 유저의 좋아요 여부
+//            if (post.flag == 1) {
+//                binding.postImageLike.setColorFilter(ContextCompat.getColor(binding.postImageLike.context, R.color.yellow))
+//            } else {
+//                binding.postImageLike.setColorFilter(ContextCompat.getColor(binding.postImageLike.context, R.color.hint))
+//            }
 
             itemView.setOnClickListener {
                 onItemClick(post)
@@ -85,4 +86,13 @@ class AdapterPost(private val posts: List<Retrofit.Post>,
     }
 
     override fun getItemCount() = posts.size
+
+    fun filterList(filterPosts: List<Retrofit.Post2>) {
+        posts = if (filterPosts.isEmpty()) {
+            originalPosts.toMutableList()
+        } else {
+            filterPosts.toMutableList()
+        }
+        notifyDataSetChanged()
+    }
 }

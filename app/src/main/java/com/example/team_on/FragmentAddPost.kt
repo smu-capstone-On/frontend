@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentAddPostBinding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
@@ -123,6 +125,7 @@ class FragmentAddPost : Fragment() {
             val title = editTextTitle.text.toString()
             val body = editTextContent.text.toString()
             val tagList = selectedTags
+            val userId = KakaoSDK.user.getString("userId", 0.toString())
 
             if (title.isEmpty()) {
                 Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
@@ -134,14 +137,12 @@ class FragmentAddPost : Fragment() {
                 return@setOnClickListener
             }
 
-            val data = JSONObject().apply {
-                put("userId", 1)
-                put("title", title)
-                put("body", body)
-                put("tagTypes", tagList)
-            }
+            val userIdJson = userId?.toRequestBody("text/plain".toMediaTypeOrNull())
+            val titleJson = title.toRequestBody("text/plain".toMediaTypeOrNull())
+            val bodyJson = body.toRequestBody("text/plain".toMediaTypeOrNull())
+            val tagTypesString = tagList.joinToString(",")
+            val tagTypesJson = tagTypesString.toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val requestBody = data.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
             var imagePart: MultipartBody.Part? = null
 
             selectedImageUri?.let { uri ->
@@ -156,27 +157,32 @@ class FragmentAddPost : Fragment() {
                 imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
             }
 
-            uploadPost(imagePart, requestBody)
+            if (userIdJson != null) {
+                uploadPost(imagePart, userIdJson, titleJson, bodyJson, tagTypesJson)
+            }
         }
     }
 
-    private fun uploadPost(imagePart: MultipartBody.Part?, requestBody: okhttp3.RequestBody) {
+    private fun uploadPost(imagePart: MultipartBody.Part?, id: RequestBody, title: RequestBody, body: RequestBody, tag: RequestBody) {
         val call = if (imagePart != null) {
-            RetrofitObject.getRetrofitService.addPost(imagePart, requestBody)
+            RetrofitObject2.getRetrofitService.addPost(imagePart, id, title, body, tag)
         } else {
-            RetrofitObject.getRetrofitService.addPost(null, requestBody)
+            RetrofitObject2.getRetrofitService.addPost(null, id, title, body, tag)
         }
-        call.enqueue(object : Callback<Retrofit.ResponseChatImage> {
-            override fun onResponse(call: Call<Retrofit.ResponseChatImage>, response: Response<Retrofit.ResponseChatImage>) {
+        call.enqueue(object : Callback<Retrofit.Post2> {
+            override fun onResponse(call: Call<Retrofit.Post2>, response: Response<Retrofit.Post2>) {
                 if (response.isSuccessful) {
                     Toast.makeText(activity, "게시글이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
                 } else {
-                    Toast.makeText(activity, "업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    // 실패했을 경우 에러 본문을 출력
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    Toast.makeText(activity, "업로드 실패: $errorBody", Toast.LENGTH_SHORT).show()
+                    Log.e("UploadError", "Response code: ${response.code()}, Error: $errorBody")
                 }
             }
 
-            override fun onFailure(call: Call<Retrofit.ResponseChatImage>, t: Throwable) {
+            override fun onFailure(call: Call<Retrofit.Post2>, t: Throwable) {
                 Toast.makeText(activity, "업로드 중 오류 발생: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })

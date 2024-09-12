@@ -10,15 +10,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentCommunityBinding
+import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
@@ -39,8 +42,9 @@ class FragmentCommunity : Fragment() {
     private lateinit var editTextSearch: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: AdapterPost
-    private var postList = mutableListOf<Retrofit.Post>()
-    private var filteredList = mutableListOf<Retrofit.Post>()
+    private lateinit var progressBar: ProgressBar
+    private var postList = mutableListOf<Retrofit.Post2>()
+    private var filteredList = mutableListOf<Retrofit.Post2>()
     private var selectedTags = mutableListOf<String>()
     private var isRefreshing = false
     private lateinit var coordinatorLayout: CoordinatorLayout
@@ -72,6 +76,7 @@ class FragmentCommunity : Fragment() {
         editTextSearch = binding.communityEditSearch
         recyclerView = binding.communityRecyclerview
         coordinatorLayout = binding.communityCoordinatorlayout
+        progressBar = binding.communityProgressBar
 
         setSearchFun()
         stopSearchFun()
@@ -86,7 +91,7 @@ class FragmentCommunity : Fragment() {
         filteredList.addAll(postList)
 
         postAdapter = AdapterPost(filteredList) { post ->
-            val fragment = FragmentPostDetail.newInstance(post.title, post.content, post.like, post.tag, post.imgUrl, post.time, post.postNum)
+            val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl ?: "", post.time, post.id.toInt(), post.memberId.toInt())
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -98,18 +103,6 @@ class FragmentCommunity : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = postAdapter
         }
-
-        // 화면 드래그 시 게시글 새로고침
-//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//
-//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-//                if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && !isRefreshing && dy < 0) {
-//                    loadItems()
-//                }
-//            }
-//        })
     }
 
     // 검색 버튼 클릭 시
@@ -149,35 +142,51 @@ class FragmentCommunity : Fragment() {
         val searchText = text.lowercase(Locale.ROOT)
         val filteredPosts = postList.filter { post ->
             val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) ||
-                    post.content.lowercase(Locale.ROOT).contains(searchText)
-            val matchesTags = selectedTags.isEmpty() || post.tag.any { it in selectedTags }
+                    post.body.lowercase(Locale.ROOT).contains(searchText)
+            val matchesTags = selectedTags.isEmpty() || post.boardTags.any { it in selectedTags }
             matchesText && matchesTags
         }
         filteredList.clear()
         filteredList.addAll(filteredPosts)
-        postAdapter.notifyDataSetChanged()
+        postAdapter.filterList(filteredList)
     }
 
     // 아이템 목록 최신화
     private fun loadItems() {
-        val call = RetrofitObject.getRetrofitService.getAllPosts()
-        call.enqueue(object : retrofit2.Callback<Retrofit.ResponsePost> {
-            override fun onResponse(call: retrofit2.Call<Retrofit.ResponsePost>, response: Response<Retrofit.ResponsePost>) {
-                if (response.isSuccessful && response.body()?.success == true) {
-                    val posts = response.body()?.data ?: emptyList()
+        progressBar.visibility = View.VISIBLE
 
-                    val sortedPosts = posts.sortedByDescending { it.time }
+        val call = RetrofitObject2.getRetrofitService.getAllPosts2()
+        call.enqueue(object : retrofit2.Callback<List<Retrofit.Post2>> {
+            override fun onResponse(call: retrofit2.Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
+                progressBar.visibility = View.GONE
+
+                if (response.isSuccessful) {
+                    val posts = response.body() ?: emptyList()
 
                     // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
                     postList.clear()
-                    postList.addAll(sortedPosts)
+                    postList.addAll(posts)
 
                     // 필터 리스트도 동일하게 갱신
                     filteredList.clear()
                     filteredList.addAll(postList)
 
+                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
+                    for (post in posts) {
+                        post.fileInfo?.let { fileInfo ->
+                            // fileInfo.id로 이미지 로드
+                            loadImg(fileInfo.id) { imageUrl ->
+                                // 이미지 URL을 받아서 해당 post에 적용
+                                post.fileInfo.fileUrl = imageUrl
+
+                                // RecyclerView 갱신
+                                postAdapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
+
                     // RecyclerView 갱신
-                    postAdapter.notifyDataSetChanged()
+                    postAdapter.filterList(filteredList)
 
                     Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
@@ -185,9 +194,31 @@ class FragmentCommunity : Fragment() {
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<Retrofit.ResponsePost>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<List<Retrofit.Post2>>, t: Throwable) {
                 Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
             }
+        })
+    }
+
+    private fun loadImg(id: Long, onImageLoaded: (String) -> Unit) {
+        val call = RetrofitObject2.getRetrofitService.loadImg(id)
+        call.enqueue(object : retrofit2.Callback<Retrofit.FileInfo> {
+            override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
+                if (response.isSuccessful) {
+                    val fileInfo = response.body()
+                    fileInfo?.let {
+                        val imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
+                        onImageLoaded(imageUrl)   // 콜백을 통해 URL 전달
+                    }
+                } else {
+                    Toast.makeText(context, "이미지 로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Retrofit.FileInfo>, t: Throwable) {
+                Toast.makeText(context, "이미지 로드 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+
         })
     }
 

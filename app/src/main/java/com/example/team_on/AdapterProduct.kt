@@ -13,20 +13,23 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class AdapterProduct(
-    private var products: MutableList<Retrofit.Product>,
-    private val onItemClick: (Retrofit.Product) -> Unit
+    private var products: MutableList<Retrofit.Product2>,
+    private val onItemClick: (Retrofit.Product2) -> Unit
 ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() {
 
-    private var originalProducts: MutableList<Retrofit.Product> = products.toMutableList()
+    private var originalProducts: MutableList<Retrofit.Product2> = products.toMutableList()
 
     inner class ProductViewHolder(private val binding: ItemViewProductBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Retrofit.Product) {
+        fun bind(product: Retrofit.Product2) {
             binding.productName.text = product.title
             binding.productPrice.text = product.price.toString() + "원"
-            binding.productDate.text = formatPostTime(product.time)
+            binding.productDate.text = formatPostTime(product.createDate)
+            binding.productImage.setImageResource(0)
 
-            product.imgUrl?.let { url ->
+            val imgUrl = product.fileInfo?.fileUrl
+
+            imgUrl?.let { url ->
                 Glide.with(binding.productImage.context)
                     .load(url.toUri())
                     .error(R.drawable.svg_camera_error)
@@ -62,7 +65,7 @@ class AdapterProduct(
 
     override fun getItemCount() = products.size
 
-    fun filterList(filteredProducts: List<Retrofit.Product>) {
+    fun filterList(filteredProducts: List<Retrofit.Product2>) {
         products = if (filteredProducts.isEmpty()) {
             originalProducts.toMutableList()
         } else {

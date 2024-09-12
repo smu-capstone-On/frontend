@@ -16,7 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentAddDealBinding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -143,13 +143,12 @@ class FragmentAddDeal : Fragment() {
             }
 
             val data = JSONObject().apply {
-                put("userId", 1)
                 put("title", title)
-                put("price", price)
                 put("body", body)
-                put("tagTypes", tagList)
+                put("price", price)
                 put("reservationStatus", false)
                 put("saleStatus", false)
+                put("tagTypes", tagList)
             }
 
             val requestBody = data.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
@@ -173,9 +172,9 @@ class FragmentAddDeal : Fragment() {
 
     private fun uploadDeal(imagePart: MultipartBody.Part?, requestBody: okhttp3.RequestBody) {
         val call = if (imagePart != null) {
-            RetrofitObject.getRetrofitService.addProduct(imagePart, requestBody)
+            RetrofitObject2.getRetrofitService.addProduct(imagePart, requestBody)
         } else {
-            RetrofitObject.getRetrofitService.addProduct(null, requestBody)
+            RetrofitObject2.getRetrofitService.addProduct(null, requestBody)
         }
 
         call.enqueue(object : Callback<Retrofit.ResponseSuccess> {

@@ -23,7 +23,7 @@ class FragmentDealDetail : Fragment() {
 
     private var title: String? = null
     private var body: String? = null
-    private var tag: List<String>? = null
+    private var tag: String? = null
     private var imgUrl: String? = null
     private var time: String? = null
     private var productId: Int? = null
@@ -36,7 +36,7 @@ class FragmentDealDetail : Fragment() {
         arguments?.let {
             title = it.getString(ARG_TITLE)
             body = it.getString(ARG_BODY)
-            tag = it.getStringArrayList(ARG_TAG)
+            tag = it.getString(ARG_TAG)
             imgUrl = it.getString(ARG_IMGURL)
             time = it.getString(ARG_TIME)
             productId = it.getInt(ARG_PRODUCTID)
@@ -67,17 +67,19 @@ class FragmentDealDetail : Fragment() {
         val tags = tag
         val productTags = listOf(binding.dealDetailTag1, binding.dealDetailTag2, binding.dealDetailTag3)
 
-        if (tags != null) {
-            for (i in tags.indices) {
-                if (i < tags.size) {
-                    productTags[i].text = tags[i]
-                    productTags[i].visibility = View.VISIBLE
-                } else {
-                    productTags[i].text = ""
-                    productTags[i].visibility = View.GONE
-                }
-            }
-        }
+//        if (tags != null) {
+//            for (i in tags.indices) {
+//                if (i < tags.size) {
+//                    productTags[i].text = tags[i]
+//                    productTags[i].visibility = View.VISIBLE
+//                } else {
+//                    productTags[i].text = ""
+//                    productTags[i].visibility = View.GONE
+//                }
+//            }
+//        }
+        productTags[1].text = tag
+        productTags[1].visibility = View.VISIBLE
 
         imgUrl?.let { url ->
             binding.dealDetailImageview.visibility = View.VISIBLE
@@ -132,12 +134,12 @@ class FragmentDealDetail : Fragment() {
         private const val ARG_RESERVATIONSTATUS = "reservationStatus"
         private const val ARG_PRICE = "price"
 
-        fun newInstance(title: String, body: String, tag: List<String>, imgUrl: String?, time: String, productId: Int, reservationStatus: Boolean, price: String) =
+        fun newInstance(title: String, body: String, tag: String, imgUrl: String?, time: String, productId: Int, reservationStatus: Boolean, price: String) =
             FragmentDealDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
                     putString(ARG_BODY, body)
-                    putStringArrayList(ARG_TAG, ArrayList(tag))
+                    putString(ARG_TAG, tag)
                     putString(ARG_IMGURL, imgUrl)
                     putString(ARG_TIME, time)
                     putInt(ARG_PRODUCTID, productId)

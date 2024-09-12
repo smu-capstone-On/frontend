@@ -65,30 +65,12 @@ interface RetrofitAPI {
     @POST("/walkmate")
     fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<Retrofit.ResponseSuccess>
 
-    //물품 등록
-    @Multipart
-    @POST("/products")
-    fun addProduct(
-        @Part file: MultipartBody.Part?,
-        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
-    //모든 물품 조회
-    @GET("/products")
-    fun getAllProducts(): Call<Retrofit.ResponseProduct>
-    //물품 삭제
-    @DELETE("/api/products/{id}")
-    fun deleteProduct(@Path("id") id: Long): Call<Retrofit.ResponseSuccess>
-    //물품 수정
-    @PATCH("/api/products/{id}")
-    fun updateProduct(
-        @Part postImage: MultipartBody.Part?,
-        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
-
     //게시글 전체 조회
     @GET("/board")
-    fun getAllPosts(): Call<Retrofit.ResponsePost>
+    fun getAllPosts2(): Call<List<Retrofit.Post2>>
     //게시글 상세 조회(댓글 조회)
     @GET("/board/{boardId}")
-    fun getPost(@Path("boardId") boardId: Int): Call<Retrofit.ResponseLoadComment>
+    fun getPost2(@Path("boardId") boardId: Long): Call<Retrofit.Post2>
     //댓글 저장
     @POST("/comments")
     fun saveComment(@Body comment:Retrofit.SaveComment): Call<Retrofit.ResponseSaveComment>
@@ -97,8 +79,30 @@ interface RetrofitAPI {
     @POST("/board")
     fun addPost(
         @Part file: MultipartBody.Part?,
-        @Part("info") info: RequestBody): Call<Retrofit.ResponseChatImage>
+        @Part("userId") userId: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("body") body: RequestBody,
+        @Part("tagTypes") tagTypes: RequestBody): Call<Retrofit.Post2>
     //게시글 좋아요
     @POST("/likes")
     fun editLike(@Body data: Retrofit.EditLikeStatus): Call<Retrofit.ResponseSuccess>
+
+    //물품 등록
+    @Multipart
+    @POST("/products")
+    fun addProduct(
+        @Part file: MultipartBody.Part?,
+        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
+    //모든 물품 조회
+    @GET("/products")
+    fun getAllProducts(@Query("sort") sort: String,
+                       @Query("isReserved") isReserved: Boolean): Call<List<Retrofit.Product2>>
+    //물품 수정
+    @PATCH("/api/products/{productId}")
+    fun updateProduct(
+        @Part postImage: MultipartBody.Part?,
+        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
+
+    @GET("/file")
+    fun loadImg(@Part id: Long): Call<Retrofit.FileInfo>
 }

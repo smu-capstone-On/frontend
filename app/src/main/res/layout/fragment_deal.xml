@@ -168,7 +168,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/radius_10_enabled_button"
-                android:text="강아지"
+                android:text="DOG"
                 android:textColor="@color/hint"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -180,7 +180,7 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/radius_10_enabled_button"
-                android:text="고양이"
+                android:text="CAT"
                 android:textColor="@color/hint"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/deal_tag_dog"
@@ -192,9 +192,9 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/radius_10_enabled_button"
-                android:text="소동물"
+                android:text="SMALL_ANIMAL"
                 android:textColor="@color/hint"
-                android:textSize="12sp"
+                android:textSize="9sp"
                 app:layout_constraintStart_toEndOf="@id/deal_tag_cat"
                 app:layout_constraintTop_toTopOf="@id/deal_tag_dog"/>
 
@@ -204,7 +204,7 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/radius_10_enabled_button"
-                android:text="파충류"
+                android:text="REPILES"
                 android:textColor="@color/hint"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/deal_tag_small"
@@ -217,7 +217,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/radius_10_enabled_button"
-                android:text="조류"
+                android:text="BIRD"
                 android:textColor="@color/hint"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -259,5 +259,16 @@
         android:src="@drawable/svg_add_post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/deal_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
