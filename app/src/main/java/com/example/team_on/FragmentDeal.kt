@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -18,7 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentDealBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,10 +47,11 @@ class FragmentDeal : Fragment() {
     private lateinit var btnAddDeal: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutSearchCondition: ConstraintLayout
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var productAdapter: AdapterProduct
-    private var productList = mutableListOf<Retrofit.Product>()
-    private var filteredList = mutableListOf<Retrofit.Product>()
+    private var productList = mutableListOf<Retrofit.Product2>()
+    private var filteredList = mutableListOf<Retrofit.Product2>()
     private var selectedTags = mutableListOf<String>()
     private var isPreOrderSelected: Boolean? = null
     private var sortCriteria: String? = null
@@ -85,11 +87,12 @@ class FragmentDeal : Fragment() {
         btnAddDeal = binding.dealBtnPost
         recyclerView = binding.dealRecyclerview
         layoutSearchCondition = binding.dealLayoutSearchCondition
+        progressBar = binding.dealProgressBar
 
         productList = mutableListOf()
 
         productAdapter = AdapterProduct(productList) { product ->
-            val fragment = FragmentDealDetail.newInstance(product.title, product.body, product.tags, product.imgUrl, product.time, product.productId, product.reservationStatus, product.price.toString())
+            val fragment = FragmentDealDetail.newInstance(product.title, product.body, product.tagType, product.fileInfo?.fileUrl ?:"", product.createDate, product.id.toInt(), product.reservationStatus, product.price.toString())
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -168,7 +171,7 @@ class FragmentDeal : Fragment() {
         val searchText = editTextSearch.text.toString().lowercase(Locale.ROOT)
         val filteredProducts = productList.filter { product ->
             val matchesText = product.title.lowercase(Locale.ROOT).contains(searchText)
-            val matchesTag = selectedTags.isEmpty() || product.tags!!.any { it in selectedTags }
+            val matchesTag = selectedTags.isEmpty() || product.tagType in selectedTags
             val matchesPreorder = when (isPreOrderSelected) {
                 true -> true // preorder가 true인 경우, 모든 reservationStatus 포함
                 false -> product.reservationStatus == false // preorder가 false인 경우, reservationStatus가 false인 것만 포함
@@ -184,9 +187,9 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareByDescending<Retrofit.Product> { it.time }
+            "new" -> compareByDescending<Retrofit.Product2> { it.createDate }
             "price" -> compareBy { it.price }  // 가격에 따른 오름차순 정렬
-            else -> compareByDescending { it.time }
+            else -> compareByDescending { it.createDate }
         }
         comparator.let {
             filteredList.sortWith(it)
@@ -262,20 +265,38 @@ class FragmentDeal : Fragment() {
 
     // 물품 데이터 가져오기
     private fun fetchProduct() {
-        val call = RetrofitObject.getRetrofitService.getAllProducts()
-        call.enqueue(object : Callback<Retrofit.ResponseProduct> {
-            override fun onResponse(call: Call<Retrofit.ResponseProduct>, response: Response<Retrofit.ResponseProduct>) {
-                if (response.isSuccessful && response.body()?.success == true) {
-                    requireActivity().runOnUiThread {
-                        val products = response.body()?.data ?: emptyList()
+        progressBar.visibility = View.VISIBLE
 
-                        val sortedProducts = products.sortedByDescending { it.time }
+        val call = RetrofitObject2.getRetrofitService.getAllProducts("LOW_PRICE", true)
+        call.enqueue(object : Callback<List<Retrofit.Product2>> {
+            override fun onResponse(call: Call<List<Retrofit.Product2>>, response: Response<List<Retrofit.Product2>>) {
+                progressBar.visibility = View.GONE
+
+                if (response.isSuccessful) {
+                    requireActivity().runOnUiThread {
+                        val products = response.body() ?: emptyList()
+
+                        val sortedProducts = products.sortedByDescending { it.createDate }
 
                         productList.clear()
                         productList.addAll(sortedProducts)
 
                         filteredList.clear()
                         filteredList.addAll(productList)
+
+                        // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
+                        for (product in products) {
+                            product.fileInfo?.let { fileInfo ->
+                                // fileInfo.id로 이미지 로드
+                                loadImg(fileInfo.id) { imageUrl ->
+                                    // 이미지 URL을 받아서 해당 post에 적용
+                                    product.fileInfo.fileUrl = imageUrl
+
+                                    // RecyclerView 갱신
+                                    productAdapter.notifyDataSetChanged()
+                                }
+                            }
+                        }
 
                         productAdapter.filterList(filteredList)
 
@@ -286,9 +307,32 @@ class FragmentDeal : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<Retrofit.ResponseProduct>, t: Throwable) {
+            override fun onFailure(call: Call<List<Retrofit.Product2>>, t: Throwable) {
                 Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()  // 실패 시 로그 남기기
             }
+        })
+    }
+
+    private fun loadImg(id: Long, onImageLoaded: (String) -> Unit) {
+        val call = RetrofitObject2.getRetrofitService.loadImg(id)
+        call.enqueue(object : Callback<Retrofit.FileInfo> {
+            override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
+                if (response.isSuccessful) {
+                    val fileInfo = response.body()
+                    fileInfo?.let {
+                        val imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
+                        onImageLoaded(imageUrl)   // 콜백을 통해 URL 전달
+                    }
+                } else {
+                    Toast.makeText(context, "이미지 로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Retrofit.FileInfo>, t: Throwable) {
+                Toast.makeText(context, "이미지 로드 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+
         })
     }
 

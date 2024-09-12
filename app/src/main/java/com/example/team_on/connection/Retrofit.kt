@@ -2,6 +2,8 @@ package com.example.team_on.connection
 
 import android.content.SharedPreferences
 import com.google.gson.annotations.SerializedName
+import java.math.BigInteger
+import java.time.LocalDateTime
 
 class Retrofit {
 
@@ -144,104 +146,25 @@ class Retrofit {
         val memo: String?
     )
 
-    //커뮤니티 게시글
-    data class Post(
-        @SerializedName("title")
-        val title: String,
-        @SerializedName("content")
-        val content: String,
-        @SerializedName("postNum")
-        val postNum: Int,
-        @SerializedName("like")
-        val like: Int,
-        @SerializedName("comment")
-        val comment: Int,
-        @SerializedName("userId")
-        val userId: Int,
-        @SerializedName("tag")
-        val tag: List<String>,
-        @SerializedName("flag")
-        val flag: Int,
-        @SerializedName("imgUrl")
-        val imgUrl: String?,
-        @SerializedName("time")
-        val time: String
-    )
-    //커뮤니티 게시글 응답
-    data class ResponsePost(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("data")
-        val data: List<Post>
-    )
-    //커뮤니티 게시글 작성 응답
-    data class ResponseChatImage(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("data")
-        val data: List<Post>
-    )
-    //거래게시판 물품
-    data class Product(
-        @SerializedName("title")
-        val title: String,
-        @SerializedName("body")
-        val body: String,
-        @SerializedName("ProductId")
-        val productId: Int,
-        @SerializedName("reservationStatus")
-        val reservationStatus: Boolean,
-        @SerializedName("saleStatus")
-        val saleStatus: Boolean,
-        @SerializedName("userId")
-        val userId: Int,
-        @SerializedName("tag")
-        val tags: List<String>,
-        @SerializedName("imgUrl")
-        val imgUrl: String?,
-        @SerializedName("time")
-        val time: String,
-        @SerializedName("price")
-        val price: Int
-    )
-    // 거래게시판 물품 조회 반응
-    data class ResponseProduct(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("data")
-        val data: List<Product>
-    )
-    //게시판 댓글 불러오기
-    data class LoadComment(
-        @SerializedName("userId")
-        val userId: Int,
-        @SerializedName("comment")
-        val comment: String,
-        @SerializedName("time")
-        val createdTime: String
-    )
-    //댓글 불러오기 응답
-    data class ResponseLoadComment(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("data")
-        val data: List<LoadComment>
-    )
     //게시판 댓글 저장
     data class SaveComment(
         @SerializedName("boardId")
-        val boardId: Int,
+        val boardId: Long,
         @SerializedName("userId")
-        val userId: Int,
+        val userId: Long,
         @SerializedName("body")
         val body: String
     )
     // 댓글 저장 응답
     data class ResponseSaveComment(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("data")
-        val data: SaveComment
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("createDate")
+        val createDate: String,
+        @SerializedName("modifyDate")
+        val modifyDate: String,
+        @SerializedName("body")
+        val body: String
     )
     //좋아요 여부 전송
     data class EditLikeStatus(
@@ -249,5 +172,81 @@ class Retrofit {
         val memberId: Long,
         @SerializedName("boardId")
         val boardId: Int
+    )
+
+    // post2
+    data class Post2(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("body")
+        val body: String,
+        @SerializedName("likeCount")
+        val likeCount: Int,
+        @SerializedName("boardTags")
+        val boardTags: List<String>,
+        @SerializedName("comments")
+        val comments: List<Comment2>,
+        @SerializedName("FileInfo")
+        val fileInfo: FileInfo?,
+        @SerializedName("memberId")
+        val memberId: Long,
+        @SerializedName("time")
+        val time: String
+//        @SerializedName("flag")
+//        val flag: Int,
+//
+    )
+    // comment2
+    data class Comment2(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("createDate")
+        val createDate: String,
+        @SerializedName("modifyDate")
+        val modifyDate: String,
+        @SerializedName("body")
+        val body: String
+    )
+    data class Product2(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("createDate")
+        val createDate: String,
+        @SerializedName("modifyDate")
+        val modifyDate: String,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("body")
+        val body: String,
+        @SerializedName("price")
+        val price: BigInteger,
+        @SerializedName("reservationStatus")
+        val reservationStatus: Boolean,
+        @SerializedName("saleStatus")
+        val saleStatus: Boolean,
+        @SerializedName("tagType")
+        val tagType: String,
+        @SerializedName("fileInfo")
+        val fileInfo: FileInfo?
+    )
+    data class FileInfo(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("createDate")
+        val createDate: String,
+        @SerializedName("modifyDate")
+        val modifyDate: String,
+        @SerializedName("fileName")
+        val fileName: String,
+        @SerializedName("fileOriName")
+        val fileOriName: String,
+        @SerializedName("fileUrl")
+        var fileUrl: String,
+        @SerializedName("fileExt")
+        val fileExt: String,
+        @SerializedName("fileSize")
+        val fileSize: Long
     )
 }

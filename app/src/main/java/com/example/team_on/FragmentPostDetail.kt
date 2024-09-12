@@ -15,8 +15,9 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.team_on.KakaoSDK.Companion.user
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentPostDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +41,7 @@ class FragmentPostDetail : Fragment() {
     private lateinit var toolbar: Toolbar
 
     private lateinit var commentAdapter: AdapterComment
-    private var loadCommentList = mutableListOf<Retrofit.LoadComment>()
+    private var loadCommentList = mutableListOf<Retrofit.Comment2>()
 
     private var title: String? = null
     private var body: String? = null
@@ -49,6 +50,7 @@ class FragmentPostDetail : Fragment() {
     private var imgUrl: String? = null
     private var time: String? = null
     private var postNum: Int? = null
+    private var userId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +62,8 @@ class FragmentPostDetail : Fragment() {
             tag = it.getStringArrayList(ARG_TAG)
             imgUrl = it.getString(ARG_IMGURL)
             time = it.getString(ARG_TIME)
-            postNum = it.getInt(ARG_POSTNUM)
+            postNum = it.getInt(ARG_BOARDID)
+            userId = it.getInt(ARG_USERID)
         }
     }
 
@@ -79,6 +82,7 @@ class FragmentPostDetail : Fragment() {
         binding.postDetailContent.text = body
         binding.postDetailTextLike.text = like.toString()
         binding.postDetailPostDate.text = time?.let { formatPostTime(it) }
+        binding.postDetailUserName.text = userId.toString()
 
         val tags = tag
         val postTags = listOf(binding.postDetailTag1, binding.postDetailTag2, binding.postDetailTag3)
@@ -95,14 +99,16 @@ class FragmentPostDetail : Fragment() {
             }
         }
 
-        imgUrl?.let { url ->
-            binding.postDetailImage.visibility = View.VISIBLE
-            val uri = url.toUri().buildUpon().scheme("https").build()
-            Glide.with(binding.postDetailImage.context)
-                .load(uri) // URL을 URI로 변환하여 로드
-                .error(R.drawable.svg_camera_error)
-                .into(binding.postDetailImage) // 이미지가 로드될 ImageView
-        }
+//        imgUrl?.let { url ->
+//            binding.postDetailImage.visibility = View.VISIBLE
+//            val uri = url.toUri().buildUpon().scheme("https").build()
+//            Glide.with(binding.postDetailImage.context)
+//                .load(uri) // URL을 URI로 변환하여 로드
+//                .error(R.drawable.svg_camera_error)
+//                .into(binding.postDetailImage) // 이미지가 로드될 ImageView
+//        }
+        binding.postDetailImage.setImageResource(R.drawable.svg_camera_error)
+
 
         btnLike = binding.postDetailBtnLike
         btnSendComment = binding.postDetailBtnSendComment
@@ -153,16 +159,16 @@ class FragmentPostDetail : Fragment() {
         }
 
         // 댓글 데이터 불러오기
-        postNum?.let { loadComments(it) }
+        postNum?.let { loadComments(it.toLong()) }
     }
 
     // 댓글 불러오기
-    private fun loadComments(boardId: Int) {
-        val call = RetrofitObject.getRetrofitService.getPost(boardId)
-        call.enqueue(object : Callback<Retrofit.ResponseLoadComment> {
-            override fun onResponse(call: Call<Retrofit.ResponseLoadComment>, response: Response<Retrofit.ResponseLoadComment>) {
-                if (response.isSuccessful && response.body()?.success == true) {
-                    val comments = response.body()?.data ?: emptyList()
+    private fun loadComments(boardId: Long) {
+        val call = RetrofitObject2.getRetrofitService.getPost2(boardId)
+        call.enqueue(object : Callback<Retrofit.Post2> {
+            override fun onResponse(call: Call<Retrofit.Post2>, response: Response<Retrofit.Post2>) {
+                if (response.isSuccessful) {
+                    val comments = response.body()?.comments ?: emptyList()
 
                     // 댓글 리스트 갱신
                     loadCommentList.clear()
@@ -177,7 +183,7 @@ class FragmentPostDetail : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<Retrofit.ResponseLoadComment>, t: Throwable) {
+            override fun onFailure(call: Call<Retrofit.Post2>, t: Throwable) {
                 Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
@@ -185,26 +191,18 @@ class FragmentPostDetail : Fragment() {
 
     // 댓글 등록 기능
     private fun addCommentToServer(comment: String) {
-//        val userId = MySharedPreference.user.getLong("userId", 0L)
-        val user = 99
+        val userId = KakaoSDK.user.getString("userId", 0.toString())
 
-        val commentRequest = postNum?.let { Retrofit.SaveComment(it, user, comment) }
 
-        val call = commentRequest?.let { RetrofitObject.getRetrofitService.saveComment(it) }
+        val commentRequest = postNum?.let { userId?.let { it1 -> Retrofit.SaveComment(it.toLong(), it1.toLong(), comment) } }
+
+        val call = commentRequest?.let { RetrofitObject2.getRetrofitService.saveComment(it) }
         call?.enqueue(object : Callback<Retrofit.ResponseSaveComment> {
             override fun onResponse(call: Call<Retrofit.ResponseSaveComment>, response: Response<Retrofit.ResponseSaveComment>) {
-                if (response.isSuccessful && response.body()?.success == true) {
+                if (response.isSuccessful) {
                     Toast.makeText(context, "댓글 작성에 성공했습니다.", Toast.LENGTH_SHORT).show()
 
-                    val loadComment = Retrofit.LoadComment(user, comment, LocalDateTime.now().toString())
-
-                    // 댓글 리스트 갱신
-                    loadCommentList.addAll(listOf(loadComment))
-
-                    binding.postDetailCommentCounter.text = loadCommentList.size.toString()
-
-                    // RecyclerView 갱신
-                    commentAdapter.notifyDataSetChanged()
+                    postNum?.let { loadComments(it.toLong()) }
                 } else {
                     // 서버 응답이 실패했을 때 처리
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
@@ -232,10 +230,10 @@ class FragmentPostDetail : Fragment() {
     // 좋아요 여부 전송
     private fun updateLikeStatus(postNum: Int?) {
         postNum?.let {
-            val userId = KakaoSDK.user.getLong("userId", 0L)
+            val userId = user.getLong("userId", 0L)
             val data = Retrofit.EditLikeStatus(userId, postNum)
 
-            val call = RetrofitObject.getRetrofitService.editLike(data)
+            val call = RetrofitObject2.getRetrofitService.editLike(data)
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
                     if (response.isSuccessful) {
@@ -273,22 +271,24 @@ class FragmentPostDetail : Fragment() {
     companion object {
         private const val ARG_TITLE = "title"
         private const val ARG_BODY = "body"
-        private const val ARG_LIKE = "like"
-        private const val ARG_TAG = "tag"
+        private const val ARG_LIKE = "likeCount"
+        private const val ARG_TAG = "boardTags"
         private const val ARG_IMGURL = "imgUrl"
         private const val ARG_TIME = "time"
-        private const val ARG_POSTNUM = "postNum"
+        private const val ARG_BOARDID = "boardId"
+        private const val ARG_USERID = "userId"
 
-        fun newInstance(title: String, content: String, like: Int, tag: List<String>, imgUrl: String?, time: String, postNum: Int) =
+        fun newInstance(title: String, body: String, likeCount: Int, boardTags: List<String>, imgUrl: String?, time: String?, boardId: Int, userId: Int) =
             FragmentPostDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
-                    putString(ARG_BODY, content)
-                    putInt(ARG_LIKE, like)
-                    putStringArrayList(ARG_TAG, ArrayList(tag))
-                    putString(ARG_IMGURL, imgUrl)
+                    putString(ARG_BODY, body)
+                    putInt(ARG_LIKE, likeCount)
+                    putStringArrayList(ARG_TAG, ArrayList(boardTags))
+                    putString(ARG_IMGURL, imgUrl ?: "")
                     putString(ARG_TIME, time)
-                    putInt(ARG_POSTNUM, postNum)
+                    putInt(ARG_BOARDID, boardId)
+                    putInt(ARG_USERID, userId)
                 }
             }
     }

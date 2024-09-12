@@ -9,16 +9,16 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class AdapterComment (
-    private val loadComments: List<Retrofit.LoadComment>
+    private val loadComments: List<Retrofit.Comment2>
 ) : RecyclerView.Adapter<AdapterComment.CommentViewHolder>() {
 
     inner class CommentViewHolder(private val binding: ItemViewCommentBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(loadComment: Retrofit.LoadComment) {
-            binding.commentUserId.text = loadComment.userId.toString()
-            binding.commentContent.text = loadComment.comment
+        fun bind(loadComment: Retrofit.Comment2) {
+            binding.commentUserId.text = loadComment.id.toString()
+            binding.commentContent.text = loadComment.body
             //binding.commentUserProfile = comment.userImage
 
-            binding.commentDate.text = formatPostTime(loadComment.createdTime)
+            binding.commentDate.text = formatPostTime(loadComment.modifyDate)
         }
 
         fun formatPostTime(dateString: String): String {
