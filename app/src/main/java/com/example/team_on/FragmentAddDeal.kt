@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,15 +48,14 @@ class FragmentAddDeal : Fragment() {
     private lateinit var toolbar: Toolbar
 
     private var selectedTags = mutableListOf<String>()
+    private var imageUri: Uri? = null // 선택된 이미지의 Uri를 저장할 변수
 
+    // 이미지 선택을 위한 ActivityResultContracts 사용
     private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            btnAddImage.setImageURI(it)
+            imageUri = it
+            btnAddImage.setImageURI(it) // 선택된 이미지 버튼에 표시
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -63,7 +63,6 @@ class FragmentAddDeal : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddDealBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -98,8 +97,7 @@ class FragmentAddDeal : Fragment() {
             button.setOnClickListener {
                 if (selectedTags.size == 3 && !button.isSelected) {
                     Toast.makeText(activity, "태그는 최대 3개까지 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
-                }
-                else {
+                } else {
                     button.isSelected = !button.isSelected
                     if (button.isSelected) {
                         button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
@@ -113,33 +111,24 @@ class FragmentAddDeal : Fragment() {
         }
     }
 
-    // 물품 이미지 추가
+    // 이미지 선택 버튼 설정
     private fun addImage() {
         btnAddImage.setOnClickListener {
-            getImage.launch("image/*")
+            getImage.launch("image/*") // 이미지 선택 창 열기
         }
     }
 
     // 물품 등록하기
     private fun addDeal() {
         btnAddDeal.setOnClickListener {
-            // 사용자 정보(이름) 받는 방법 수정 필요
-
             val title = editTextTitle.text.toString()
             val body = editTextContent.text.toString()
             val tagList = selectedTags
-            val price= editTextPrice.text.toString().toInt()
+            val price = editTextPrice.text.toString().toIntOrNull()
 
-            if (title.isEmpty()) {
-                Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            }
-
-            if (body.isEmpty()) {
-                Toast.makeText(activity, "게시글 내용이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
-            }
-
-            if (editTextPrice.text.isEmpty()) {
-                Toast.makeText(activity, "가격이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            if (title.isEmpty() || body.isEmpty() || price == null) {
+                Toast.makeText(activity, "모든 필드를 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
             val data = JSONObject().apply {
@@ -152,24 +141,30 @@ class FragmentAddDeal : Fragment() {
             }
 
             val requestBody = data.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-            var imagePart: MultipartBody.Part? = null
 
-            btnAddImage?.let { uri ->
-                val bitmap = (btnAddImage.drawable as BitmapDrawable).bitmap
-                val file = File(requireContext().cacheDir, "image.jpg")
-                val outputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                outputStream.flush()
-                outputStream.close()
+            // 이미지를 MultipartBody.Part로 변환
+            val imagePart = imageUri?.let { uri ->
+                val bitmap = requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                    BitmapDrawable(resources, inputStream).bitmap
+                }
 
-                val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                bitmap?.let {
+                    val file = File(requireContext().cacheDir, "image.jpg")
+                    val outputStream = FileOutputStream(file)
+                    it.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+
+                    val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData("file", file.name, requestFile)
+                }
             }
 
             uploadDeal(imagePart, requestBody)
         }
     }
 
+    // 서버로 데이터 전송
     private fun uploadDeal(imagePart: MultipartBody.Part?, requestBody: okhttp3.RequestBody) {
         val call = if (imagePart != null) {
             RetrofitObject2.getRetrofitService.addProduct(imagePart, requestBody)
@@ -183,7 +178,9 @@ class FragmentAddDeal : Fragment() {
                     Toast.makeText(activity, "물품이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
                 } else {
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     Toast.makeText(activity, "업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Log.e("UploadError", "Response code: ${response.code()}, Error: $errorBody")
                 }
             }
 
@@ -195,8 +192,6 @@ class FragmentAddDeal : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (activity as? ActivityMain)?.showBottomNaviagtion()
         _binding = null
     }
-
 }

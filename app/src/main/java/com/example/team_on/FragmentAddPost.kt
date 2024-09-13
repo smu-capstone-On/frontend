@@ -25,7 +25,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -146,15 +145,20 @@ class FragmentAddPost : Fragment() {
             var imagePart: MultipartBody.Part? = null
 
             selectedImageUri?.let { uri ->
-                val bitmap = (imageView.drawable as BitmapDrawable).bitmap
-                val file = File(requireContext().cacheDir, "image.jpg")
-                val outputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                outputStream.flush()
-                outputStream.close()
+                try {
+                    val file = File(requireContext().cacheDir, "image.jpg")
+                    requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                        file.outputStream().use { outputStream ->
+                            inputStream.copyTo(outputStream)
+                        }
+                    }
 
-                val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                    val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                } catch (e: Exception) {
+                    Toast.makeText(activity, "이미지를 처리하는 데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+                    return@let
+                }
             }
 
             if (userIdJson != null) {
@@ -175,7 +179,6 @@ class FragmentAddPost : Fragment() {
                     Toast.makeText(activity, "게시글이 업로드되었습니다.", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
                 } else {
-                    // 실패했을 경우 에러 본문을 출력
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     Toast.makeText(activity, "업로드 실패: $errorBody", Toast.LENGTH_SHORT).show()
                     Log.e("UploadError", "Response code: ${response.code()}, Error: $errorBody")
