@@ -55,6 +55,21 @@ class FragmentDeal : Fragment() {
     private var selectedTags = mutableListOf<String>()
     private var isPreOrderSelected: Boolean? = null
     private var sortCriteria: String? = null
+
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "DOG" to "강아지",
+        "CAT" to "고양이",
+        "SMALL_ANIMAL" to "소동물",
+        "REPILES" to "파충류",
+        "BIRD" to "조류"
+    )
+
+    // 태그를 한글로 변환하는 함수
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -171,7 +186,12 @@ class FragmentDeal : Fragment() {
         val searchText = editTextSearch.text.toString().lowercase(Locale.ROOT)
         val filteredProducts = productList.filter { product ->
             val matchesText = product.title.lowercase(Locale.ROOT).contains(searchText)
-            val matchesTag = selectedTags.isEmpty() || product.tagType in selectedTags
+            val matchesTag = if(selectedTags.isEmpty()) {
+                true
+            } else {
+                val koreanTags = convertTagToKorean(product.tagType)
+                koreanTags in selectedTags
+            }
             val matchesPreorder = when (isPreOrderSelected) {
                 true -> true // preorder가 true인 경우, 모든 reservationStatus 포함
                 false -> product.reservationStatus == false // preorder가 false인 경우, reservationStatus가 false인 것만 포함
@@ -267,41 +287,39 @@ class FragmentDeal : Fragment() {
     private fun fetchProduct() {
         progressBar.visibility = View.VISIBLE
 
-        val call = RetrofitObject2.getRetrofitService.getAllProducts("LOW_PRICE", true)
+        val call = RetrofitObject2.getRetrofitService.getAllProducts()
         call.enqueue(object : Callback<List<Retrofit.Product2>> {
             override fun onResponse(call: Call<List<Retrofit.Product2>>, response: Response<List<Retrofit.Product2>>) {
                 progressBar.visibility = View.GONE
 
                 if (response.isSuccessful) {
-                    requireActivity().runOnUiThread {
-                        val products = response.body() ?: emptyList()
+                    val products = response.body() ?: emptyList()
 
-                        val sortedProducts = products.sortedByDescending { it.createDate }
+                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
+//                    for (product in products) {
+//                        product.fileInfo?.let { fileInfo ->
+//                            // fileInfo.id로 이미지 로드
+//                            loadImg(fileInfo.id) { imageUrl ->
+//                                // 이미지 URL을 받아서 해당 post에 적용
+//                                product.fileInfo.fileUrl = imageUrl
+//
+//                                // RecyclerView 갱신
+//                                productAdapter.notifyDataSetChanged()
+//                            }
+//                        }
+//                    }
 
-                        productList.clear()
-                        productList.addAll(sortedProducts)
+                    val sortedProducts = products.sortedByDescending { it.createDate }
 
-                        filteredList.clear()
-                        filteredList.addAll(productList)
+                    productList.clear()
+                    productList.addAll(sortedProducts)
 
-                        // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
-                        for (product in products) {
-                            product.fileInfo?.let { fileInfo ->
-                                // fileInfo.id로 이미지 로드
-                                loadImg(fileInfo.id) { imageUrl ->
-                                    // 이미지 URL을 받아서 해당 post에 적용
-                                    product.fileInfo.fileUrl = imageUrl
+                    filteredList.clear()
+                    filteredList.addAll(productList)
 
-                                    // RecyclerView 갱신
-                                    productAdapter.notifyDataSetChanged()
-                                }
-                            }
-                        }
+                    productAdapter.filterList(filteredList)
 
-                        productAdapter.filterList(filteredList)
-
-                        Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
                 }

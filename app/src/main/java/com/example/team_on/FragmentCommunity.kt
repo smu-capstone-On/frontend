@@ -49,6 +49,21 @@ class FragmentCommunity : Fragment() {
     private var isRefreshing = false
     private lateinit var coordinatorLayout: CoordinatorLayout
 
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "DOG" to "강아지",
+        "CAT" to "고양이",
+        "SMALL_ANIMAL" to "소동물",
+        "REPILES" to "파충류",
+        "BIRD" to "조류",
+        "QUESTION" to "질문"
+    )
+
+    // 태그를 한글로 변환하는 함수
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -143,7 +158,14 @@ class FragmentCommunity : Fragment() {
         val filteredPosts = postList.filter { post ->
             val matchesText = post.title.lowercase(Locale.ROOT).contains(searchText) ||
                     post.body.lowercase(Locale.ROOT).contains(searchText)
-            val matchesTags = selectedTags.isEmpty() || post.boardTags.any { it in selectedTags }
+            val matchesTags = if(selectedTags.isEmpty()) {
+                true
+            } else {
+                post.boardTags.any { tag ->
+                    val koreanTags = convertTagToKorean(tag)
+                    koreanTags in selectedTags
+                }
+            }
             matchesText && matchesTags
         }
         filteredList.clear()
@@ -157,11 +179,25 @@ class FragmentCommunity : Fragment() {
 
         val call = RetrofitObject2.getRetrofitService.getAllPosts2()
         call.enqueue(object : retrofit2.Callback<List<Retrofit.Post2>> {
-            override fun onResponse(call: retrofit2.Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
+            override fun onResponse(call: Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
                 progressBar.visibility = View.GONE
 
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
+
+//                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
+//                    for (post in posts) {
+//                        post.fileInfo?.let { fileInfo ->
+//                            // fileInfo.id로 이미지 로드
+//                            loadImg(fileInfo.id) { imageUrl ->
+//                                // 이미지 URL을 받아서 해당 post에 적용
+//                                post.fileInfo.fileUrl = imageUrl
+//
+//                                // RecyclerView 갱신
+//                                postAdapter.notifyDataSetChanged()
+//                            }
+//                        }
+//                    }
 
                     // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
                     postList.clear()
@@ -170,20 +206,6 @@ class FragmentCommunity : Fragment() {
                     // 필터 리스트도 동일하게 갱신
                     filteredList.clear()
                     filteredList.addAll(postList)
-
-                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
-                    for (post in posts) {
-                        post.fileInfo?.let { fileInfo ->
-                            // fileInfo.id로 이미지 로드
-                            loadImg(fileInfo.id) { imageUrl ->
-                                // 이미지 URL을 받아서 해당 post에 적용
-                                post.fileInfo.fileUrl = imageUrl
-
-                                // RecyclerView 갱신
-                                postAdapter.notifyDataSetChanged()
-                            }
-                        }
-                    }
 
                     // RecyclerView 갱신
                     postAdapter.filterList(filteredList)

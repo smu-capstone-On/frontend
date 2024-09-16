@@ -27,14 +27,14 @@ class AdapterProduct(
             binding.productDate.text = formatPostTime(product.createDate)
             binding.productImage.setImageResource(0)
 
-            val imgUrl = product.fileInfo?.fileUrl
-
-            imgUrl?.let { url ->
-                Glide.with(binding.productImage.context)
-                    .load(url.toUri())
-                    .error(R.drawable.svg_camera_error)
-                    .into(binding.productImage)
-            }
+//            val imgUrl = product.fileInfo?.fileUrl
+//
+//            imgUrl?.let { url ->
+//                Glide.with(binding.productImage.context)
+//                    .load(url.toUri())
+//                    .error(R.drawable.svg_camera_error)
+//                    .into(binding.productImage)
+//            }
 
             Log.d("AdapterPost", "product: ${product}")
 

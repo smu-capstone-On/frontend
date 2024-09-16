@@ -30,6 +30,20 @@ class FragmentDealDetail : Fragment() {
     private var reservationStatus: Boolean? = null
     private var price: String? = null
 
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "DOG" to "강아지",
+        "CAT" to "고양이",
+        "SMALL_ANIMAL" to "소동물",
+        "REPILES" to "파충류",
+        "BIRD" to "조류"
+    )
+
+    // 태그를 한글로 변환하는 함수
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,21 +79,12 @@ class FragmentDealDetail : Fragment() {
         toolbar = binding.dealDetailToolbar
 
         val tags = tag
-        val productTags = listOf(binding.dealDetailTag1, binding.dealDetailTag2, binding.dealDetailTag3)
 
-//        if (tags != null) {
-//            for (i in tags.indices) {
-//                if (i < tags.size) {
-//                    productTags[i].text = tags[i]
-//                    productTags[i].visibility = View.VISIBLE
-//                } else {
-//                    productTags[i].text = ""
-//                    productTags[i].visibility = View.GONE
-//                }
-//            }
-//        }
-        productTags[1].text = tag
-        productTags[1].visibility = View.VISIBLE
+        if (tags != null) {
+            val displayTag = convertTagToKorean(tags)
+            binding.dealDetailTag1.text = displayTag
+            binding.dealDetailTag1.visibility = View.VISIBLE
+        }
 
         imgUrl?.let { url ->
             binding.dealDetailImageview.visibility = View.VISIBLE

@@ -256,19 +256,9 @@ class Retrofit {
     data class FileInfo(
         @SerializedName("id")
         val id: Long,
-        @SerializedName("createDate")
-        val createDate: String,
-        @SerializedName("modifyDate")
-        val modifyDate: String,
         @SerializedName("fileName")
         val fileName: String,
-        @SerializedName("fileOriName")
-        val fileOriName: String,
         @SerializedName("fileUrl")
-        var fileUrl: String,
-        @SerializedName("fileExt")
-        val fileExt: String,
-        @SerializedName("fileSize")
-        val fileSize: Long
+        var fileUrl: String
     )
 }

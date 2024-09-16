@@ -18,6 +18,21 @@ class AdapterPost(private var posts: MutableList<Retrofit.Post2>,
 
     private val originalPosts: MutableList<Retrofit.Post2> = posts.toMutableList()
 
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "DOG" to "강아지",
+        "CAT" to "고양이",
+        "SMALL_ANIMAL" to "소동물",
+        "REPILES" to "파충류",
+        "BIRD" to "조류",
+        "QUESTION" to "질문"
+    )
+
+    // 태그를 한글로 변환하는 함수
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Retrofit.Post2) {
             binding.postTitle.text = post.title
@@ -44,7 +59,8 @@ class AdapterPost(private var posts: MutableList<Retrofit.Post2>,
 
             for (i in postTags.indices) {
                 if (i < tags.size) {
-                    postTags[i].text = tags[i]
+                    val displayTag = convertTagToKorean(tags[i])
+                    postTags[i].text = displayTag
                     postTags[i].visibility = View.VISIBLE
                 } else {
                     postTags[i].text = ""

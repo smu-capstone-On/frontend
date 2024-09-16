@@ -107,12 +107,16 @@ interface RetrofitAPI {
     @Multipart
     @POST("/products")
     fun addProduct(
-        @Part file: MultipartBody.Part?,
-        @Part("info") info: RequestBody): Call<Retrofit.ResponseSuccess>
+        @Part("title") title: RequestBody,
+        @Part("body") body: RequestBody,
+        @Part("price") price: RequestBody,
+        @Part("reservationStatus") reservationStatus: RequestBody,
+        @Part("saleStatus") saleStatus: RequestBody,
+        @Part("tagType") tagType: RequestBody,
+        @Part file: MultipartBody.Part?): Call<Retrofit.Product2>
     //모든 물품 조회
     @GET("/products")
-    fun getAllProducts(@Query("sort") sort: String,
-                       @Query("isReserved") isReserved: Boolean): Call<List<Retrofit.Product2>>
+    fun getAllProducts(): Call<List<Retrofit.Product2>>
     //물품 수정
     @PATCH("/api/products/{productId}")
     fun updateProduct(
