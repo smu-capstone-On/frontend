@@ -161,14 +161,14 @@
         android:id="@+id/add_post_tag_dog"
         android:layout_width="54dp"
         android:layout_height="22dp"
-        android:layout_marginStart="-9dp"
+        android:layout_marginStart="13dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="DOG"
+        android:text="강아지"
         android:textColor="@color/hint"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/add_post_tag_list"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_post_tag_list" />
 
     <Button
@@ -178,7 +178,7 @@
         android:layout_marginStart="5dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="CAT"
+        android:text="고양이"
         android:textColor="@color/hint"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/add_post_tag_dog"
@@ -191,9 +191,9 @@
         android:layout_marginStart="5dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="SMALL_ANIMAL"
+        android:text="소동물"
         android:textColor="@color/hint"
-        android:textSize="9sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/add_post_tag_cat"
         app:layout_constraintTop_toTopOf="@id/add_post_tag_cat" />
 
@@ -204,7 +204,7 @@
         android:layout_marginStart="5dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="REPILES"
+        android:text="파충류"
         android:textColor="@color/hint"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/add_post_tag_small"
@@ -217,7 +217,7 @@
         android:layout_marginStart="5dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="BIRD"
+        android:text="조류"
         android:textColor="@color/hint"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/add_post_tag_reptile"
@@ -230,9 +230,9 @@
         android:layout_marginStart="5dp"
         android:background="@drawable/radius_10_enabled_button"
         android:gravity="center"
-        android:text="QUESTION"
+        android:text="질문"
         android:textColor="@color/hint"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/add_post_tag_bird"
         app:layout_constraintTop_toTopOf="@id/add_post_tag_bird" />
 

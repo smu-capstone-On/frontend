@@ -52,6 +52,21 @@ class FragmentPostDetail : Fragment() {
     private var postNum: Int? = null
     private var userId: Int? = null
 
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "DOG" to "강아지",
+        "CAT" to "고양이",
+        "SMALL_ANIMAL" to "소동물",
+        "REPILES" to "파충류",
+        "BIRD" to "조류",
+        "QUESTION" to "질문"
+    )
+
+    // 태그를 한글로 변환하는 함수
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,7 +105,8 @@ class FragmentPostDetail : Fragment() {
         if (tags != null) {
             for (i in tags.indices) {
                 if (i < tags.size) {
-                    postTags[i].text = tags[i]
+                    val displayTag = convertTagToKorean(tags[i])
+                    postTags[i].text = displayTag
                     postTags[i].visibility = View.VISIBLE
                 } else {
                     postTags[i].text = ""

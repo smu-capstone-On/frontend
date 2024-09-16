@@ -52,6 +52,21 @@ class FragmentAddPost : Fragment() {
     private var selectedTags = mutableListOf<String>()
     private var selectedImageUri: Uri? = null
 
+    // 태그 매핑을 위한 Map 생성
+    private val tagMapping = mapOf(
+        "강아지" to "DOG",
+        "고양이" to "CAT",
+        "소동물" to "SMALL_ANIMAL",
+        "파충류" to "REPILES",
+        "조류" to "BIRD",
+        "질문" to "QUESTION"
+    )
+
+    // 태그 변환
+    private fun convertTagToKorean(tag: String): String {
+        return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
+    }
+
     private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
@@ -123,8 +138,12 @@ class FragmentAddPost : Fragment() {
         btnAddPost.setOnClickListener {
             val title = editTextTitle.text.toString()
             val body = editTextContent.text.toString()
-            val tagList = selectedTags
             val userId = KakaoSDK.user.getString("userId", 0.toString())
+            val tagList = selectedTags
+
+            for (i in selectedTags.indices) {
+                tagList[i] = convertTagToKorean(tagList[i])
+            }
 
             if (title.isEmpty()) {
                 Toast.makeText(activity, "게시글 제목이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
