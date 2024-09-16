@@ -1,5 +1,6 @@
 package com.example.team_on
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
@@ -23,6 +24,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityProfileBinding
 import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.MediaType
@@ -35,9 +37,6 @@ import java.io.File
 class ActivityProfile : AppCompatActivity() {
 
     private val binding: ActivityProfileBinding by lazy { ActivityProfileBinding.inflate(layoutInflater) }
-    private lateinit var changeProfileImage: ImageButton
-    private lateinit var profile: CircleImageView
-    private lateinit var mediaType: MediaType
     private lateinit var textCheckNick: TextView
     private lateinit var btnNick: Button
     private lateinit var editNick: EditText
@@ -45,15 +44,6 @@ class ActivityProfile : AppCompatActivity() {
     private lateinit var gender: String
     private lateinit var animal: String
     private var checkNick = false
-
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val path = getRealPathFromUri(uri)
-            val file = File(path)
-            mediaType = "image/*".toMediaType()
-            changeProfile(uri, file)
-        }
-    }
 
     //닉네임 중복 체크
     private val checkNickWatcherListener = object : TextWatcher {
@@ -72,31 +62,14 @@ class ActivityProfile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        changeProfileImage = binding.profileBtnChangeImage
-        profile = binding.profileImageProfile
         textCheckNick = binding.profileTextCheckNick
         btnNick = binding.profileBtnNickcheck
         editNick = binding.profileEditNick
+        val id = intent.getStringExtra("id")
+        val pw = intent.getStringExtra("pw")
+        val mail = intent.getStringExtra("mail")
 
         editNick.addTextChangedListener(checkNickWatcherListener)
-
-        changeProfileImage.setOnClickListener{
-            when {
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED -> {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
-
-                shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                -> {
-                    showPermissionContextPopup()
-                }
-
-                else -> requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1000
-                )
-            }
-        }
 
         btnNick.setOnClickListener {
             nick = editNick.text.toString()
@@ -131,54 +104,99 @@ class ActivityProfile : AppCompatActivity() {
         binding.profileBtnSignup.setOnClickListener {
             val groupGender = binding.profileRadioGender.checkedRadioButtonId
             val groupAnimal = binding.profileRadioAnimal.checkedRadioButtonId
+            var age = 0
+            var userId = 0
+            if(!checkNick){
+                Toast.makeText(this@ActivityProfile,"닉네임 중복을 확인해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if(groupGender != -1){
                 gender = findViewById<RadioButton>(groupGender).text.toString()
+                gender = when (gender) {
+                    "여자" -> "FEMALE"
+                    "남자" -> "MALE"
+                    else -> "UNKNOWN"
+                }
             }else{
                 Toast.makeText(this@ActivityProfile,"성별을 선택해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if(groupAnimal != -1){
                 animal = findViewById<RadioButton>(groupAnimal).text.toString()
+                animal = when (animal) {
+                    "있음" -> "PETYES"
+                    "없음" -> "PETNO"
+                    else -> "UNKNOWN"
+                }
             }else{
                 Toast.makeText(this@ActivityProfile,"반려동물 유무를 선택해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val ageString = binding.profileEditAge.text.toString()
-            val age = ageString.toInt()
-            Log.d("profile", gender+animal+ageString)
-        }
-    }
-
-    //이미지 저장 주소 가져오기
-    private fun getRealPathFromUri(uri: Uri): String? {
-        val context = applicationContext
-        val contentResolver = context.contentResolver
-        val cursor = contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                return it.getString(columnIndex)
+            if(ageString.isEmpty()){
+                Toast.makeText(this@ActivityProfile,"나이를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }else{
+                age = ageString.toInt()
             }
+            val call = RetrofitObject2.getRetrofitService.signUp(Retrofit.RequestSignUp(id!!,pw!!,mail!!))
+            call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if(responseBody != null){
+                            if(responseBody.success){
+                                Log.d("회원가입", "회원가입 성공")
+                                val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
+                                call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
+                                    override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
+                                        if (response.isSuccessful) {
+                                            val responseBody = response.body()
+                                            if(responseBody != null){
+                                                if(responseBody.success) {
+                                                    Log.d("회원가입", "로그인 성공")
+                                                    userId = responseBody.data.id
+                                                    val call = RetrofitObject2.getRetrofitService.makeProfile(userId.toString(), Retrofit.RequestProfile(nick, gender, age, animal))
+                                                    call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                                                        override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                                                            if (response.isSuccessful) {
+                                                                val responseBody = response.body()
+                                                                if(responseBody != null){
+                                                                    if(responseBody.success) {
+                                                                        Log.d("회원가입", "프로필 생성 성공")
+                                                                        startActivity(Intent(this@ActivityProfile, ActivitySuccessSignUp::class.java))
+                                                                        finish()
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                                                            val errorMessage = "Call Failed: ${t.message}"
+                                                            Log.d("Retrofit", errorMessage)
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<Retrofit.ResponseSignIn>, t: Throwable) {
+                                        val errorMessage = "Call Failed: ${t.message}"
+                                        Log.d("Retrofit", errorMessage)
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                    btnNick.isEnabled = true
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
+                }
+            })
         }
-        return null
-    }
-
-    //권한 요청
-    private fun showPermissionContextPopup() {
-        AlertDialog.Builder(this)
-            .setTitle("권한이 필요합니다.")
-            .setMessage("프로필 이미지를 설정하기 위해서는 갤러리 접근 권한이 필요합니다.")
-            .setPositiveButton("동의하기") { _, _ ->
-                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1000)
-            }
-            .setNegativeButton("취소하기") { _, _ -> }
-            .create()
-            .show()
-    }
-
-    private fun changeProfile(uri: Uri, file: File){
-        Glide.with(this)
-            .load(uri)
-            .into(profile)
     }
 }

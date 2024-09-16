@@ -142,7 +142,6 @@ class ActivitySignup : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
-                            textCheckId.visibility = View.VISIBLE
                             Toast.makeText(this@ActivitySignup,"메일이 발송되었습니다.",Toast.LENGTH_SHORT).show()
                             btnAuth.isEnabled = true
                             btnAuth.alpha = 1f
@@ -163,6 +162,11 @@ class ActivitySignup : AppCompatActivity() {
         btnAuth.setOnClickListener {
             btnAuth.isEnabled = false
             val auth = editAuth.text.toString()
+            if(auth.isEmpty()){
+                btnAuth.isEnabled = true
+                Toast.makeText(this@ActivitySignup,"인증 번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

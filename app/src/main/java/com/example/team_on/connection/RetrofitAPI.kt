@@ -36,6 +36,15 @@ interface RetrofitAPI {
     //닉네임 중복 확인
     @GET("/api/checkNick")
     fun checkNick(@Query("nick") nick: String): Call<Retrofit.ResponseSuccess>
+    //회원가입
+    @POST("/member/join")
+    fun signUp(@Body request: Retrofit.RequestSignUp): Call<Retrofit.ResponseSuccess>
+    //프로필 생성
+    @POST("/profiles/{memberId}")
+    fun makeProfile(
+        @Path("memberId") memberId: String,
+        @Body request: Retrofit.RequestProfile): Call<Retrofit.ResponseSuccess>
+
     //아이디 변경 요청
     @PATCH("/api/changeId")
     fun changeId(@Body request: Retrofit.RequestChangeId): Call<Retrofit.ResponseSuccess>
@@ -63,7 +72,14 @@ interface RetrofitAPI {
 
     //산책 등록
     @POST("/walkmate")
-    fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<Retrofit.ResponseSuccess>
+    fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<ResponseBody>
+
+    //메이트 검색
+    @GET("/walkmate/localtion")
+    fun findMate(
+        @Query("latitude") latitude: Float,
+        @Query("logitude") logitude: Float
+    ): Call<List<Retrofit.ResponseFindMate>>
 
     //게시글 전체 조회
     @GET("/board")

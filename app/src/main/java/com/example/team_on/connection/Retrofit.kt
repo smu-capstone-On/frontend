@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class Retrofit {
 
     //회원가입
-    data class RequestSignup(
+    data class RequestSignUp(
         @SerializedName("loginId")
         val id: String,
         @SerializedName("password")
@@ -16,7 +16,6 @@ class Retrofit {
         @SerializedName("email")
         val email: String
     )
-
     //로그인 요청
     data class RequestSignIn(
         @SerializedName("loginId")
@@ -34,7 +33,6 @@ class Retrofit {
         @SerializedName("id")
         val id: Int
     )
-
     //인증 번호 확인 요청
     data class RequestAuth(
         @SerializedName("mail")
@@ -46,6 +44,17 @@ class Retrofit {
     data class ResponseSuccess(
         @SerializedName("success")
         val success: Boolean
+    )
+    //프로필 생성
+    data class RequestProfile(
+        @SerializedName("nickName")
+        val nickName: String,
+        @SerializedName("sex")
+        val sex: String,
+        @SerializedName("age")
+        val age: Int,
+        @SerializedName("petStatus")
+        val petStatus: String
     )
     // 아이디 변경 요청
     data class RequestChangeId(
@@ -135,17 +144,30 @@ class Retrofit {
         @SerializedName("hasPet")
         val hasPet: Boolean,
         @SerializedName("latitude")
-        val latitude: String,
+        val latitude: Float,
         @SerializedName("longitude")
-        val longitude: String,
+        val longitude: Float,
         @SerializedName("startDateTime")
         val sTime: String,
-        @SerializedName("walkTime")
+        @SerializedName("endDateTime")
         val wTime: String,
         @SerializedName("memo")
         val memo: String?
     )
 
+    //메이트 찾기 응답
+    data class ResponseFindMate(
+        val id: Int,
+        val memberId: Int,
+        val sexType: String,
+        val age: Int,
+        val hasPet: Boolean,
+        val latitude: Float,
+        val longitude: Float,
+        val startDateTime: String,
+        val endDateTime: String,
+        val memo: String
+    )
     //게시판 댓글 저장
     data class SaveComment(
         @SerializedName("boardId")

@@ -243,24 +243,24 @@ class FragmentWalk : Fragment() {
 
                         alertDialog.window?.setBackgroundDrawable(ColorDrawable(0)) // 50% 투명도 검정색
 
-                        button.setOnClickListener {
-                            val call2 = RetrofitObject.getRetrofitService.walkPut(Retrofit.RequestWalkPut(1,"MALE",25,true, latitude, longitude, "18:30", "30", "메모1"))
-                            call2.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                                    if (response.isSuccessful) {
-                                        if(response.body()!!.success){
-                                            alertDialog.dismiss()
-                                            Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                                    val errorMessage = "Call Failed: ${t.message}"
-                                    Log.d("Retrofit", errorMessage)
-                                }
-                            })
-                        }
+//                        button.setOnClickListener {
+//                            val call2 = RetrofitObject.getRetrofitService.walkPut(Retrofit.RequestWalkPut(1,"MALE",25,true, latitude, longitude, "18:30", "30", "메모1"))
+//                            call2.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+//                                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+//                                    if (response.isSuccessful) {
+//                                        if(response.body()!!.success){
+//                                            alertDialog.dismiss()
+//                                            Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()
+//                                        }
+//                                    }
+//                                }
+//
+//                                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+//                                    val errorMessage = "Call Failed: ${t.message}"
+//                                    Log.d("Retrofit", errorMessage)
+//                                }
+//                            })
+//                        }
 
                         alertDialog.show()
                     }

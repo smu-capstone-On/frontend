@@ -62,6 +62,7 @@ class ActivityLogin : AppCompatActivity() {
                 val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
                 call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
                     override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
+                        Log.d("로그인", response.toString())
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if(responseBody != null){
