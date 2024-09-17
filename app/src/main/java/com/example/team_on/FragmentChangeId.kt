@@ -46,6 +46,8 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             checkId = false
+            btnSave.isEnabled = false
+            btnSave.alpha = 0.5f
             textCheckId.visibility = View.INVISIBLE
         }
 
@@ -90,6 +92,8 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
                                 textCheckId.text = "사용할 수 있는 아이디입니다."
                                 textCheckId.setTextColor(Color.BLACK)
                                 checkId = true
+                                btnSave.isEnabled = true
+                                btnSave.alpha = 1f
                             }else{
                                 textCheckId.text = "이미 존재하는 아이디입니다."
                                 textCheckId.setTextColor(Color.RED)

@@ -29,7 +29,7 @@
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="영문/숫자/특수문자 혼용하여 입력"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:maxLength="10"
         android:paddingStart="8dp"
         android:textColorHint="@color/hint"
@@ -45,7 +45,7 @@
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
         android:hint="비밀번호 확인"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:maxLength="10"
         android:paddingStart="8dp"
         android:textColorHint="@color/hint"
@@ -83,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="text"
+        android:textColor="@color/red"
         android:textSize="10sp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/change_pw_edit_pwcheck"
@@ -93,14 +94,16 @@
         android:layout_width="288dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="270dp"
+        android:alpha="0.5"
         android:background="@drawable/radius_10_solid_yellow"
+        android:enabled="false"
         android:text="완료"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

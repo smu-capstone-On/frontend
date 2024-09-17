@@ -14,10 +14,10 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/svg_back"
         app:title="계정 관리"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
-        app:titleTextColor="@color/white"
-        app:navigationIcon="@drawable/svg_back"/>
+        app:titleTextColor="@color/white" />
 
     <EditText
         android:id="@+id/change_id_edit_id"
@@ -57,8 +57,8 @@
         \n새로운 아이디를 입력해 주세요."
         android:textColor="@color/hint"
         android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@id/change_id_text1"
-        app:layout_constraintStart_toStartOf="@id/change_id_text1" />
+        app:layout_constraintStart_toStartOf="@id/change_id_text1"
+        app:layout_constraintTop_toBottomOf="@id/change_id_text1" />
 
     <TextView
         android:id="@+id/change_id_text_checkId"
@@ -88,13 +88,15 @@
         android:layout_width="288dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="270dp"
+        android:alpha="0.5"
         android:background="@drawable/radius_10_solid_yellow"
+        android:enabled="false"
         android:text="완료"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

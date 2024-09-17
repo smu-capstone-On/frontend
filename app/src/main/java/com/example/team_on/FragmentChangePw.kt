@@ -35,7 +35,6 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
     private lateinit var toolbar: Toolbar
     private val sharedPreference = KakaoSDK.user
     private val id = sharedPreference.getString("id", null)
-    private var checkPw = false
 
     //비밀번호 일치하는지 확인
     private val checkPwWatcherListener = object : TextWatcher {
@@ -50,11 +49,13 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
                 textCheckPw.visibility = View.VISIBLE
                 if (inputText == editPw.text.toString()) {
                     textCheckPw.visibility = View.INVISIBLE
+                    btnSave.isEnabled = true
+                    btnSave.alpha = 1f
                     newPw=inputText
-                    checkPw = true
                 } else {
                     textCheckPw.text = "비밀번호가 일치하지 않습니다."
-                    checkPw = false
+                    btnSave.isEnabled = false
+                    btnSave.alpha = 0.5f
                 }
             }
         }
@@ -93,28 +94,26 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
     }
     private fun clickViewEvents() {
         btnSave.setOnClickListener {
-            if (checkPw) {
-                newPw = editPw.text.toString()
-                val call = RetrofitObject2.getRetrofitService.changePw(Retrofit.RequestChangePw(id!!, newPw))
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(call: retrofit2.Call<ResponseBody>, response: Response<ResponseBody>) {
-                        if (response.isSuccessful) {
-                            // 비밀번호 변경 성공 시 팝업
-                            val title = "비밀번호 변경\n 완료"
-                            val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인", 1)
-                            dialog.isCancelable = false
-                            activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
-                        }else{
-                            Toast.makeText(context, "비밀번호 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                        }
+            newPw = editPw.text.toString()
+            val call = RetrofitObject2.getRetrofitService.changePw(Retrofit.RequestChangePw(id!!, newPw))
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: retrofit2.Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        // 비밀번호 변경 성공 시 팝업
+                        val title = "비밀번호 변경\n 완료"
+                        val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인", 1)
+                        dialog.isCancelable = false
+                        activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
+                    }else{
+                        Toast.makeText(context, "비밀번호 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                     }
-                    // 비밀번호 변경 실패 시
-                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                        val errorMessage = "Call Failed: ${t.message}"
-                        Log.d("Retrofit", errorMessage)
-                    }
-                })
-            }
+                }
+                // 비밀번호 변경 실패 시
+                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
+                }
+            })
         }
     }
 
