@@ -21,7 +21,7 @@ class FragmentManageAccount : Fragment() {
     private lateinit var toolbar: Toolbar
 
     private val sharedPreference = KakaoSDK.user
-    private val email = sharedPreference.getString("userEmail", null)
+    private val email = sharedPreference.getString("email", null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

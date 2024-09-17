@@ -60,9 +60,9 @@ class Retrofit {
     )
     // 아이디 변경 요청
     data class RequestChangeId(
-        @SerializedName("oldId")
+        @SerializedName("loginId")
         val oldId: String,
-        @SerializedName("newId")
+        @SerializedName("modifyLoginId")
         val newId: String
     )
     // 비밀번호 변경 요청

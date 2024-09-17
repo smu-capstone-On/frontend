@@ -1,5 +1,7 @@
 package com.example.team_on
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -16,7 +18,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentChangeIdBinding
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,9 +35,10 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
     private lateinit var btnSave: Button
     private lateinit var textCheckId: TextView
     private lateinit var newId : String
-    private lateinit var oldId: String
     private lateinit var toolbar: Toolbar
     private var checkId = false
+    private val sharedPreference = KakaoSDK.user
+    private val oldId = sharedPreference.getString("id", null)
 
     //아이디 중복 체크
     private val checkIdWatcherListener = object : TextWatcher {
@@ -74,10 +79,10 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
         btnIdCheck.setOnClickListener {
             btnIdCheck.isEnabled = false
             newId = editId.text.toString()
-            val call = RetrofitObject.getRetrofitService.checkId(newId)
+            val call = RetrofitObject2.getRetrofitService.checkId(newId)
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                    btnIdCheck.isEnabled = true
+                    Log.d("아이디 확인", response.toString())
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
@@ -92,6 +97,7 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
                             }
                         }
                     }
+                    btnIdCheck.isEnabled = true
                 }
 
                 override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
@@ -111,38 +117,33 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
     private fun clickViewEvents() {
         btnSave.setOnClickListener {
             if (checkId) {
-                newId = editId.text.toString()
-                val call = RetrofitObject.getRetrofitService.changeId(Retrofit.RequestChangeId(oldId, newId))
-                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                Log.d("아이디 변경", oldId+" "+newId)
+                val call = RetrofitObject2.getRetrofitService.changeId(Retrofit.RequestChangeId(oldId!!, newId))
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        Log.d("아이디 변경", response.toString()+"\n"+response.body())
                         if (response.isSuccessful) {
-                            val responseBody = response.body()
-                            // 아이디 변경 성공 시 팝업
-                            if (responseBody != null) {
-                                val title = "아이디 변경\n 완료"
-                                val dialog = DialogAlert(this@FragmentChangeId, title, null, "확인", null)
-                                dialog.isCancelable = false
-                                activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
-                            }
+                            val title = "아이디 변경\n 완료"
+                            val dialog = DialogAlert(this@FragmentChangeId, title, null, "확인", 1)
+                            dialog.isCancelable = false
+                            activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
+                        }else{
+                            Toast.makeText(context, "아이디 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                         }
                     }
                     // 아이디 변경 실패 시
-                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                        Toast.makeText(context, "아이디 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        val errorMessage = "Call Failed: ${t.message}"
+                        Log.d("Retrofit", errorMessage)
                     }
                 })
-            } else {
-                Toast.makeText(context, "완료되지 않은 작업이 있습니다", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onClickOkButton(id: Int) {
-        onDestroyView()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        sharedPreference.edit().clear()
+        startActivity(Intent(requireContext(), ActivityLogin::class.java))
     }
 }

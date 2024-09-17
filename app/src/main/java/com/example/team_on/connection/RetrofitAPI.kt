@@ -46,8 +46,8 @@ interface RetrofitAPI {
         @Body request: Retrofit.RequestProfile): Call<Retrofit.ResponseSuccess>
 
     //아이디 변경 요청
-    @PATCH("/api/changeId")
-    fun changeId(@Body request: Retrofit.RequestChangeId): Call<Retrofit.ResponseSuccess>
+    @POST("/member/updateLoginId")
+    fun changeId(@Body request: Retrofit.RequestChangeId): Call<ResponseBody>
     //비밀번호 변경 요청
     @PATCH("/api/changePw")
     fun changePw(@Body request: Retrofit.RequestChangePw): Call<Retrofit.ResponseSuccess>
