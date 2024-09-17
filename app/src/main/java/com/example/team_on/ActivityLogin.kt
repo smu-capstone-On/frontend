@@ -62,7 +62,6 @@ class ActivityLogin : AppCompatActivity() {
                 val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
                 call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
                     override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
-                        Log.d("로그인", response.toString())
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if(responseBody != null){
@@ -70,6 +69,7 @@ class ActivityLogin : AppCompatActivity() {
                                     startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
                                     editor.putString("userId", responseBody.data.id.toString())
                                     editor.apply()
+                                    finish()
                                 }
                             }
                         }
@@ -95,12 +95,9 @@ class ActivityLogin : AppCompatActivity() {
                 }
             }
 
-
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
                 UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
                     if (error != null) {
-                        Log.e("Kakao", "카카오톡으로 로그인 실패", error)
-
                         // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
                         // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                         if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
@@ -119,7 +116,35 @@ class ActivityLogin : AppCompatActivity() {
                                 Log.i("Kakao", "사용자 정보 요청 성공" +
                                         "\n닉네임: ${user.id}")
                             }
-                            startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
+                            val kakaoId = user!!.id.toString()
+                            val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(kakaoId,kakaoId))
+                            call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
+                                override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
+                                    if (response.isSuccessful) {
+                                        val responseBody = response.body()
+                                        if(responseBody != null){
+                                            if(responseBody.success) {
+                                                startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
+                                                editor.putString("userId", responseBody.data.id.toString())
+                                                editor.apply()
+                                                finish()
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        val intent = Intent(this@ActivityLogin, ActivityProfile::class.java)
+                                        intent.putExtra("id", kakaoId)
+                                        intent.putExtra("pw", kakaoId)
+                                        intent.putExtra("mail", kakaoId)
+                                        startActivity(intent)
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<Retrofit.ResponseSignIn>, t: Throwable) {
+                                    val errorMessage = "Call Failed: ${t.message}"
+                                    Log.d("Retrofit", errorMessage)
+                                }
+                            })
                         }
                     }
                 }
