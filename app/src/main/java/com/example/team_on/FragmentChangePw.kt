@@ -1,8 +1,11 @@
 package com.example.team_on
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentChangePwBinding
+import okhttp3.ResponseBody
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -27,10 +31,10 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
     private lateinit var editPwCheck: EditText
     private lateinit var btnSave: Button
     private lateinit var textCheckPw: TextView
-    private lateinit var id: String
     private lateinit var newPw: String
-    private lateinit var oldPw: String
     private lateinit var toolbar: Toolbar
+    private val sharedPreference = KakaoSDK.user
+    private val id = sharedPreference.getString("id", null)
     private var checkPw = false
 
     //비밀번호 일치하는지 확인
@@ -91,37 +95,32 @@ class FragmentChangePw : Fragment(), DialogAlertInterface {
         btnSave.setOnClickListener {
             if (checkPw) {
                 newPw = editPw.text.toString()
-                val call = RetrofitObject.getRetrofitService.changePw(Retrofit.RequestChangePw(id, oldPw, newPw))
-                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                    override fun onResponse(call: retrofit2.Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                val call = RetrofitObject2.getRetrofitService.changePw(Retrofit.RequestChangePw(id!!, newPw))
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: retrofit2.Call<ResponseBody>, response: Response<ResponseBody>) {
                         if (response.isSuccessful) {
-                            val responseBody = response.body()
                             // 비밀번호 변경 성공 시 팝업
-                            if (responseBody != null) {
-                                val title = "비밀번호 변경\n 완료"
-                                val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인", null)
-                                dialog.isCancelable = false
-                                activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
-                            }
+                            val title = "비밀번호 변경\n 완료"
+                            val dialog = DialogAlert(this@FragmentChangePw, title, null, "확인", 1)
+                            dialog.isCancelable = false
+                            activity?.let { dialog.show(it.supportFragmentManager, "DialogAlert") }
+                        }else{
+                            Toast.makeText(context, "비밀번호 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                         }
                     }
                     // 비밀번호 변경 실패 시
-                    override fun onFailure(call: retrofit2.Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                        Toast.makeText(context, "비밀번호 변경에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                        val errorMessage = "Call Failed: ${t.message}"
+                        Log.d("Retrofit", errorMessage)
                     }
                 })
-            } else {
-                Toast.makeText(context, "완료되지 않은 작업이 있습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onClickOkButton(id: Int) {
-        onDestroyView()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        sharedPreference.edit().clear()
+        startActivity(Intent(requireContext(), ActivityLogin::class.java))
     }
 }

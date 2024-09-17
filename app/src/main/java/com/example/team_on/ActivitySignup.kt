@@ -15,7 +15,6 @@ import android.widget.Toast
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
-import com.example.team_on.databinding.ActivityProfileBinding
 import com.example.team_on.databinding.ActivitySignupBinding
 import okhttp3.ResponseBody
 import retrofit2.Call

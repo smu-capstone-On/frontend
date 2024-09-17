@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentChangeIdBinding
 import okhttp3.ResponseBody
@@ -121,7 +120,6 @@ class FragmentChangeId : Fragment(), DialogAlertInterface {
                 val call = RetrofitObject2.getRetrofitService.changeId(Retrofit.RequestChangeId(oldId!!, newId))
                 call.enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("아이디 변경", response.toString()+"\n"+response.body())
                         if (response.isSuccessful) {
                             val title = "아이디 변경\n 완료"
                             val dialog = DialogAlert(this@FragmentChangeId, title, null, "확인", 1)

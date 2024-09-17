@@ -7,11 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.FragmentTransaction
 import com.example.team_on.databinding.FragmentMyPageBinding
-import de.hdodenhof.circleimageview.CircleImageView
 
 class FragmentMyPage : Fragment(), DialogAlertInterface {
 

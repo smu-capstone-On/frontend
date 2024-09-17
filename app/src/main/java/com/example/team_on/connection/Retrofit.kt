@@ -67,11 +67,9 @@ class Retrofit {
     )
     // 비밀번호 변경 요청
     data class RequestChangePw(
-        @SerializedName("id")
+        @SerializedName("loginId")
         val id: String,
-        @SerializedName("oldPw")
-        val oldPw: String,
-        @SerializedName("newPw")
+        @SerializedName("modifyPassword")
         val newPw: String
     )
     // 아이디 찾기 응답

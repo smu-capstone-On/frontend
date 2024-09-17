@@ -1,6 +1,5 @@
 package com.example.team_on
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View

@@ -72,6 +72,8 @@ class ActivityLogin : AppCompatActivity() {
                                     editor.putString("id", id)
                                     editor.apply()
                                     finish()
+                                }else{
+                                    Toast.makeText(this@ActivityLogin,"입력하신 내용을 다시 확인해 주세요.",Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
