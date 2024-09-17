@@ -52,8 +52,8 @@ interface RetrofitAPI {
     @PATCH("/api/changePw")
     fun changePw(@Body request: Retrofit.RequestChangePw): Call<Retrofit.ResponseSuccess>
     //아이디 찾기
-    @GET("/api/findId")
-    fun findId(@Body request: Retrofit.RequestFindId): Call<Retrofit.ResponseFindId>
+    @GET("/member/find-id")
+    fun findId(@Query("email") mail: String): Call<Retrofit.ResponseFindId>
     //비밀번호 찾기
     @GET("/api/findPw")
     fun findPw(@Body request: Retrofit.RequestFindPw): Call<Retrofit.ResponseFindPw>

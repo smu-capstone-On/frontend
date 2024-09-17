@@ -72,11 +72,6 @@ class Retrofit {
         @SerializedName("newPw")
         val newPw: String
     )
-    // 아이디 찾기
-    data class RequestFindId(
-        @SerializedName("mail")
-        val mail: String
-    )
     // 비밀번호 찾기
     data class RequestFindPw(
         @SerializedName("id")
@@ -88,8 +83,12 @@ class Retrofit {
     data class ResponseFindId(
         @SerializedName("success")
         val success: Boolean,
-        @SerializedName("id")
-        val id: String
+        @SerializedName("data")
+        val data: FindId
+    )
+    data class FindId(
+        @SerializedName("loginId")
+        val loginId: String
     )
     // 비밀번호 찾기 응답
     data class ResponseFindPw(

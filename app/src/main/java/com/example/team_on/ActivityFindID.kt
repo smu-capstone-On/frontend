@@ -3,8 +3,11 @@ package com.example.team_on
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
@@ -21,6 +24,7 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
 
     private lateinit var editMail: EditText
     private lateinit var editAuth: EditText
+    private lateinit var textAuth: TextView
     private lateinit var btnMail: Button
     private lateinit var btnAuth: Button
     private lateinit var btnEnd: Button
@@ -35,6 +39,7 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
 
         editMail = binding.findidEditMail
         editAuth = binding.findidEditAuth
+        textAuth = binding.findidTextAuth
         btnMail = binding.findidBtnMail
         btnAuth = binding.findidBtnAuth
         btnEnd = binding.findidBtnEnd
@@ -42,31 +47,37 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
         btnMail.setOnClickListener {
             btnMail.isEnabled = false
             mail = editMail.text.toString()
-            val call = RetrofitObject2.getRetrofitService.sendMail(mail)
+            val call = RetrofitObject.getRetrofitService.sendMail(mail)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
-                        // 인증 번호 전송 성공 시
-                        if (responseBody != null) {
-                            Toast.makeText(this@ActivityFindID, "인증 번호를 메일로 전송했습니다.", Toast.LENGTH_SHORT).show()
+                        if(responseBody != null){
+                            Toast.makeText(this@ActivityFindID,"메일이 발송되었습니다.",Toast.LENGTH_SHORT).show()
                             btnAuth.isEnabled = true
                             btnAuth.alpha = 1f
                         }
+                    }else{
+                        Toast.makeText(this@ActivityFindID,"메일 양식을 확인해주세요.",Toast.LENGTH_SHORT).show()
                     }
                 }
-                // 인증 번호 전송 실패 시
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Toast.makeText(this@ActivityFindID, "인증 번호 전송에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                    btnMail.isEnabled = true
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
                 }
             })
+            btnMail.isEnabled = true
         }
 
         btnAuth.setOnClickListener {
             btnAuth.isEnabled = false
             mail = editMail.text.toString()
             auth = editAuth.text.toString()
+            if(auth.isEmpty()){
+                btnAuth.isEnabled = true
+                Toast.makeText(this@ActivityFindID,"인증 번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -74,19 +85,22 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
                         val responseBody = response.body()
                         // 메일 인증 성공 시
                         if (responseBody != null) {
-                            Toast.makeText(this@ActivityFindID, "메일 인증에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                            btnMail.visibility = View.GONE
+                            btnAuth.visibility = View.GONE
+                            editAuth.visibility = View.GONE
+                            textAuth.visibility = View.VISIBLE
                             checkAuth = true
                         }
                     }
                 }
                 // 메일 인증 실패 시
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Toast.makeText(this@ActivityFindID, "메일 인증에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                    btnAuth.isEnabled = true
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
                 }
             })
+            btnAuth.isEnabled = true
         }
-
         clickViewEvents()
     }
 
@@ -95,26 +109,30 @@ class ActivityFindID : AppCompatActivity(), DialogAlertInterface {
             // 인증 여부 확인
             if (checkAuth) {
                 mail = editMail.text.toString()
-                val call = RetrofitObject.getRetrofitService.findId(Retrofit.RequestFindId(mail))
+                val call = RetrofitObject2.getRetrofitService.findId(mail)
                 call.enqueue(object : Callback<Retrofit.ResponseFindId> {
                     override fun onResponse(call: Call<Retrofit.ResponseFindId>, response: Response<Retrofit.ResponseFindId>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             // 아이디 찾기 성공 시
                             if (responseBody != null) {
-                                val title = "아이디 찾기"
-                                val content = responseBody.id
+                                if(responseBody.success){
+                                    val title = "아이디 찾기"
+                                    val id = responseBody.data.loginId
 
-                                val dialog = DialogAlert(this@ActivityFindID, title, content, "로그인 하기", null)
-                                // 배경 클릭 막기
-                                dialog.isCancelable = false
-                                dialog.show(this@ActivityFindID.supportFragmentManager, "DialogAlert")
+                                    val dialog = DialogAlert(this@ActivityFindID, title, id, "로그인 하기", null)
+                                    // 배경 클릭 막기
+                                    dialog.isCancelable = false
+                                    dialog.show(this@ActivityFindID.supportFragmentManager, "DialogAlert")
+                                }else{
+                                    Toast.makeText(this@ActivityFindID, "입력하신 이메일로 가입된 계정이 없습니다.", Toast.LENGTH_SHORT).show()                                }
                             }
                         }
                     }
                     // 아이디 찾기 실패 시
                     override fun onFailure(call: Call<Retrofit.ResponseFindId>, t: Throwable) {
-                        Toast.makeText(this@ActivityFindID, "아이디 찾기에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                        val errorMessage = "Call Failed: ${t.message}"
+                        Log.d("Retrofit", errorMessage)
                     }
                 })
             } else {
