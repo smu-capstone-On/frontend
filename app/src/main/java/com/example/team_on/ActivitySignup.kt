@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivitySignupBinding
 import okhttp3.ResponseBody
@@ -135,7 +134,7 @@ class ActivitySignup : AppCompatActivity() {
         btnMail.setOnClickListener {
             btnMail.isEnabled = false
             mail = editMail.text.toString()
-            val call = RetrofitObject.getRetrofitService.sendMail(mail)
+            val call = RetrofitObject2.getRetrofitService.sendMail(mail)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
@@ -166,7 +165,7 @@ class ActivitySignup : AppCompatActivity() {
                 Toast.makeText(this@ActivitySignup,"인증 번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
+            val call = RetrofitObject2.getRetrofitService.checkAuth(mail, auth)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     Log.d("이메일 확인", response.toString())

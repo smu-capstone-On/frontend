@@ -217,7 +217,7 @@
                 android:background="@drawable/radius_5_stroke_gray"
                 android:ems="10"
                 android:hint="인증 번호 입력"
-                android:inputType="number"
+                android:inputType="text"
                 android:paddingStart="8dp"
                 android:textColorHint="@color/hint"
                 android:textSize="14sp"

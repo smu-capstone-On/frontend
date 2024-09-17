@@ -130,7 +130,7 @@ class ActivityChat : AppCompatActivity() {
         btnSend.setOnClickListener {
             val message = chatEdit.text.toString()
             if (message.isNotBlank()) {
-                sendMessage(message, 1, 2)
+                sendMessage(message, 3, 2)
                 chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
             }
         }
