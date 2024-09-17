@@ -55,8 +55,8 @@ interface RetrofitAPI {
     @GET("/member/find-id")
     fun findId(@Query("email") mail: String): Call<Retrofit.ResponseFindId>
     //비밀번호 찾기
-    @GET("/api/findPw")
-    fun findPw(@Body request: Retrofit.RequestFindPw): Call<Retrofit.ResponseFindPw>
+    @GET("/member/reset-password")
+    fun findPw(@Query("email") mail: String): Call<ResponseBody>
     //카카오 검색
     @GET("/v2/local/search/address.json")
     fun kakaoSearch(

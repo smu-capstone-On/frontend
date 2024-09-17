@@ -3,10 +3,12 @@ package com.example.team_on
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
-import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.ActivityFindPwBinding
@@ -22,10 +24,10 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
     private lateinit var editId: EditText
     private lateinit var editMail: EditText
     private lateinit var editAuth: EditText
+    private lateinit var textAuth: TextView
     private lateinit var btnMail: Button
     private lateinit var btnAuth: Button
     private lateinit var btnEnd: Button
-    private lateinit var id: String
     private lateinit var mail: String
     private lateinit var auth: String
     private var checkAuth = false
@@ -36,6 +38,7 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
 
         editId = binding.findpwEditId
         editMail = binding.findpwEditMail
+        textAuth = binding.findpwTextAuth
         editAuth = binding.findpwEditAuth
         btnMail = binding.findpwBtnMail
         btnAuth = binding.findpwBtnAuth
@@ -44,32 +47,37 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
         btnMail.setOnClickListener {
             btnMail.isEnabled = false
             mail = editMail.text.toString()
-            val call = RetrofitObject2.getRetrofitService.sendMail(mail)
+            val call = RetrofitObject.getRetrofitService.sendMail(mail)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
-                        // 인증 번호 전송 성공 시
-                        if (responseBody != null) {
-                            Toast.makeText(this@ActivityFindPW, "인증 번호를 메일로 전송했습니다.", Toast.LENGTH_SHORT).show()
+                        if(responseBody != null){
+                            Toast.makeText(this@ActivityFindPW,"메일이 발송되었습니다.",Toast.LENGTH_SHORT).show()
                             btnAuth.isEnabled = true
                             btnAuth.alpha = 1f
                         }
+                    }else{
+                        Toast.makeText(this@ActivityFindPW,"메일 양식을 확인해주세요.",Toast.LENGTH_SHORT).show()
                     }
                 }
-                // 인증 번호 전송 실패 시
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Toast.makeText(this@ActivityFindPW, "인증 번호 전송에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                    btnMail.isEnabled = true
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
                 }
-
             })
+            btnMail.isEnabled = true
         }
 
         btnAuth.setOnClickListener {
             btnAuth.isEnabled = false
-            auth = editAuth.text.toString()
             mail = editMail.text.toString()
+            auth = editAuth.text.toString()
+            if(auth.isEmpty()){
+                btnAuth.isEnabled = true
+                Toast.makeText(this@ActivityFindPW,"인증 번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val call = RetrofitObject.getRetrofitService.checkAuth(mail, auth.toInt())
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -77,49 +85,37 @@ class ActivityFindPW : AppCompatActivity(), DialogAlertInterface {
                         val responseBody = response.body()
                         // 메일 인증 성공 시
                         if (responseBody != null) {
-                            Toast.makeText(this@ActivityFindPW, "메일 인증에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                            btnMail.visibility = View.GONE
+                            btnAuth.visibility = View.GONE
+                            editAuth.visibility = View.GONE
+                            textAuth.visibility = View.VISIBLE
                             checkAuth = true
                         }
                     }
                 }
-                // 메일 인증 실패 시
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Toast.makeText(this@ActivityFindPW, "메일 인증에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                    btnAuth.isEnabled = true
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
                 }
             })
+            btnAuth.isEnabled = true
         }
-        clickViewEvents()
-    }
 
-    private fun clickViewEvents() {
         btnEnd.setOnClickListener {
-            if (checkAuth) {
-                id = editId.text.toString()
-                mail = editMail.text.toString()
-                val call = RetrofitObject.getRetrofitService.findPw(Retrofit.RequestFindPw(mail, id))
-                call.enqueue(object : Callback<Retrofit.ResponseFindPw> {
-                    override fun onResponse(call: Call<Retrofit.ResponseFindPw>, response: Response<Retrofit.ResponseFindPw>) {
+            if(checkAuth && editId.text.isNotEmpty()){
+                val call = RetrofitObject2.getRetrofitService.findPw(mail)
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         if (response.isSuccessful) {
-                            val responseBody = response.body()
-                            if (responseBody != null) {
-                                val title = "비밀번호 찾기"
-                                val content = responseBody.pw
-
-                                val dialog = DialogAlert(this@ActivityFindPW, title, content, "로그인 하기", null)
-                                // 배경 클릭 막기
-                                dialog.isCancelable = false
-                                dialog.show(this@ActivityFindPW.supportFragmentManager, "DialogAlert")
-                            }
+                            Toast.makeText(this@ActivityFindPW,"임시 비밀번호가 메일로 발송되었습니다.", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@ActivityFindPW, ActivityLogin::class.java))
                         }
                     }
-
-                    override fun onFailure(call: Call<Retrofit.ResponseFindPw>, t: Throwable) {
-                        Toast.makeText(this@ActivityFindPW, "비밀번호 찾기에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        val errorMessage = "Call Failed: ${t.message}"
+                        Log.d("Retrofit", errorMessage)
                     }
                 })
-            } else {
-                Toast.makeText(this@ActivityFindPW, "메일이 인증되지 않았습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
