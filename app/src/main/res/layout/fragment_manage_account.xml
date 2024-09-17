@@ -87,29 +87,54 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/account_tv_change_id" />
 
     <ImageButton
         android:id="@+id/account_btn_change_id"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="9dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="10dp"
         android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/account_tv_change_id"
         app:layout_constraintEnd_toEndOf="@id/account_tv_change_id"
-        app:layout_constraintTop_toTopOf="@id/account_tv_change_id"
+        app:layout_constraintTop_toTopOf="@+id/account_tv_change_id"
         app:srcCompat="@drawable/svg_chevron_right" />
 
     <ImageButton
         android:id="@+id/account_btn_change_pw"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="9dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="10dp"
         android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/account_tv_change_pw"
         app:layout_constraintEnd_toEndOf="@id/account_tv_change_pw"
-        app:layout_constraintTop_toTopOf="@id/account_tv_change_pw"
+        app:layout_constraintTop_toTopOf="@+id/account_tv_change_pw"
+        app:srcCompat="@drawable/svg_chevron_right" />
+
+    <TextView
+        android:id="@+id/account_tv_change_nick"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/white"
+        android:paddingStart="15dp"
+        android:paddingTop="9dp"
+        android:text="닉네임 변경"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/account_tv_change_pw" />
+
+    <ImageButton
+        android:id="@+id/account_btn_change_nick"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/account_tv_change_nick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/account_tv_change_nick"
         app:srcCompat="@drawable/svg_chevron_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

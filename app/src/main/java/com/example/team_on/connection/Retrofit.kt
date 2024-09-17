@@ -31,7 +31,9 @@ class Retrofit {
     )
     data class SignIn(
         @SerializedName("id")
-        val id: Int
+        val id: Int,
+        @SerializedName("email")
+        val email: String
     )
     //인증 번호 확인 요청
     data class RequestAuth(
@@ -72,13 +74,6 @@ class Retrofit {
         @SerializedName("newPw")
         val newPw: String
     )
-    // 비밀번호 찾기
-    data class RequestFindPw(
-        @SerializedName("id")
-        val id: String,
-        @SerializedName("mail")
-        val mail: String
-    )
     // 아이디 찾기 응답
     data class ResponseFindId(
         @SerializedName("success")
@@ -89,13 +84,6 @@ class Retrofit {
     data class FindId(
         @SerializedName("loginId")
         val loginId: String
-    )
-    // 비밀번호 찾기 응답
-    data class ResponseFindPw(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("pw")
-        val pw: String
     )
     //카카오 주소 검색 응답
     data class ResponseSearch(

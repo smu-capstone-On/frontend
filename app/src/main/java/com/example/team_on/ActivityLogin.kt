@@ -68,6 +68,7 @@ class ActivityLogin : AppCompatActivity() {
                                 if(responseBody.success) {
                                     startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
                                     editor.putString("userId", responseBody.data.id.toString())
+                                    editor.putString("userEmail", responseBody.data.email)
                                     editor.apply()
                                     finish()
                                 }

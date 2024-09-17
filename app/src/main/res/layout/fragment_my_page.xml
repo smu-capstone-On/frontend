@@ -20,76 +20,6 @@
         app:titleTextColor="@color/white" />
 
     <TextView
-        android:id="@+id/mypage_text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="-5dp"
-        android:text="내 프로필"
-        android:textColor="@color/titleText"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/mypage_imageview_user_profile"
-        app:layout_constraintStart_toStartOf="@id/mypage_imageview_user_profile" />
-
-    <ImageView
-        android:id="@+id/mypage_imageview_user_profile"
-        android:layout_width="340dp"
-        android:layout_height="122dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/radius_10_solid_white"
-        android:paddingStart="117dp"
-        android:paddingTop="33dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mypage_title"/>
-
-    <TextView
-        android:id="@+id/mypage_tv_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        android:text="닉네임 123"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/mypage_image_profile"
-        app:layout_constraintTop_toTopOf="@id/mypage_imageview_user_profile" />
-
-    <TextView
-        android:id="@+id/mypage_tv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:text="smu1234"
-        android:textColor="@color/gray"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/mypage_tv_nickname"
-        app:layout_constraintTop_toBottomOf="@id/mypage_tv_nickname" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/mypage_image_profile"
-        android:layout_width="91dp"
-        android:layout_height="91dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/svg_default_profile"
-        app:layout_constraintStart_toStartOf="@id/mypage_imageview_user_profile"
-        app:layout_constraintTop_toTopOf="@id/mypage_imageview_user_profile" />
-
-    <ImageButton
-        android:id="@+id/mypage_btn_edit_profile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="4dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/mypage_imageview_user_profile"
-        app:layout_constraintBottom_toBottomOf="@id/mypage_imageview_user_profile"
-        app:srcCompat="@drawable/svg_edit_profile"/>
-
-    <TextView
         android:id="@+id/mypage_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,7 +35,7 @@
         android:id="@+id/mypage_tv_article"
         android:layout_width="match_parent"
         android:layout_height="47dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="30dp"
         android:background="@color/white"
         android:paddingStart="15dp"
         android:paddingTop="12dp"
@@ -114,7 +44,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mypage_imageview_user_profile" />
+        app:layout_constraintTop_toBottomOf="@+id/mypage_title" />
 
     <TextView
         android:id="@+id/mypage_tv_comment"

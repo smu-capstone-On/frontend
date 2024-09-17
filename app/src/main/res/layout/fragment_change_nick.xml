@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentEditProfile">
+    tools:context=".FragmentChangeNick">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_profile_toolbar"
@@ -14,36 +14,15 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="프로필 수정"
+        app:title="닉네임 변경"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:titleTextColor="@color/white"
         app:navigationIcon="@drawable/svg_back"/>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/edit_profile_image_profile"
-        android:layout_width="101dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/svg_default_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_profile_toolbar" />
-
-    <ImageButton
-        android:id="@+id/edit_profile_btn_change_image"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="73dp"
-        app:layout_constraintStart_toStartOf="@+id/edit_profile_image_profile"
-        app:layout_constraintTop_toTopOf="@+id/edit_profile_image_profile"
-        app:srcCompat="@drawable/svg_profile_plus" />
 
     <EditText
         android:id="@+id/edit_profile_edit_nick"
         android:layout_width="214dp"
         android:layout_height="33dp"
-        android:layout_marginStart="-7dp"
         android:layout_marginBottom="51dp"
         android:background="@drawable/radius_5_stroke_gray"
         android:ems="10"
@@ -54,7 +33,7 @@
         android:textColorHint="@color/hint"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/edit_profile_btn_save"
-        app:layout_constraintStart_toStartOf="@id/edit_profile_btn_save"/>
+        app:layout_constraintStart_toStartOf="@id/edit_profile_btn_save" />
 
     <TextView
         android:id="@+id/edit_profile_text1"
@@ -84,26 +63,26 @@
         android:id="@+id/edit_profile_btn_nickcheck"
         android:layout_width="67dp"
         android:layout_height="33dp"
-        android:layout_marginStart="7dp"
         android:background="@drawable/radius_5_solid_yellow"
         android:text="중복 확인"
         android:textColor="@color/white"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@+id/edit_profile_edit_nick"
+        app:layout_constraintEnd_toEndOf="@+id/edit_profile_btn_save"
         app:layout_constraintStart_toEndOf="@+id/edit_profile_edit_nick" />
 
     <Button
         android:id="@+id/edit_profile_btn_save"
         android:layout_width="288dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="370dp"
+        android:layout_marginTop="200dp"
         android:background="@drawable/radius_10_solid_yellow"
         android:text="입력 완료"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

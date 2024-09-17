@@ -17,7 +17,11 @@ class FragmentManageAccount : Fragment() {
 
     private lateinit var btnChangeId: ImageButton
     private lateinit var btnChangePw: ImageButton
+    private lateinit var btnChangeNick: ImageButton
     private lateinit var toolbar: Toolbar
+
+    private val sharedPreference = KakaoSDK.user
+    private val email = sharedPreference.getString("userEmail", null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +40,10 @@ class FragmentManageAccount : Fragment() {
 
         btnChangeId = binding.accountBtnChangeId
         btnChangePw = binding.accountBtnChangePw
+        btnChangeNick = binding.accountBtnChangeNick
         toolbar = binding.accountToolbar
+
+        binding.accountTvMail.text = email
 
         btnChangeId.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
@@ -48,6 +55,13 @@ class FragmentManageAccount : Fragment() {
         btnChangePw.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.main_frame, FragmentChangePw())
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        btnChangeNick.setOnClickListener {
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.main_frame, FragmentChangeNick())
             transaction.addToBackStack(null)
             transaction.commit()
         }

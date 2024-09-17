@@ -18,15 +18,12 @@ class FragmentMyPage : Fragment(), DialogAlertInterface {
     private var _binding: FragmentMyPageBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var imageUserProfile: CircleImageView
     private lateinit var btnEditProfile: ImageButton
     private lateinit var btnViewArticle: ImageButton
     private lateinit var btnViewComment: ImageButton
     private lateinit var btnViewBlacklist: ImageButton
     private lateinit var btnManageAccount: ImageButton
     private lateinit var btnLogout: ImageButton
-    private lateinit var textUserId: TextView
-    private lateinit var textUserNickname: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,22 +40,11 @@ class FragmentMyPage : Fragment(), DialogAlertInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        imageUserProfile = binding.mypageImageProfile
-        btnEditProfile = binding.mypageBtnEditProfile
         btnViewArticle = binding.mypageBtnArticle
         btnViewComment = binding.mypageBtnComment
         btnViewBlacklist = binding.mypageBtnBlacklist
         btnManageAccount = binding.mypageBtnManageAccount
         btnLogout = binding.mypageBtnLogout
-        textUserId = binding.mypageTvId
-        textUserNickname = binding.mypageTvNickname
-
-        btnEditProfile.setOnClickListener {
-            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_frame, FragmentEditProfile())
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
 
         btnManageAccount.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
@@ -78,7 +64,6 @@ class FragmentMyPage : Fragment(), DialogAlertInterface {
     override fun onClickOkButton(id: Int) {
         if (id == -1) {
             // 로그아웃 실행
-
         }
         activity?.finishAffinity()
         startActivity(Intent(context, ActivityLogin()::class.java))
