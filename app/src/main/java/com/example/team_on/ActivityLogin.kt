@@ -65,15 +65,22 @@ class ActivityLogin : AppCompatActivity() {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if(responseBody != null){
-                                if(responseBody.success) {
-                                    startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
-                                    editor.putString("userId", responseBody.data.id.toString())
-                                    editor.putString("email", responseBody.data.email)
-                                    editor.putString("id", id)
-                                    editor.apply()
+                                if(responseBody.profile == null){
+                                    val intent = Intent(this@ActivityLogin, ActivityProfile::class.java)
+                                    intent.putExtra("userId", responseBody.id)
+                                    startActivity(intent)
                                     finish()
                                 }else{
-                                    Toast.makeText(this@ActivityLogin,"입력하신 내용을 다시 확인해 주세요.",Toast.LENGTH_SHORT).show()
+                                    editor.putString("userId", responseBody.id.toString())
+                                    editor.putString("email", responseBody.email)
+                                    editor.putString("nick", responseBody.profile.nickName)
+                                    editor.putInt("age", responseBody.profile.age)
+                                    editor.putString("sex", responseBody.profile.sex)
+                                    editor.putString("id", id)
+                                    editor.putBoolean("kakao", false)
+                                    editor.apply()
+                                    startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
+                                    finish()
                                 }
                             }
                         }
@@ -127,20 +134,41 @@ class ActivityLogin : AppCompatActivity() {
                                     if (response.isSuccessful) {
                                         val responseBody = response.body()
                                         if(responseBody != null){
-                                            if(responseBody.success) {
-                                                startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
-                                                editor.putString("userId", responseBody.data.id.toString())
+                                            if(responseBody.profile == null){
+                                                val intent = Intent(this@ActivityLogin, ActivityProfile::class.java)
+                                                intent.putExtra("userId", responseBody.id)
+                                                startActivity(intent)
+                                                finish()
+                                            }else{
+                                                editor.putString("userId", responseBody.id.toString())
+                                                editor.putString("email", responseBody.email)
+                                                editor.putString("nick", responseBody.profile.nickName)
+                                                editor.putInt("age", responseBody.profile.age)
+                                                editor.putString("sex", responseBody.profile.sex)
+                                                editor.putBoolean("kakao", true)
                                                 editor.apply()
+                                                startActivity(Intent(this@ActivityLogin, ActivityMain::class.java))
                                                 finish()
                                             }
                                         }
-                                    }
-                                    else{
-                                        val intent = Intent(this@ActivityLogin, ActivityProfile::class.java)
-                                        intent.putExtra("id", kakaoId)
-                                        intent.putExtra("pw", kakaoId)
-                                        intent.putExtra("mail", kakaoId)
-                                        startActivity(intent)
+                                    }else{
+                                        val call2 = RetrofitObject2.getRetrofitService.signUp(Retrofit.RequestSignUp(kakaoId,kakaoId,kakaoId))
+                                        call2.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                                            override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                                                if (response.isSuccessful) {
+                                                    val responseBody = response.body()
+                                                    if(responseBody!!.success){
+                                                        val intent = Intent(this@ActivityLogin, ActivitySuccessSignUp::class.java)
+                                                        startActivity(intent)
+                                                        finish()
+                                                    }
+                                                }
+                                            }
+                                            override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                                                val errorMessage = "Call Failed: ${t.message}"
+                                                Log.d("Retrofit", errorMessage)
+                                            }
+                                        })
                                     }
                                 }
 

@@ -52,9 +52,7 @@ class ActivityProfile : AppCompatActivity() {
         textCheckNick = binding.profileTextCheckNick
         btnNick = binding.profileBtnNickcheck
         editNick = binding.profileEditNick
-        val id = intent.getStringExtra("id")
-        val pw = intent.getStringExtra("pw")
-        val mail = intent.getStringExtra("mail")
+        val id = intent.getIntExtra("userId", 0)
 
         editNick.addTextChangedListener(checkNickWatcherListener)
 
@@ -92,10 +90,16 @@ class ActivityProfile : AppCompatActivity() {
             val groupGender = binding.profileRadioGender.checkedRadioButtonId
             val groupAnimal = binding.profileRadioAnimal.checkedRadioButtonId
             var age = 0
-            var userId = 0
             if(!checkNick){
                 Toast.makeText(this@ActivityProfile,"닉네임 중복을 확인해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+            }
+            val ageString = binding.profileEditAge.text.toString()
+            if(ageString.isEmpty()){
+                Toast.makeText(this@ActivityProfile,"나이를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }else{
+                age = ageString.toInt()
             }
             if(groupGender != -1){
                 gender = findViewById<RadioButton>(groupGender).text.toString()
@@ -119,67 +123,24 @@ class ActivityProfile : AppCompatActivity() {
                 Toast.makeText(this@ActivityProfile,"반려동물 유무를 선택해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val ageString = binding.profileEditAge.text.toString()
-            if(ageString.isEmpty()){
-                Toast.makeText(this@ActivityProfile,"나이를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }else{
-                age = ageString.toInt()
-            }
-            val call = RetrofitObject2.getRetrofitService.signUp(Retrofit.RequestSignUp(id!!,pw!!,mail!!))
+
+            Log.d("회원가입", "$id $nick $gender $age $animal")
+            val call = RetrofitObject2.getRetrofitService.makeProfile(id.toString(), Retrofit.RequestProfile(nick, gender, age, animal))
             call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
                 override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if(responseBody != null){
-                            if(responseBody.success){
-                                Log.d("회원가입", "회원가입 성공")
-                                val call = RetrofitObject2.getRetrofitService.signIn(Retrofit.RequestSignIn(id, pw))
-                                call.enqueue(object : Callback<Retrofit.ResponseSignIn> {
-                                    override fun onResponse(call: Call<Retrofit.ResponseSignIn>, response: Response<Retrofit.ResponseSignIn>) {
-                                        if (response.isSuccessful) {
-                                            val responseBody = response.body()
-                                            if(responseBody != null){
-                                                if(responseBody.success) {
-                                                    Log.d("회원가입", "로그인 성공")
-                                                    userId = responseBody.data.id
-                                                    val call = RetrofitObject2.getRetrofitService.makeProfile(userId.toString(), Retrofit.RequestProfile(nick, gender, age, animal))
-                                                    call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-                                                        override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-                                                            if (response.isSuccessful) {
-                                                                val responseBody = response.body()
-                                                                if(responseBody != null){
-                                                                    if(responseBody.success) {
-                                                                        Log.d("회원가입", "프로필 생성 성공")
-                                                                        startActivity(Intent(this@ActivityProfile, ActivitySuccessSignUp::class.java))
-                                                                        finish()
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-
-                                                        override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                                                            val errorMessage = "Call Failed: ${t.message}"
-                                                            Log.d("Retrofit", errorMessage)
-                                                        }
-                                                    })
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    override fun onFailure(call: Call<Retrofit.ResponseSignIn>, t: Throwable) {
-                                        val errorMessage = "Call Failed: ${t.message}"
-                                        Log.d("Retrofit", errorMessage)
-                                    }
-                                })
+                            if(responseBody.success) {
+                                Log.d("회원가입", "프로필 생성 성공")
+                                startActivity(Intent(this@ActivityProfile, ActivityMain::class.java))
+                                finish()
                             }
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-                    btnNick.isEnabled = true
                     val errorMessage = "Call Failed: ${t.message}"
                     Log.d("Retrofit", errorMessage)
                 }

@@ -191,12 +191,23 @@ class ActivitySignup : AppCompatActivity() {
 
         btnNext.setOnClickListener {
             if(checkId && checkPw && checkAuth){
-                val intent = Intent(this, ActivityProfile::class.java)
-                intent.putExtra("id", id)
-                intent.putExtra("pw", pw)
-                intent.putExtra("mail", mail)
-                startActivity(intent)
-                finish()
+                val call = RetrofitObject2.getRetrofitService.signUp(Retrofit.RequestSignUp(id,pw,mail))
+                call.enqueue(object : Callback<Retrofit.ResponseSuccess> {
+                    override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            if(responseBody!!.success){
+                                val intent = Intent(this@ActivitySignup, ActivitySuccessSignUp::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
+                        val errorMessage = "Call Failed: ${t.message}"
+                        Log.d("Retrofit", errorMessage)
+                    }
+                })
             }else{
                 Toast.makeText(this@ActivitySignup,"양식을 다시 확인해 주세요.",Toast.LENGTH_SHORT).show()
             }

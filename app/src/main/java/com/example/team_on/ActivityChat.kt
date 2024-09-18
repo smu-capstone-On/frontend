@@ -31,7 +31,7 @@ class ActivityChat : AppCompatActivity() {
 
     fun connectWebSocket(roomId: Int) {
         val request = Request.Builder()
-            .url("ws://34.231.37.92:8080/send/$roomId")
+            .url("ws://34.231.37.92:8080/gs-guide-websocket/$roomId")
             .build()
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
