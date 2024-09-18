@@ -214,14 +214,16 @@ class FragmentWalk : Fragment() {
                 override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
                     if (response.isSuccessful) {
                         val matesList = response.body()
-                        var count = 1
                         if (matesList!!.isNotEmpty()) {
+                            labelLayer.removeAll()
+                            var count = 1
                             val mateList = mutableListOf<Retrofit.MateInfo>()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                             // 배열 데이터 출력 또는 처리
                             for (mate in matesList) {
                                 mateList.add(Retrofit.MateInfo(count, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
                                 labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
+                                count++
                             }
 
                             recyclerViewMate.layoutManager =
