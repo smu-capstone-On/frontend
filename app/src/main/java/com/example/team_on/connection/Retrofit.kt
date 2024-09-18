@@ -135,9 +135,9 @@ class Retrofit {
         @SerializedName("hasPet")
         val hasPet: Boolean,
         @SerializedName("latitude")
-        val latitude: Float,
+        val latitude: Double,
         @SerializedName("longitude")
-        val longitude: Float,
+        val longitude: Double,
         @SerializedName("startDateTime")
         val sTime: String,
         @SerializedName("endDateTime")
@@ -148,15 +148,25 @@ class Retrofit {
 
     //메이트 찾기 응답
     data class ResponseFindMate(
+        @SerializedName("id")
         val id: Int,
+        @SerializedName("memberId")
         val memberId: Int,
+        @SerializedName("sexType")
         val sexType: String,
+        @SerializedName("age")
         val age: Int,
+        @SerializedName("hasPet")
         val hasPet: Boolean,
-        val latitude: Float,
-        val longitude: Float,
+        @SerializedName("latitude")
+        val latitude: Double,
+        @SerializedName("longitude")
+        val longitude: Double,
+        @SerializedName("startDateTime")
         val startDateTime: String,
+        @SerializedName("endDateTime")
         val endDateTime: String,
+        @SerializedName("memo")
         val memo: String
     )
     //게시판 댓글 저장

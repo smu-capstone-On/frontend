@@ -71,6 +71,7 @@ class ActivityLogin : AppCompatActivity() {
                                     startActivity(intent)
                                     finish()
                                 }else{
+                                    Log.d("로그인", responseBody.toString())
                                     editor.putString("userId", responseBody.id.toString())
                                     editor.putString("email", responseBody.email)
                                     editor.putString("nick", responseBody.profile.nickName)

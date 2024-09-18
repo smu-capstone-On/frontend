@@ -178,7 +178,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fwalk_d_text7">
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/fwalk_d_radio_true"
                 android:layout_width="54dp"
                 android:layout_height="25dp"
                 android:background="@drawable/custom_radiobutton_v2"
@@ -188,7 +188,7 @@
                 android:textColor="@drawable/custom_radiobutton_text"/>
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/fwalk_d_radio_false"
                 android:layout_width="54dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="10dp"

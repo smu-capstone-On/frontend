@@ -15,6 +15,8 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.NumberPicker
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,6 +25,7 @@ import androidx.fragment.app.Fragment
 import com.example.team_on.connection.KakaoRetrofitObject
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
+import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentWalkBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -36,6 +39,7 @@ import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,6 +59,11 @@ class FragmentWalk : Fragment() {
     private lateinit var cameraPos: CameraPosition
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var editSearch: EditText
+
+    private val sharedPreference = KakaoSDK.user
+    private val userId = sharedPreference.getString("userId", null)
+    private val gender = sharedPreference.getString("sex", null)
+    private val age = sharedPreference.getInt("age", 0)
 
     private lateinit var mapView: MapView
     private lateinit var map: KakaoMap
@@ -99,7 +108,6 @@ class FragmentWalk : Fragment() {
         }
     }
 
-    @SuppressLint("DefaultLocale")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -190,14 +198,36 @@ class FragmentWalk : Fragment() {
 
         //현재 지도에서 찾기 눌렀을 때 데모
         btnMapSearch.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             val LabelStyle = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon)
                 .setTextStyles(45, Color.parseColor("#000000"))
                 .setAnchorPoint(0.5f,1f)))
+            cameraPos = map.cameraPosition!!
+            val longitude = cameraPos.position.longitude
+            val latitude = cameraPos.position.latitude
+            val call = RetrofitObject2.getRetrofitService.findMate(latitude,longitude)
+            call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
+                override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
+                    Log.d("메이트 검색", response.toString()+"\n"+response.body().toString())
+                    if (response.isSuccessful) {
+                        val matesList = response.body()
+                        var count = 1
+                        if (matesList!!.isNotEmpty()) {
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            // 배열 데이터 출력 또는 처리
+                            for (mate in matesList) {
+                                labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
+                            }
+                        } else {
+                            Toast.makeText(requireContext(), "검색된 사용자가 없습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
-            labelLayer.addLabel(LabelOptions.from("1", LatLng.from(37.599669844990906,126.95765567311638)).setStyles(LabelStyle).setTexts("1"))
-            labelLayer.addLabel(LabelOptions.from("2", LatLng.from(37.60149068988,126.95531178715)).setStyles(LabelStyle).setTexts("2"))
-            labelLayer.addLabel(LabelOptions.from("3", LatLng.from(37.601923289543194,126.95699815251602)).setStyles(LabelStyle).setTexts("3"))
+                override fun onFailure(call: Call<List<Retrofit.ResponseFindMate>>, t: Throwable) {
+                    val errorMessage = "Call Failed: ${t.message}"
+                    Log.d("Retrofit", errorMessage)
+                }
+            })
         }
 
         btnJoin.setOnClickListener {
@@ -208,6 +238,7 @@ class FragmentWalk : Fragment() {
             val latitude = cameraPos.position.latitude.toString()
             val call = KakaoRetrofitObject.getRetrofitService.kakaoAddress("KakaoAK $key", longitude, latitude)
             call.enqueue(object : Callback<Retrofit.ResponseAddress> {
+                @SuppressLint("CutPasteId")
                 override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
                     if (response.isSuccessful) {
                         val arr = response.body()?.documents!![0].roadAddress
@@ -227,7 +258,9 @@ class FragmentWalk : Fragment() {
                         val minute2 = view.findViewById<NumberPicker>(R.id.fwalk_d_nf_m2)
                         val addressName = view.findViewById<TextView>(R.id.fwalk_d_text_address)
                         val post = view.findViewById<EditText>(R.id.fwalk_d_edit_post)
+                        val radioGroup = view.findViewById<RadioGroup>(R.id.fwalk_d_radio_group)
                         val button = view.findViewById<Button>(R.id.fwalk_d_btn_save)
+                        var pet = false
 
                         hour1.minValue = 0
                         hour1.maxValue = 23
@@ -243,24 +276,40 @@ class FragmentWalk : Fragment() {
 
                         alertDialog.window?.setBackgroundDrawable(ColorDrawable(0)) // 50% 투명도 검정색
 
-//                        button.setOnClickListener {
-//                            val call2 = RetrofitObject.getRetrofitService.walkPut(Retrofit.RequestWalkPut(1,"MALE",25,true, latitude, longitude, "18:30", "30", "메모1"))
-//                            call2.enqueue(object : Callback<Retrofit.ResponseSuccess> {
-//                                override fun onResponse(call: Call<Retrofit.ResponseSuccess>, response: Response<Retrofit.ResponseSuccess>) {
-//                                    if (response.isSuccessful) {
-//                                        if(response.body()!!.success){
-//                                            alertDialog.dismiss()
-//                                            Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()
-//                                        }
-//                                    }
-//                                }
-//
-//                                override fun onFailure(call: Call<Retrofit.ResponseSuccess>, t: Throwable) {
-//                                    val errorMessage = "Call Failed: ${t.message}"
-//                                    Log.d("Retrofit", errorMessage)
-//                                }
-//                            })
-//                        }
+                        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                            pet = when (checkedId) {
+                                R.id.fwalk_d_radio_true -> true // '있음' 버튼의 ID
+                                R.id.fwalk_d_radio_false -> false  // '없음' 버튼의 ID
+                                else -> {
+                                    Toast.makeText(requireContext(), "반려동물 유무를 선택해주세요.", Toast.LENGTH_SHORT).show()
+                                    false
+                                }
+                            }
+                        }
+
+                        button.setOnClickListener {
+                            val text = post.text?.toString() ?: ""
+
+                            val sTime = hour1.value.toString()+":"+minute1.value.toString()
+                            val wTime = minute2.value.toString()
+                            Log.d("메이트 등록", "$userId $gender $age $pet $latitude $longitude $sTime $wTime $text")
+
+                            val call2 = RetrofitObject2.getRetrofitService.walkPut(Retrofit.RequestWalkPut(userId!!.toInt(),gender!!,age,pet, latitude.toDouble(), longitude.toDouble(), sTime, wTime, text))
+                            call2.enqueue(object : Callback<ResponseBody> {
+                                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                    Log.d("메이트 등록", response.toString())
+                                    if (response.isSuccessful) {
+                                        alertDialog.dismiss()
+                                        Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                    val errorMessage = "Call Failed: ${t.message}"
+                                    Log.d("Retrofit", errorMessage)
+                                }
+                            })
+                        }
 
                         alertDialog.show()
                     }

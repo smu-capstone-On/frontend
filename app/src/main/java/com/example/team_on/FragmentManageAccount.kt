@@ -22,6 +22,7 @@ class FragmentManageAccount : Fragment() {
 
     private val sharedPreference = KakaoSDK.user
     private val email = sharedPreference.getString("email", null)
+    private val kakao = sharedPreference.getBoolean("kakao", false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,11 @@ class FragmentManageAccount : Fragment() {
         toolbar = binding.accountToolbar
 
         binding.accountTvMail.text = email
+
+        if(kakao){
+            btnChangeId.isEnabled = false
+            btnChangeNick.isEnabled = false
+        }
 
         btnChangeId.setOnClickListener {
             val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()

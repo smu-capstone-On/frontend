@@ -77,8 +77,8 @@ interface RetrofitAPI {
     //메이트 검색
     @GET("/walkmate/localtion")
     fun findMate(
-        @Query("latitude") latitude: Float,
-        @Query("logitude") logitude: Float
+        @Query("latitude") latitude: Double,
+        @Query("logitude") logitude: Double
     ): Call<List<Retrofit.ResponseFindMate>>
 
     //게시글 전체 조회
