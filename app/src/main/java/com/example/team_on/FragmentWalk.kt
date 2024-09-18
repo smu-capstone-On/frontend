@@ -22,6 +22,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.KakaoRetrofitObject
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
@@ -59,6 +61,8 @@ class FragmentWalk : Fragment() {
     private lateinit var cameraPos: CameraPosition
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var editSearch: EditText
+    private lateinit var recyclerViewMate: RecyclerView
+    private lateinit var mateAdapter: AdapterMate
 
     private val sharedPreference = KakaoSDK.user
     private val userId = sharedPreference.getString("userId", null)
@@ -122,6 +126,7 @@ class FragmentWalk : Fragment() {
         btnJoin = binding.fwalkBtnJoin
         imgLoc = binding.fwalkImgLoc
         editSearch = binding.fwalkEditSearch
+        recyclerViewMate = binding.fwalkRvMate
         bottomSheetBehavior = BottomSheetBehavior.from(binding.fwalkBottomSheet)
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -207,16 +212,22 @@ class FragmentWalk : Fragment() {
             val call = RetrofitObject2.getRetrofitService.findMate(latitude,longitude)
             call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
                 override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
-                    Log.d("메이트 검색", response.toString()+"\n"+response.body().toString())
                     if (response.isSuccessful) {
                         val matesList = response.body()
                         var count = 1
                         if (matesList!!.isNotEmpty()) {
+                            val mateList = mutableListOf<Retrofit.MateInfo>()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                             // 배열 데이터 출력 또는 처리
                             for (mate in matesList) {
+                                mateList.add(Retrofit.MateInfo(count, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
                                 labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
                             }
+
+                            recyclerViewMate.layoutManager =
+                                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                            mateAdapter = AdapterMate(mateList)
+                            recyclerViewMate.adapter = mateAdapter
                         } else {
                             Toast.makeText(requireContext(), "검색된 사용자가 없습니다.", Toast.LENGTH_SHORT).show()
                         }
@@ -238,7 +249,7 @@ class FragmentWalk : Fragment() {
             val latitude = cameraPos.position.latitude.toString()
             val call = KakaoRetrofitObject.getRetrofitService.kakaoAddress("KakaoAK $key", longitude, latitude)
             call.enqueue(object : Callback<Retrofit.ResponseAddress> {
-                @SuppressLint("CutPasteId")
+                @SuppressLint("CutPasteId", "DefaultLocale")
                 override fun onResponse(call: Call<Retrofit.ResponseAddress>, response: Response<Retrofit.ResponseAddress>) {
                     if (response.isSuccessful) {
                         val arr = response.body()?.documents!![0].roadAddress
@@ -290,14 +301,15 @@ class FragmentWalk : Fragment() {
                         button.setOnClickListener {
                             val text = post.text?.toString() ?: ""
 
-                            val sTime = hour1.value.toString()+":"+minute1.value.toString()
-                            val wTime = minute2.value.toString()
-                            Log.d("메이트 등록", "$userId $gender $age $pet $latitude $longitude $sTime $wTime $text")
+                            val sTime = "2024-01-01T00:"+String.format("%02d:%02d", hour1.value, minute1.value)
+                            val totalMinutes = minute2.value
+                            val hours = totalMinutes / 60
+                            val minutes = totalMinutes % 60
+                            val wTime = "2024-01-01T00:"+String.format("%02d:%02d", hours, minutes)
 
                             val call2 = RetrofitObject2.getRetrofitService.walkPut(Retrofit.RequestWalkPut(userId!!.toInt(),gender!!,age,pet, latitude.toDouble(), longitude.toDouble(), sTime, wTime, text))
                             call2.enqueue(object : Callback<ResponseBody> {
                                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                                    Log.d("메이트 등록", response.toString())
                                     if (response.isSuccessful) {
                                         alertDialog.dismiss()
                                         Toast.makeText(requireContext(), "등록되었습니다!", Toast.LENGTH_SHORT).show()

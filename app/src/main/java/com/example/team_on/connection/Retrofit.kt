@@ -146,6 +146,16 @@ class Retrofit {
         val memo: String?
     )
 
+    data class MateInfo(
+        val num: Int,
+        val age: Int,
+        val gender: String,
+        val sTime: String,
+        val wTime: String,
+        val pet: Boolean,
+        val post: String
+    )
+
     //메이트 찾기 응답
     data class ResponseFindMate(
         @SerializedName("id")

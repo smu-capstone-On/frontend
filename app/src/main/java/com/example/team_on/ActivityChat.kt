@@ -10,72 +10,25 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.team_on.databinding.ActivityChatBinding
+import io.reactivex.disposables.CompositeDisposable
 import okhttp3.*
+import org.json.JSONObject
+import ua.naiksoftware.stomp.Stomp
+import ua.naiksoftware.stomp.StompClient
+import ua.naiksoftware.stomp.dto.LifecycleEvent
+import java.time.LocalDateTime
 
 class ActivityChat : AppCompatActivity() {
 
     private val binding : ActivityChatBinding by lazy { ActivityChatBinding.inflate(layoutInflater) }
-
-    companion object {
-        const val NORMAL_CLOSURE_STATUS = 1000
-    }
 
     private lateinit var chatEdit : EditText
     private lateinit var const: ConstraintLayout
     private lateinit var chatConst: ConstraintLayout
     private lateinit var btnSend: ImageButton
 
-    private val client = OkHttpClient()
-    private var webSocket: WebSocket? = null
-    private val TAG = "WebSocketManager"
-
-    fun connectWebSocket(roomId: Int) {
-        val request = Request.Builder()
-            .url("ws://34.231.37.92:8080/send/$roomId")
-            .build()
-
-        webSocket = client.newWebSocket(request, object : WebSocketListener() {
-
-            override fun onOpen(webSocket: WebSocket, response: Response) {
-                Log.i(TAG, "WebSocket Opened: $response")
-            }
-
-            override fun onMessage(webSocket: WebSocket, text: String) {
-                Log.d(TAG, "Received Message: $text")
-            }
-
-            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                Log.i(TAG, "Closing WebSocket: Code=$code Reason=$reason")
-                webSocket.close(NORMAL_CLOSURE_STATUS, null)
-            }
-
-            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                Log.i(TAG, "WebSocket Closed: Code=$code Reason=$reason")
-            }
-
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.e(TAG, "WebSocket Error: ${t.message}")
-            }
-        })
-    }
-
-    fun sendMessage(message: String, senderId: Int, recipientId: Int) {
-        val payload = """
-            {
-                "message": "$message",
-                "senderId": $senderId,
-                "recipientId": $recipientId
-            }
-        """.trimIndent()
-
-        webSocket?.send(payload)
-        Log.d(TAG, "Sent Message: $payload")
-    }
-
-    fun closeWebSocket() {
-        webSocket?.close(NORMAL_CLOSURE_STATUS, "Closing WebSocket")
-        Log.i(TAG, "WebSocket closed manually.")
-    }
+    private lateinit var stompClient: StompClient
+    private val compositeDisposable = CompositeDisposable()
 
     private val chatline = object : TextWatcher {
 
@@ -124,16 +77,49 @@ class ActivityChat : AppCompatActivity() {
 
         chatEdit.addTextChangedListener(chatline)
 
-        // 웹소켓 연결
-        connectWebSocket(1)
+        val url = "ws://34.231.37.92:8080/ws"
 
-        btnSend.setOnClickListener {
-            val message = chatEdit.text.toString()
-            if (message.isNotBlank()) {
-                sendMessage(message, 3, 2)
-                chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
+        stompClient.withServerHeartbeat(10000)
+        stompClient.connect()
+
+//        val topicDisposable = stompClient.topic("/topic/1").subscribe(
+//            { topicMessage ->
+//                Log.d("이미지 추적 : 메시지 수신", LocalDateTime.now().toString())
+//                val payload = topicMessage.payload
+//                val jsonObject = JSONObject(payload)
+//                val sender = jsonObject.getString("senderId")
+//                val message = jsonObject.getString("content")
+//            },
+//            { throwable ->
+//                Log.e("stomp", "Error while receiving message", throwable)
+//            }
+//        )
+
+        val lifecycleDisposable = stompClient.lifecycle().subscribe { lifecycleEvent ->
+            when (lifecycleEvent.type) {
+                LifecycleEvent.Type.OPENED -> {
+                }
+                LifecycleEvent.Type.CLOSED -> {
+                }
+                LifecycleEvent.Type.ERROR -> {
+                }
+                else->{
+                }
             }
         }
+
+//        btnSend.setOnClickListener {
+//            val message = chatEdit.text.toString()
+//            if (message.isNotBlank()) {
+//                chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
+//            }
+//            val data = JSONObject()
+//            data.put("senderId", 3)
+//            data.put("content", "하이")
+//            data.put("recipientId", 7)
+//            stompClient.send("/app/send", data.toString()).subscribe()
+//        }
     }
 
     fun Int.dpToPx(): Int {
