@@ -217,16 +217,24 @@ class FragmentWalk : Fragment() {
                             var count = 1
                             val mateList = mutableListOf<Retrofit.MateInfo>()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            recyclerViewMate.layoutManager =
+                                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                            mateAdapter = AdapterMate(mateList)
+                            recyclerViewMate.adapter = mateAdapter
                             // 배열 데이터 출력 또는 처리
                             for (mate in matesList) {
                                 val call2 = RetrofitObject2.getRetrofitService.searchUser((mate.memberId+1).toString())
                                 call2.enqueue(object : Callback<Retrofit.ResponseUserInfo> {
+                                    @SuppressLint("NotifyDataSetChanged")
                                     override fun onResponse(call: Call<Retrofit.ResponseUserInfo>, response: Response<Retrofit.ResponseUserInfo>) {
                                         if (response.isSuccessful) {
                                             val responseBody = response.body()
                                             if(responseBody != null){
                                                 val userNick = responseBody.nickName
                                                 mateList.add(Retrofit.MateInfo(count, userNick, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
+                                                labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
+                                                count++
+                                                recyclerViewMate.adapter?.notifyDataSetChanged()
                                             }
                                         }
                                     }
@@ -236,14 +244,7 @@ class FragmentWalk : Fragment() {
                                         Log.d("Retrofit", errorMessage)
                                     }
                                 })
-                                labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
-                                count++
                             }
-
-                            recyclerViewMate.layoutManager =
-                                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                            mateAdapter = AdapterMate(mateList)
-                            recyclerViewMate.adapter = mateAdapter
                         } else {
                             Toast.makeText(requireContext(), "검색된 사용자가 없습니다.", Toast.LENGTH_SHORT).show()
                         }
