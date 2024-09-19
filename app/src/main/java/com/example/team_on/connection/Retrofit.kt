@@ -282,6 +282,6 @@ class Retrofit {
         @SerializedName("age")
         var age: Int,
         @SerializedName("petStatus")
-        var petStatus: Int
+        var petStatus: String
     )
 }
