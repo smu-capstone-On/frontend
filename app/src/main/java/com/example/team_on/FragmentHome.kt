@@ -29,11 +29,6 @@ class FragmentHome : Fragment() {
         btnGoCommunity = binding.homeBtnGoCommunity
         btnGoDeal = binding.homeBtnGoDeal
 
-        binding.homeBtnChat.setOnClickListener {
-            val intent = Intent(requireContext(), ActivityChat::class.java)
-            startActivity(intent)
-        }
-
         btnGoWalk.setOnClickListener{
             val intent = Intent(requireContext(), ActivityWalk::class.java)
             startActivity(intent)

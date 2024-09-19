@@ -15,7 +15,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.NumberPicker
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -26,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.KakaoRetrofitObject
 import com.example.team_on.connection.Retrofit
-import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentWalkBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -228,7 +226,7 @@ class FragmentWalk : Fragment() {
 
                             recyclerViewMate.layoutManager =
                                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                            mateAdapter = AdapterMate(mateList)
+                            mateAdapter = AdapterMate(mateList, requireContext())
                             recyclerViewMate.adapter = mateAdapter
                         } else {
                             Toast.makeText(requireContext(), "검색된 사용자가 없습니다.", Toast.LENGTH_SHORT).show()

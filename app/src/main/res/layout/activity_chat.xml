@@ -15,8 +15,8 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="사용자"
-        app:titleTextColor="@color/black" />
+        app:title="채팅방"
+        app:titleTextColor="@color/yellow" />
 
     <View
         android:id="@+id/chat_view"

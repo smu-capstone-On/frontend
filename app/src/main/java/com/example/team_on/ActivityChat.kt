@@ -10,14 +10,16 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.databinding.ActivityChatBinding
-import io.reactivex.disposables.CompositeDisposable
+import com.gmail.bishoybasily.stomp.lib.StompClient
+import com.gmail.bishoybasily.stomp.lib.Event
+import io.reactivex.disposables.Disposable
 import okhttp3.*
 import org.json.JSONObject
-import ua.naiksoftware.stomp.Stomp
-import ua.naiksoftware.stomp.StompClient
-import ua.naiksoftware.stomp.dto.LifecycleEvent
-import java.time.LocalDateTime
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class ActivityChat : AppCompatActivity() {
 
@@ -27,9 +29,11 @@ class ActivityChat : AppCompatActivity() {
     private lateinit var const: ConstraintLayout
     private lateinit var chatConst: ConstraintLayout
     private lateinit var btnSend: ImageButton
+    private lateinit var listChat: MutableList<ChatMessage>
+    private lateinit var recyclerChat: RecyclerView
+    private lateinit var chatAdapter: AdapterChat
 
-    private lateinit var stompClient: StompClient
-    private val compositeDisposable = CompositeDisposable()
+    lateinit var stompConnection: Disposable
 
     private val chatline = object : TextWatcher {
 
@@ -63,11 +67,10 @@ class ActivityChat : AppCompatActivity() {
                 chatEdit.requestLayout()
             }
         }
-
         override fun afterTextChanged(s: Editable?) {}
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -76,56 +79,48 @@ class ActivityChat : AppCompatActivity() {
         const = binding.chatMainConst
         chatConst = binding.chatConst
         btnSend = binding.chatBtnSend
+        recyclerChat = binding.chatRv
+
+        recyclerChat.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        chatAdapter = AdapterChat(listChat)
+        recyclerChat.adapter = chatAdapter
 
         chatEdit.addTextChangedListener(chatline)
 
         val url = "ws://34.231.37.92:8080/ws/websocket"
+        val intervalMillis = 1000L
+        val client = OkHttpClient()
 
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
-        stompClient.withServerHeartbeat(10000)
-        stompClient.connect()
+        val stomp = StompClient(client, intervalMillis).apply { this@apply.url = url }
 
-//        val topicDisposable = stompClient.topic("/queue/messages").subscribe(
-//            { topicMessage ->
-//                Log.d("stomp", "메시지 수신")
-//                val payload = topicMessage.payload
-//                val jsonObject = JSONObject(payload)
-//                val sender = jsonObject.getString("senderId")
-//                val message = jsonObject.getString("content")
-//            },
-//            { throwable ->
-//                Log.e("stomp", "Error while receiving message", throwable)
-//            }
-//        )
+        stompConnection = stomp.connect().subscribe {
+            when (it.type) {
+                Event.Type.OPENED -> {
+                    Log.d("stomp", "연결")
+                }
 
-        stompClient.topic("/queue/messages/3").subscribe(
-            { topicMessage ->
-                Log.d("스톰프", "메시지 수신")
-                val payload = topicMessage.payload
-                val jsonObject = JSONObject(payload)
-                val sender = jsonObject.getString("senderId")
-                val message = jsonObject.getString("content")
-            },
-            { throwable ->
-                Log.e("stomp", "Error while receiving message", throwable)
-            }
-        )
+                Event.Type.CLOSED -> {
 
-        val lifecycleDisposable = stompClient.lifecycle().subscribe { lifecycleEvent ->
-            when (lifecycleEvent.type) {
-                LifecycleEvent.Type.OPENED -> {
-                    Log.d("웹소켓", "연결")
                 }
-                LifecycleEvent.Type.CLOSED -> {
-                    Log.d("웹소켓", "끊김")
+
+                Event.Type.ERROR -> {
+
                 }
-                LifecycleEvent.Type.ERROR -> {
-                    Log.d("웹소켓", "오류.")
-                }
-                else->{
-                }
+
+                null -> TODO()
             }
         }
+
+        stomp.join("/user/3/queue/messages")
+            .subscribe(
+                { message ->
+                    Log.d("stomp", "메시지: $message")
+                },
+                { throwable ->
+                    Log.d("stomp", "에러 메시지: ${throwable.message}")
+                }
+            )
 
         btnSend.setOnClickListener {
             val message = chatEdit.text.toString()
@@ -134,13 +129,23 @@ class ActivityChat : AppCompatActivity() {
             }
             val data = JSONObject()
             data.put("senderId", 1)
-            data.put("message", "하이")
+            data.put("message", message)
             data.put("recipientId", 3)
-            stompClient.send("/app/send/2", data.toString()).subscribe()
+            stomp.send("/app/send/2", data.toString()).subscribe()
+            listChat.add(ChatMessage(message, getCurrentTime()))
+            recyclerChat.adapter?.notifyDataSetChanged()
         }
     }
 
     fun Int.dpToPx(): Int {
         return (this * Resources.getSystem().displayMetrics.density).toInt()
+    }
+
+    //오전 or 오후 몇 시인지 변환
+    @SuppressLint("SimpleDateFormat")
+    fun getCurrentTime(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("a hh:mm")
+        return dateFormat.format(calendar.time)
     }
 }
