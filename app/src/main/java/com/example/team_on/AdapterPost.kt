@@ -40,8 +40,7 @@ class AdapterPost(private var posts: MutableList<Retrofit.Post2>,
             binding.postCountLike.text = post.likeCount.toString()
             binding.postCountComment.text = post.comments.size.toString()
             binding.postImage.setImageResource(0)
-
-//            binding.postDate.text = formatPostTime(post.time)
+            binding.postDate.text = formatPostTime(post.time)
 
             // 이미지 URL을 받아서 ImageView에 로드
             post.fileInfo?.fileUrl?.let { url ->

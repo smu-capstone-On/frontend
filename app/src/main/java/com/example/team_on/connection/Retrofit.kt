@@ -199,7 +199,7 @@ class Retrofit {
         val fileInfo: FileInfo?,
         @SerializedName("memberId")
         val memberId: Long,
-        @SerializedName("time")
+        @SerializedName("createDate")
         val time: String
 //        @SerializedName("flag")
 //        val flag: Int,

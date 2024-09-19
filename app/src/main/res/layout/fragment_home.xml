@@ -83,6 +83,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/radius_10_stroke_gray"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/home_btn_go_community" />
@@ -95,6 +96,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/radius_10_stroke_gray"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/home_view_popular_post1" />
@@ -102,11 +104,12 @@
             <RelativeLayout
                 android:id="@+id/home_relative_layout"
                 android:layout_width="340dp"
-                android:layout_height="160dp"
+                android:layout_height="170dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +142,7 @@
                 android:id="@+id/home_btn_go_community"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@android:color/transparent"
                 android:drawableRight="@drawable/svg_chevron_right"
                 android:text="인기 게시글"
@@ -150,9 +153,10 @@
                 android:id="@+id/home_btn_go_deal"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:drawableRight="@drawable/svg_chevron_right"
+                android:gravity="start|center"
                 android:text="물품 거래"
                 app:layout_constraintStart_toStartOf="@+id/home_btn_go_community"
                 app:layout_constraintTop_toBottomOf="@+id/home_view_popular_post2" />
@@ -247,8 +251,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
-                android:text="고양이 사진"
+                android:text=""
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_view_popular_post1"
                 app:layout_constraintTop_toTopOf="@id/home_view_popular_post1" />
 
@@ -257,7 +263,9 @@
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="고양이 사진을 드리겠습니다."
+                android:text=""
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_post_title1"
                 app:layout_constraintTop_toBottomOf="@id/home_post_title1" />
 
@@ -266,13 +274,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="4시간전"
+                android:text=""
                 android:textColor="@color/hint"
                 android:textSize="11sp"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/home_view_popular_post1"
                 app:layout_constraintStart_toStartOf="@id/home_post_body1" />
 
             <ImageView
+                android:id="@+id/home_post_img1"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="15dp"
@@ -280,7 +291,8 @@
                 android:background="@drawable/radius_5_transparent"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/pic_cat"
+                android:src="@drawable/svg_camera"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/home_view_popular_post1"
                 app:layout_constraintTop_toTopOf="@id/home_view_popular_post1" />
 
@@ -290,8 +302,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
-                android:text="강아지 사진은 없어요"
+                android:text=""
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_view_popular_post2"
                 app:layout_constraintTop_toTopOf="@id/home_view_popular_post2" />
 
@@ -300,7 +314,9 @@
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="강아지는 사진이 없어요 ㅠㅜ"
+                android:text=""
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_post_title2"
                 app:layout_constraintTop_toBottomOf="@id/home_post_title2" />
 
@@ -309,11 +325,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="3시간전"
+                android:text=""
                 android:textColor="@color/hint"
                 android:textSize="11sp"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/home_view_popular_post2"
                 app:layout_constraintStart_toStartOf="@id/home_post_body2" />
+
+            <ImageView
+                android:id="@+id/home_post_img2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/radius_5_transparent"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/svg_camera"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/home_view_popular_post2"
+                app:layout_constraintTop_toTopOf="@id/home_view_popular_post2" />
 
             <ImageView
                 android:id="@+id/home_deal_img1"
@@ -322,28 +354,45 @@
                 android:background="@drawable/radius_5_transparent"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/pic_cat"
+                android:src="@drawable/svg_camera"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_relative_layout"
                 app:layout_constraintTop_toTopOf="@id/home_relative_layout" />
 
             <TextView
                 android:id="@+id/home_deal_title1"
                 android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:text="예시 상품 1 22,000원"
+                android:layout_height="20dp"
+                android:text=""
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_img1"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_img1" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2024.08.18"
-                android:textColor="@color/hint"
-                android:textSize="11sp"
+                android:id="@+id/home_deal_price1"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_title1"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_title1" />
+
+            <TextView
+                android:id="@+id/home_deal_date1"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textColor="@color/hint"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/home_deal_price1"
+                app:layout_constraintTop_toBottomOf="@id/home_deal_price1" />
 
             <ImageView
                 android:id="@+id/home_deal_img2"
@@ -353,28 +402,45 @@
                 android:background="@drawable/radius_5_transparent"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/svg_big_camera"
+                android:src="@drawable/svg_camera"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/home_deal_img1"
                 app:layout_constraintTop_toTopOf="@id/home_deal_img1" />
 
             <TextView
                 android:id="@+id/home_deal_title2"
                 android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:text="예시 상품 2 55,000원"
+                android:layout_height="20dp"
+                android:text=""
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_img2"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_img2" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2024.08.29"
-                android:textColor="@color/hint"
-                android:textSize="11sp"
+                android:id="@+id/home_deal_price2"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_title2"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_title2" />
+
+            <TextView
+                android:id="@+id/home_deal_date2"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textColor="@color/hint"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/home_deal_price2"
+                app:layout_constraintTop_toBottomOf="@id/home_deal_price2" />
 
             <ImageView
                 android:id="@+id/home_deal_img3"
@@ -385,27 +451,44 @@
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/svg_camera"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/home_deal_img2"
                 app:layout_constraintTop_toTopOf="@id/home_deal_img2" />
 
             <TextView
                 android:id="@+id/home_deal_title3"
                 android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:text="예시 상품 3 15,000원"
+                android:layout_height="20dp"
+                android:text=""
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_img3"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_img3" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2024.09.02"
-                android:textColor="@color/hint"
-                android:textSize="11sp"
+                android:id="@+id/home_deal_price3"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/home_deal_title3"
                 app:layout_constraintTop_toBottomOf="@id/home_deal_title3" />
+
+            <TextView
+                android:id="@+id/home_deal_date3"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text=""
+                android:textColor="@color/hint"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/home_deal_price3"
+                app:layout_constraintTop_toBottomOf="@id/home_deal_price3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
