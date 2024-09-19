@@ -129,5 +129,5 @@ interface RetrofitAPI {
         @Part file: MultipartBody.Part?): Call<Retrofit.Product2>
 
     @GET("/file/v2")
-    fun loadImg(@Part id: Long): Call<Retrofit.FileInfo>
+    fun loadImg(@Query("fileId") fileId: Long): Call<Retrofit.FileInfo>
 }

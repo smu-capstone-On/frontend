@@ -3,6 +3,7 @@ package com.example.team_on
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -48,6 +49,7 @@ class FragmentDeal : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutSearchCondition: ConstraintLayout
     private lateinit var progressBar: ProgressBar
+    private lateinit var imageUrl: String
 
     private lateinit var productAdapter: AdapterProduct
     private var productList = mutableListOf<Retrofit.Product2>()
@@ -309,6 +311,18 @@ class FragmentDeal : Fragment() {
 //                        }
 //                    }
 
+//                    for (product in products) {
+//                        val fileInfo = product.fileInfo
+//                        if (fileInfo != null) {
+//                            val id = fileInfo.id
+//                            val url = fileInfo.fileUrl
+//                            loadImg(fileInfo.id)
+//                            Log.d("ProductInfo", "FileInfo ID: $id, File URL: $url")
+//                        } else {
+//                            Log.d("ProductInfo", "FileInfo is null for product: ${product.title}")
+//                        }
+//                    }
+
                     val sortedProducts = products.sortedByDescending { it.createDate }
 
                     productList.clear()
@@ -332,15 +346,14 @@ class FragmentDeal : Fragment() {
         })
     }
 
-    private fun loadImg(id: Long, onImageLoaded: (String) -> Unit) {
+    private fun loadImg(id: Long) {
         val call = RetrofitObject2.getRetrofitService.loadImg(id)
         call.enqueue(object : Callback<Retrofit.FileInfo> {
             override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
                 if (response.isSuccessful) {
                     val fileInfo = response.body()
                     fileInfo?.let {
-                        val imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
-                        onImageLoaded(imageUrl)   // 콜백을 통해 URL 전달
+                        imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
                     }
                 } else {
                     Toast.makeText(context, "이미지 로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
