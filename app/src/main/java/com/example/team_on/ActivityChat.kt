@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,7 @@ class ActivityChat : AppCompatActivity() {
     private val listChat = mutableListOf<ChatMessage>()
     private lateinit var recyclerChat: RecyclerView
     private lateinit var chatAdapter: AdapterChat
+    private lateinit var nick: TextView
 
     lateinit var stompConnection: Disposable
 
@@ -80,6 +82,9 @@ class ActivityChat : AppCompatActivity() {
         chatConst = binding.chatConst
         btnSend = binding.chatBtnSend
         recyclerChat = binding.chatRv
+        nick = binding.chatTextNick
+
+        nick.text = intent.getStringExtra("nick")
 
         recyclerChat.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

@@ -219,20 +219,23 @@ class FragmentWalk : Fragment() {
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                             // 배열 데이터 출력 또는 처리
                             for (mate in matesList) {
-                                val call = RetrofitObject2.getRetrofitService.findMate(latitude,longitude)
-                                call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
-                                    override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
+                                val call2 = RetrofitObject2.getRetrofitService.searchUser((mate.memberId+1).toString())
+                                call2.enqueue(object : Callback<Retrofit.ResponseUserInfo> {
+                                    override fun onResponse(call: Call<Retrofit.ResponseUserInfo>, response: Response<Retrofit.ResponseUserInfo>) {
                                         if (response.isSuccessful) {
-
+                                            val responseBody = response.body()
+                                            if(responseBody != null){
+                                                val userNick = responseBody.nickName
+                                                mateList.add(Retrofit.MateInfo(count, userNick, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
+                                            }
                                         }
                                     }
 
-                                    override fun onFailure(call: Call<List<Retrofit.ResponseFindMate>>, t: Throwable) {
+                                    override fun onFailure(call: Call<Retrofit.ResponseUserInfo>, t: Throwable) {
                                         val errorMessage = "Call Failed: ${t.message}"
                                         Log.d("Retrofit", errorMessage)
                                     }
                                 })
-                                mateList.add(Retrofit.MateInfo(count, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
                                 labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
                                 count++
                             }

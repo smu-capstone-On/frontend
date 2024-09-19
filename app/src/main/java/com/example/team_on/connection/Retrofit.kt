@@ -148,6 +148,7 @@ class Retrofit {
 
     data class MateInfo(
         val num: Int,
+        val nick: String,
         val age: Int,
         val gender: String,
         val sTime: String,

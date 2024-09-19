@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="75dp">
 
     <View
         android:id="@+id/rv_mate_view"
@@ -28,19 +28,18 @@
         android:id="@+id/rv_mate_text_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="22/남/산책 시작 13:00 / 산책 시간 60분 / 반려동물 있음 "
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rv_mate_text_num"
-        app:layout_constraintTop_toBottomOf="@+id/rv_mate_view" />
+        app:layout_constraintTop_toBottomOf="@+id/rv_mate_text_nick" />
 
     <TextView
         android:id="@+id/rv_mate_text_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="4dp"
         android:text="text"
         app:layout_constraintStart_toStartOf="@+id/rv_mate_text_info"
         app:layout_constraintTop_toBottomOf="@+id/rv_mate_text_info" />
@@ -55,5 +54,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rv_mate_view"
         app:srcCompat="@drawable/svg_chat_icon" />
+
+    <TextView
+        android:id="@+id/rv_mate_text_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/rv_mate_text_info"
+        app:layout_constraintTop_toBottomOf="@+id/rv_mate_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

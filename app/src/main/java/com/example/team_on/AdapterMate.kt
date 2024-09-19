@@ -16,8 +16,10 @@ class AdapterMate(private val mateList : MutableList<Retrofit.MateInfo>) : Recyc
         private val info = binding.rvMateTextInfo
         private val post = binding.rvMateTextPost
         private val btnChat = binding.rvMateBtnChat
+        private val nick = binding.rvMateTextNick
 
         fun bind(list : Retrofit.MateInfo) {
+            nick.text = list.nick
             num.text = list.num.toString()
             val start = list.sTime.substring(list.sTime.length - 5)
             val time = list.wTime.substring(list.wTime.length - 5)
@@ -40,6 +42,7 @@ class AdapterMate(private val mateList : MutableList<Retrofit.MateInfo>) : Recyc
             btnChat.setOnClickListener {
                 val context = itemView.context
                 val intent = Intent(context, ActivityChat::class.java)
+                intent.putExtra("nick", list.nick)
                 context.startActivity(intent)
             }
         }
