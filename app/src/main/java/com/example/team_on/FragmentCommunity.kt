@@ -192,16 +192,15 @@ class FragmentCommunity : Fragment() {
                             loadImg(fileInfo.id) { imageUrl ->
                                 // 이미지 URL을 받아서 해당 post에 적용
                                 post.fileInfo.fileUrl = imageUrl
-
-                                // RecyclerView 갱신
-                                postAdapter.notifyDataSetChanged()
                             }
                         }
                     }
 
+                    val sortPosts = posts.sortedByDescending { it.time }
+
                     // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
                     postList.clear()
-                    postList.addAll(posts)
+                    postList.addAll(sortPosts)
 
                     // 필터 리스트도 동일하게 갱신
                     filteredList.clear()
