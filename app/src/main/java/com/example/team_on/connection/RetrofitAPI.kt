@@ -74,6 +74,10 @@ interface RetrofitAPI {
     @POST("/walkmate")
     fun walkPut(@Body request: Retrofit.RequestWalkPut): Call<ResponseBody>
 
+    @GET("/profiles/{id}")
+    fun searchUser(
+        @Path("id") id: String): Call<Retrofit.ResponseUserInfo>
+
     //메이트 검색
     @GET("/walkmate/localtion")
     fun findMate(

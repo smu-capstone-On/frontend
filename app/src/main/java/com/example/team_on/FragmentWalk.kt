@@ -219,6 +219,19 @@ class FragmentWalk : Fragment() {
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                             // 배열 데이터 출력 또는 처리
                             for (mate in matesList) {
+                                val call = RetrofitObject2.getRetrofitService.findMate(latitude,longitude)
+                                call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
+                                    override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
+                                        if (response.isSuccessful) {
+
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<List<Retrofit.ResponseFindMate>>, t: Throwable) {
+                                        val errorMessage = "Call Failed: ${t.message}"
+                                        Log.d("Retrofit", errorMessage)
+                                    }
+                                })
                                 mateList.add(Retrofit.MateInfo(count, mate.age, mate.sexType, mate.startDateTime, mate.endDateTime, mate.hasPet, mate.memo))
                                 labelLayer.addLabel(LabelOptions.from(count.toString(), LatLng.from(mate.latitude,mate.longitude)).setStyles(LabelStyle).setTexts(count.toString()))
                                 count++

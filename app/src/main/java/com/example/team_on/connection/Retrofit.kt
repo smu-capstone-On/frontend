@@ -272,4 +272,15 @@ class Retrofit {
         @SerializedName("fileUrl")
         var fileUrl: String
     )
+
+    data class ResponseUserInfo(
+        @SerializedName("nickName")
+        val nickName: String,
+        @SerializedName("sex")
+        val sex: String,
+        @SerializedName("age")
+        var age: Int,
+        @SerializedName("petStatus")
+        var petStatus: Int
+    )
 }
