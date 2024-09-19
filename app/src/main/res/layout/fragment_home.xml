@@ -324,7 +324,7 @@
 
             <TextView
                 android:id="@+id/home_deal_title1"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -336,7 +336,7 @@
 
             <TextView
                 android:id="@+id/home_deal_price1"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -347,7 +347,7 @@
 
             <TextView
                 android:id="@+id/home_deal_date1"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textColor="@color/hint"
@@ -372,7 +372,7 @@
 
             <TextView
                 android:id="@+id/home_deal_title2"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -384,7 +384,7 @@
 
             <TextView
                 android:id="@+id/home_deal_price2"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -395,7 +395,7 @@
 
             <TextView
                 android:id="@+id/home_deal_date2"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textColor="@color/hint"
@@ -420,7 +420,7 @@
 
             <TextView
                 android:id="@+id/home_deal_title3"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -432,7 +432,7 @@
 
             <TextView
                 android:id="@+id/home_deal_price3"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textSize="12sp"
@@ -443,7 +443,7 @@
 
             <TextView
                 android:id="@+id/home_deal_date3"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:text=""
                 android:textColor="@color/hint"
