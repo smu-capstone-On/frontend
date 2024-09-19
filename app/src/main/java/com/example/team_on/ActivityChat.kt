@@ -1,5 +1,6 @@
 package com.example.team_on
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
@@ -66,6 +67,7 @@ class ActivityChat : AppCompatActivity() {
         override fun afterTextChanged(s: Editable?) {}
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -77,15 +79,15 @@ class ActivityChat : AppCompatActivity() {
 
         chatEdit.addTextChangedListener(chatline)
 
-        val url = "ws://34.231.37.92:8080/ws"
+        val url = "ws://34.231.37.92:8080/ws/websocket"
 
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
         stompClient.withServerHeartbeat(10000)
         stompClient.connect()
 
-//        val topicDisposable = stompClient.topic("/topic/1").subscribe(
+//        val topicDisposable = stompClient.topic("/queue/messages").subscribe(
 //            { topicMessage ->
-//                Log.d("이미지 추적 : 메시지 수신", LocalDateTime.now().toString())
+//                Log.d("stomp", "메시지 수신")
 //                val payload = topicMessage.payload
 //                val jsonObject = JSONObject(payload)
 //                val sender = jsonObject.getString("senderId")
@@ -96,30 +98,46 @@ class ActivityChat : AppCompatActivity() {
 //            }
 //        )
 
+        stompClient.topic("/queue/messages/3").subscribe(
+            { topicMessage ->
+                Log.d("스톰프", "메시지 수신")
+                val payload = topicMessage.payload
+                val jsonObject = JSONObject(payload)
+                val sender = jsonObject.getString("senderId")
+                val message = jsonObject.getString("content")
+            },
+            { throwable ->
+                Log.e("stomp", "Error while receiving message", throwable)
+            }
+        )
+
         val lifecycleDisposable = stompClient.lifecycle().subscribe { lifecycleEvent ->
             when (lifecycleEvent.type) {
                 LifecycleEvent.Type.OPENED -> {
+                    Log.d("웹소켓", "연결")
                 }
                 LifecycleEvent.Type.CLOSED -> {
+                    Log.d("웹소켓", "끊김")
                 }
                 LifecycleEvent.Type.ERROR -> {
+                    Log.d("웹소켓", "오류.")
                 }
                 else->{
                 }
             }
         }
 
-//        btnSend.setOnClickListener {
-//            val message = chatEdit.text.toString()
-//            if (message.isNotBlank()) {
-//                chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
-//            }
-//            val data = JSONObject()
-//            data.put("senderId", 3)
-//            data.put("content", "하이")
-//            data.put("recipientId", 7)
-//            stompClient.send("/app/send", data.toString()).subscribe()
-//        }
+        btnSend.setOnClickListener {
+            val message = chatEdit.text.toString()
+            if (message.isNotBlank()) {
+                chatEdit.text.clear()  // 메시지 전송 후 입력창 초기화
+            }
+            val data = JSONObject()
+            data.put("senderId", 1)
+            data.put("message", "하이")
+            data.put("recipientId", 3)
+            stompClient.send("/app/send/2", data.toString()).subscribe()
+        }
     }
 
     fun Int.dpToPx(): Int {
