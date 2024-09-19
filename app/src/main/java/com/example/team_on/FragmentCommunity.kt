@@ -17,11 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentCommunityBinding
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import java.util.Locale
 
@@ -106,12 +106,14 @@ class FragmentCommunity : Fragment() {
         filteredList.addAll(postList)
 
         postAdapter = AdapterPost(filteredList) { post ->
-            val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl ?: "", post.time, post.id.toInt(), post.memberId.toInt())
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.main_frame, fragment)
-                ?.addToBackStack(null)
-                ?.commit()
-            (activity as? ActivityMain)?.hideBottomNavigation()
+            getUserNick(post.memberId.toInt()) { nickname ->
+                val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl ?: "", post.time, post.id.toInt(), post.memberId.toInt(), nickname)
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.main_frame, fragment)
+                    ?.addToBackStack(null)
+                    ?.commit()
+                (activity as? ActivityMain)?.hideBottomNavigation()
+            }
         }
 
         recyclerView.apply {
@@ -273,6 +275,32 @@ class FragmentCommunity : Fragment() {
             transaction.commit()
         }
     }
+
+    private fun getUserNick(id: Int, callback: (String) -> Unit) {
+        val call = RetrofitObject2.getRetrofitService.searchUser((id + 1).toString())
+        call.enqueue(object : Callback<Retrofit.ResponseUserInfo> {
+            override fun onResponse(call: Call<Retrofit.ResponseUserInfo>, response: Response<Retrofit.ResponseUserInfo>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        callback(responseBody.nickName)
+                    } else {
+                        callback("Unknown")
+                    }
+                } else {
+                    Toast.makeText(context, "사용자 정보 로드 실패: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
+                    callback("Unknown")
+                }
+            }
+
+            override fun onFailure(call: Call<Retrofit.ResponseUserInfo>, t: Throwable) {
+                Toast.makeText(context, "사용자 정보 로드 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
+                callback("Unknown")
+            }
+        })
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

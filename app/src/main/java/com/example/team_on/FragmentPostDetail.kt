@@ -51,6 +51,7 @@ class FragmentPostDetail : Fragment() {
     private var time: String? = null
     private var postNum: Int? = null
     private var userId: Int? = null
+    private var nickname: String? = null
 
     // 태그 매핑을 위한 Map 생성
     private val tagMapping = mapOf(
@@ -79,6 +80,7 @@ class FragmentPostDetail : Fragment() {
             time = it.getString(ARG_TIME)
             postNum = it.getInt(ARG_BOARDID)
             userId = it.getInt(ARG_USERID)
+            nickname = it.getString(ARG_NICKNAME)
         }
     }
 
@@ -97,7 +99,7 @@ class FragmentPostDetail : Fragment() {
         binding.postDetailContent.text = body
         binding.postDetailTextLike.text = like.toString()
         binding.postDetailPostDate.text = time?.let { formatPostTime(it) }
-        binding.postDetailUserName.text = userId.toString()
+        binding.postDetailUserName.text = nickname
 
         val tags = tag
         val postTags = listOf(binding.postDetailTag1, binding.postDetailTag2, binding.postDetailTag3)
@@ -294,8 +296,9 @@ class FragmentPostDetail : Fragment() {
         private const val ARG_TIME = "time"
         private const val ARG_BOARDID = "boardId"
         private const val ARG_USERID = "userId"
+        private const val ARG_NICKNAME = "nickname"
 
-        fun newInstance(title: String, body: String, likeCount: Int, boardTags: List<String>, imgUrl: String?, time: String?, boardId: Int, userId: Int) =
+        fun newInstance(title: String, body: String, likeCount: Int, boardTags: List<String>, imgUrl: String?, time: String?, boardId: Int, userId: Int, nickname: String) =
             FragmentPostDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
@@ -306,6 +309,7 @@ class FragmentPostDetail : Fragment() {
                     putString(ARG_TIME, time)
                     putInt(ARG_BOARDID, boardId)
                     putInt(ARG_USERID, userId)
+                    putString(ARG_NICKNAME, nickname)
                 }
             }
     }
