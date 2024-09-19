@@ -115,14 +115,15 @@ class FragmentPostDetail : Fragment() {
             }
         }
 
-//        imgUrl?.let { url ->
-//            binding.postDetailImage.visibility = View.VISIBLE
-//            val uri = url.toUri().buildUpon().scheme("https").build()
-//            Glide.with(binding.postDetailImage.context)
-//                .load(uri) // URL을 URI로 변환하여 로드
-//                .error(R.drawable.svg_camera_error)
-//                .into(binding.postDetailImage) // 이미지가 로드될 ImageView
-//        }
+        imgUrl?.let { url ->
+            binding.postDetailImage.visibility = View.VISIBLE
+            val uri = url.toUri().buildUpon().scheme("https").build()
+            Glide.with(binding.postDetailImage.context)
+                .load(uri) // URL을 URI로 변환하여 로드
+                .error(R.drawable.svg_camera_error)
+                .into(binding.postDetailImage) // 이미지가 로드될 ImageView
+        }
+
         binding.postDetailImage.setImageResource(R.drawable.svg_camera_error)
 
 
