@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.databinding.RvMateBinding
 
-class AdapterMate(private val mateList : MutableList<Retrofit.MateInfo>,
-    private val context: Context) : RecyclerView.Adapter<AdapterMate.ViewHolder>() {
+class AdapterMate(private val mateList : MutableList<Retrofit.MateInfo>) : RecyclerView.Adapter<AdapterMate.ViewHolder>() {
 
     inner class ViewHolder(binding: RvMateBinding) : RecyclerView.ViewHolder(binding.root){
 
@@ -39,6 +38,7 @@ class AdapterMate(private val mateList : MutableList<Retrofit.MateInfo>,
             post.text = list.post
 
             btnChat.setOnClickListener {
+                val context = itemView.context
                 val intent = Intent(context, ActivityChat::class.java)
                 context.startActivity(intent)
             }

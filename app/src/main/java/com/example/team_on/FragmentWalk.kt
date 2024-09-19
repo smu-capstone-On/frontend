@@ -207,13 +207,13 @@ class FragmentWalk : Fragment() {
             cameraPos = map.cameraPosition!!
             val longitude = cameraPos.position.longitude
             val latitude = cameraPos.position.latitude
+            labelLayer.removeAll()
             val call = RetrofitObject2.getRetrofitService.findMate(latitude,longitude)
             call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
                 override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
                     if (response.isSuccessful) {
                         val matesList = response.body()
                         if (matesList!!.isNotEmpty()) {
-                            labelLayer.removeAll()
                             var count = 1
                             val mateList = mutableListOf<Retrofit.MateInfo>()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -226,7 +226,7 @@ class FragmentWalk : Fragment() {
 
                             recyclerViewMate.layoutManager =
                                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                            mateAdapter = AdapterMate(mateList, requireContext())
+                            mateAdapter = AdapterMate(mateList)
                             recyclerViewMate.adapter = mateAdapter
                         } else {
                             Toast.makeText(requireContext(), "검색된 사용자가 없습니다.", Toast.LENGTH_SHORT).show()

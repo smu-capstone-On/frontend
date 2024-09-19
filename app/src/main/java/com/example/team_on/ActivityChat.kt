@@ -29,7 +29,7 @@ class ActivityChat : AppCompatActivity() {
     private lateinit var const: ConstraintLayout
     private lateinit var chatConst: ConstraintLayout
     private lateinit var btnSend: ImageButton
-    private lateinit var listChat: MutableList<ChatMessage>
+    private val listChat = mutableListOf<ChatMessage>()
     private lateinit var recyclerChat: RecyclerView
     private lateinit var chatAdapter: AdapterChat
 
