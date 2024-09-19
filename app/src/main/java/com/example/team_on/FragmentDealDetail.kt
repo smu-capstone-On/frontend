@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.example.team_on.databinding.FragmentDealDetailBinding
 import java.time.LocalDateTime
@@ -29,6 +30,8 @@ class FragmentDealDetail : Fragment() {
     private var productId: Int? = null
     private var reservationStatus: Boolean? = null
     private var price: String? = null
+    private val sharedPreference = KakaoSDK.user
+    private val userId = sharedPreference.getString("userId", null)
 
     // 태그 매핑을 위한 Map 생성
     private val tagMapping = mapOf(
@@ -78,6 +81,10 @@ class FragmentDealDetail : Fragment() {
         btnchatting = binding.dealDetailBtnChatting
         toolbar = binding.dealDetailToolbar
 
+        if (productId.toString() == userId) {
+            toolbar.inflateMenu(R.menu.nav_product)
+        }
+
         val tags = tag
 
         if (tags != null) {
@@ -103,6 +110,21 @@ class FragmentDealDetail : Fragment() {
 
         toolbar.setNavigationOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
+        }
+
+        toolbar.setOnMenuItemClickListener { menu ->
+            when (menu.itemId) {
+                R.id.nav_product_edit -> {
+                    (activity as? ActivityMain)?.hideBottomNavigation()
+
+                    val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+                    transaction.replace(R.id.main_frame, FragmentEditDeal())
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
