@@ -3,6 +3,7 @@ package com.example.team_on
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,10 +47,8 @@ class FragmentCommunity : Fragment() {
     private var postList = mutableListOf<Retrofit.Post2>()
     private var filteredList = mutableListOf<Retrofit.Post2>()
     private var selectedTags = mutableListOf<String>()
-    private var isRefreshing = false
     private lateinit var coordinatorLayout: CoordinatorLayout
 
-    // 태그 매핑을 위한 Map 생성
     private val tagMapping = mapOf(
         "DOG" to "강아지",
         "CAT" to "고양이",
@@ -99,21 +98,21 @@ class FragmentCommunity : Fragment() {
         addPost()
         loadItems()
 
-        _binding = FragmentCommunityBinding.inflate(layoutInflater)
-
         postList = mutableListOf()
-
         filteredList.addAll(postList)
 
-        postAdapter = AdapterPost(filteredList) { post ->
+        // Adapter 생성 시 loadImageUrl 함수 전달
+        postAdapter = AdapterPost(filteredList, { post ->
             getUserNick(post.memberId.toInt()) { nickname ->
-                val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl ?: "", post.time, post.id.toInt(), post.memberId.toInt(), nickname)
+                val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl, post.time, post.id.toInt(), post.memberId.toInt(), nickname)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.main_frame, fragment)
                     ?.addToBackStack(null)
                     ?.commit()
                 (activity as? ActivityMain)?.hideBottomNavigation()
             }
+        }) { fileId, callback ->
+            loadImg(fileId, callback)
         }
 
         recyclerView.apply {
@@ -138,7 +137,6 @@ class FragmentCommunity : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {}
-
         })
     }
 
@@ -186,18 +184,9 @@ class FragmentCommunity : Fragment() {
 
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
-
-                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
                     for (post in posts) {
-                        post.fileInfo?.let { fileInfo ->
-                            // fileInfo.id로 이미지 로드
-                            loadImg(fileInfo.id) { imageUrl ->
-                                // 이미지 URL을 받아서 해당 post에 적용
-                                post.fileInfo.fileUrl = imageUrl
-                            }
-                        }
+                        Log.d("FragmentCommunity", "Post ID: ${post.id}, fileInfo: ${post.fileInfo}")
                     }
-
                     val sortPosts = posts.sortedByDescending { it.time }
 
                     // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
@@ -218,30 +207,31 @@ class FragmentCommunity : Fragment() {
             }
 
             override fun onFailure(call: retrofit2.Call<List<Retrofit.Post2>>, t: Throwable) {
+                progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
             }
         })
     }
 
-    private fun loadImg(id: Long, onImageLoaded: (String) -> Unit) {
+    // AdapterPost에 전달될 loadImageUrl
+    private fun loadImg(id: Long, callback: (String?) -> Unit) {
         val call = RetrofitObject2.getRetrofitService.loadImg(id)
-        call.enqueue(object : retrofit2.Callback<Retrofit.FileInfo> {
+        call.enqueue(object : Callback<Retrofit.FileInfo> {
             override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
                 if (response.isSuccessful) {
                     val fileInfo = response.body()
-                    fileInfo?.let {
-                        val imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
-                        onImageLoaded(imageUrl)   // 콜백을 통해 URL 전달
-                    }
+                    callback(fileInfo?.fileUrl) // URL 전달
                 } else {
-                    Toast.makeText(context, "이미지 로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Log.d("FragmentCommunity", "이미지 로드 실패: ${response.message()}")
+                    callback(null)
                 }
             }
 
             override fun onFailure(call: Call<Retrofit.FileInfo>, t: Throwable) {
-                Toast.makeText(context, "이미지 로드 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.d("FragmentCommunity", "Failure: ${t.message}")
+                callback(null)
             }
-
         })
     }
 
@@ -276,6 +266,7 @@ class FragmentCommunity : Fragment() {
         }
     }
 
+    // getUserNick
     private fun getUserNick(id: Int, callback: (String) -> Unit) {
         val call = RetrofitObject2.getRetrofitService.searchUser((id + 1).toString())
         call.enqueue(object : Callback<Retrofit.ResponseUserInfo> {

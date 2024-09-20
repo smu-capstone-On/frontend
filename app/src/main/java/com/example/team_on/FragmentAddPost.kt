@@ -161,9 +161,8 @@ class FragmentAddPost : Fragment() {
             val tagTypesString = tagList.joinToString(",")
             val tagTypesJson = tagTypesString.toRequestBody("text/plain".toMediaTypeOrNull())
 
-            var imagePart: MultipartBody.Part? = null
-
-            selectedImageUri?.let { uri ->
+            // 이미지 처리
+            val imagePart: MultipartBody.Part? = selectedImageUri?.let { uri ->
                 try {
                     val file = File(requireContext().cacheDir, "image.jpg")
                     requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -171,14 +170,13 @@ class FragmentAddPost : Fragment() {
                             inputStream.copyTo(outputStream)
                         }
                     }
-
                     val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                    imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                    MultipartBody.Part.createFormData("file", file.name, requestFile)
                 } catch (e: Exception) {
                     Toast.makeText(activity, "이미지를 처리하는 데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
-                    return@let
+                    null
                 }
-            }
+            } ?: createDefaultImagePart() // 이미지가 없으면 기본 이미지 사용
 
             if (userIdJson != null) {
                 uploadPost(imagePart, userIdJson, titleJson, bodyJson, tagTypesJson)
@@ -187,11 +185,8 @@ class FragmentAddPost : Fragment() {
     }
 
     private fun uploadPost(imagePart: MultipartBody.Part?, id: RequestBody, title: RequestBody, body: RequestBody, tag: RequestBody) {
-        val call = if (imagePart != null) {
-            RetrofitObject2.getRetrofitService.addPost(imagePart, id, title, body, tag)
-        } else {
-            RetrofitObject2.getRetrofitService.addPost(null, id, title, body, tag)
-        }
+        val call = RetrofitObject2.getRetrofitService.addPost(imagePart, id, title, body, tag)
+
         call.enqueue(object : Callback<Retrofit.Post2> {
             override fun onResponse(call: Call<Retrofit.Post2>, response: Response<Retrofit.Post2>) {
                 if (response.isSuccessful) {
@@ -209,6 +204,30 @@ class FragmentAddPost : Fragment() {
             }
         })
     }
+
+    private fun createDefaultImagePart(): MultipartBody.Part? {
+        return try {
+            // 1x1 픽셀의 투명한 비트맵 생성
+            val bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+
+            // 비트맵을 파일로 저장
+            val file = File(requireContext().cacheDir, "default_image.png")
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+
+            // 파일을 RequestBody로 변환
+            val requestFile = file.asRequestBody("image/png".toMediaTypeOrNull())
+
+            // MultipartBody.Part로 변환
+            MultipartBody.Part.createFormData("file", file.name, requestFile)
+        } catch (e: Exception) {
+            Toast.makeText(activity, "기본 이미지를 생성하는 데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+            null
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

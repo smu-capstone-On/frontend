@@ -222,7 +222,7 @@ class Retrofit {
         val boardTags: List<String>,
         @SerializedName("comments")
         val comments: List<Comment2>,
-        @SerializedName("FileInfo")
+        @SerializedName("fileInfo")
         val fileInfo: FileInfo?,
         @SerializedName("memberId")
         val memberId: Long,

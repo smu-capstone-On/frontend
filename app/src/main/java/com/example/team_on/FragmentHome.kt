@@ -69,10 +69,10 @@ class FragmentHome : Fragment() {
                     val posts = response.body() ?: emptyList()
                     val topPosts = posts.sortedByDescending { it.likeCount }.take(2)
 
-                    if (topPosts.size == 2) {
+                    if (topPosts.size >= 2) {
                         adapterPost(topPosts[0], binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
                         adapterPost(topPosts[1], binding.homePostTitle2, binding.homePostBody2, binding.homePostTime2, binding.homePostImg2, binding.homeViewPopularPost2)
-                    } else if (topPosts.size == 1) {
+                    } else if (topPosts.size >= 1) {
                         adapterPost(topPosts[0], binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
                     }
                 }
@@ -92,7 +92,10 @@ class FragmentHome : Fragment() {
         date.text = formatPostTime(post.time)
         date.visibility = View.VISIBLE
         view.visibility = View.VISIBLE
-        image.visibility = View.VISIBLE
+        if (post.fileInfo != null) {
+
+            image.visibility = View.VISIBLE
+        }
     }
 
     private fun loadItem() {
@@ -138,7 +141,10 @@ class FragmentHome : Fragment() {
         price.visibility = View.VISIBLE
         date.text = formatPostTime(product2.createDate)
         date.visibility = View.VISIBLE
-        image.visibility = View.VISIBLE
+        if (product2.fileInfo != null) {
+
+            image.visibility = View.VISIBLE
+        }
     }
 
     private fun formatPostTime(dateString: String): String {
