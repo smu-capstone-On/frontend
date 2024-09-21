@@ -228,9 +228,18 @@ class Retrofit {
         val memberId: Long,
         @SerializedName("createDate")
         val time: String
-//        @SerializedName("flag")
-//        val flag: Int,
-//
+    )
+
+    data class Post3(
+        val title: String,
+        val body: String,
+        val likeCount: Int,
+        val boardTags: List<String>,
+        val comments: List<Comment2>,
+        val fileInfo: FileInfo?,
+        val memberId: Long,
+        val time: String,
+        val url: String?
     )
     // comment2
     data class Comment2(
@@ -265,13 +274,27 @@ class Retrofit {
         @SerializedName("fileInfo")
         val fileInfo: FileInfo?
     )
+
+    data class Product3(
+        val createDate: String,
+        val title: String,
+        val body: String,
+        val price: BigInteger,
+        val reservationStatus: Boolean,
+        val saleStatus: Boolean,
+        val tagType: String,
+        val fileInfo: FileInfo?,
+        val url: String?
+    )
+
     data class FileInfo(
         @SerializedName("id")
-        val id: Long,
-        @SerializedName("fileName")
-        val fileName: String,
-        @SerializedName("fileUrl")
-        var fileUrl: String
+        val id: Long
+    )
+
+    data class FileUrl(
+        @SerializedName("url")
+        val url: String
     )
 
     data class ResponseUserInfo(

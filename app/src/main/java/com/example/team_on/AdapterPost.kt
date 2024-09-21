@@ -1,10 +1,10 @@
 package com.example.team_on
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.team_on.connection.Retrofit
@@ -13,12 +13,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class AdapterPost(
-    private var posts: MutableList<Retrofit.Post2>,
-    private val onItemClick: (Retrofit.Post2) -> Unit,
-    private val loadImageUrl: (Long, (String?) -> Unit) -> Unit // 이미지 URL을 로드하는 함수
+    private var posts: MutableList<Retrofit.Post3>,
+    private val onItemClick: (Retrofit.Post3) -> Unit,
 ) : RecyclerView.Adapter<AdapterPost.PostViewHolder>() {
 
-    private val originalPosts: MutableList<Retrofit.Post2> = posts.toMutableList()
+    private val originalPosts: MutableList<Retrofit.Post3> = posts.toMutableList()
 
     // 태그 매핑을 위한 Map 생성
     private val tagMapping = mapOf(
@@ -35,11 +34,8 @@ class AdapterPost(
         return tagMapping[tag] ?: tag // 매핑에 없으면 원래 태그 반환
     }
 
-    // 캐싱을 위한 Map
-    private val imageUrlCache = mutableMapOf<Long, String>()
-
     inner class PostViewHolder(private val binding: ItemViewPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Retrofit.Post2) {
+        fun bind(post: Retrofit.Post3) {
             binding.postTitle.text = post.title
             binding.postContent.text = post.body
             binding.postCountLike.text = post.likeCount.toString()
@@ -48,43 +44,17 @@ class AdapterPost(
             binding.postDate.text = formatPostTime(post.time)
 
             // 이미지 로딩
-            post.fileInfo?.id?.let { fileId ->
-                if (imageUrlCache.containsKey(fileId)) {
-                    // 캐시에 이미지 URL이 있으면 Glide로 로드
-                    Glide.with(binding.postImage.context)
-                        .load(imageUrlCache[fileId]?.toUri())
-                        .placeholder(R.drawable.svg_camera) // 로딩 중 표시할 이미지
-                        .error(R.drawable.svg_camera_error) // 로딩 실패 시 표시할 이미지
-                        .into(binding.postImage)
+            post.fileInfo?.id?.let { _ ->
+                Glide.with(binding.postImage.context)
+                    .load(post.url)
+                    .placeholder(R.drawable.svg_camera) // 로딩 중 표시할 이미지
+                    .error(R.drawable.svg_camera_error) // 로딩 실패 시 표시할 이미지
+                    .into(binding.postImage)
 
-                    Log.d("AdapterPost", "Loaded image from cache for fileId $fileId: ${imageUrlCache[fileId]}")
-                } else {
-                    // 캐시에 없으면 이미지 URL을 가져온 후 Glide로 로드
-                    loadImageUrl(fileId) { imageUrl ->
-                        if (imageUrl != null) {
-                            imageUrlCache[fileId] = imageUrl
-                            Log.d("AdapterPost", "Loaded imageUrl for fileId $fileId: $imageUrl") // 파일 URL 로그 출력
-
-                            // 메인 스레드에서 Glide 로드
-                            binding.postImage.post {
-                                Glide.with(binding.postImage.context)
-                                    .load(imageUrl.toUri())
-                                    .placeholder(R.drawable.svg_camera)
-                                    .error(R.drawable.svg_camera_error)
-                                    .into(binding.postImage)
-                            }
-                        } else {
-                            // 이미지 로딩 실패 시 에러 이미지 설정
-                            binding.postImage.setImageResource(R.drawable.svg_camera_error)
-                            Log.e("AdapterPost", "Failed to load imageUrl for fileId $fileId")
-                        }
-                    }
-                }
                 binding.postImage.visibility = View.VISIBLE
             } ?: run {
                 binding.postImage.visibility = View.GONE
                 binding.postImage.setImageResource(R.drawable.svg_camera)
-                Log.d("AdapterPost", "No fileInfo for post: ${post.id}")
             }
 
             Log.d("AdapterPost", "post: ${post}")
@@ -131,7 +101,8 @@ class AdapterPost(
 
     override fun getItemCount() = posts.size
 
-    fun filterList(filterPosts: List<Retrofit.Post2>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun filterList(filterPosts: List<Retrofit.Post3>) {
         posts = if (filterPosts.isEmpty()) {
             originalPosts.toMutableList()
         } else {

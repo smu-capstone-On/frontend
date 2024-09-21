@@ -161,7 +161,7 @@ class FragmentDealDetail : Fragment() {
         private const val ARG_RESERVATIONSTATUS = "reservationStatus"
         private const val ARG_PRICE = "price"
 
-        fun newInstance(title: String, body: String, tag: String, imgUrl: String?, time: String, productId: Int, reservationStatus: Boolean, price: String) =
+        fun newInstance(title: String, body: String, tag: String, imgUrl: String?, time: String, reservationStatus: Boolean, price: String) =
             FragmentDealDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
@@ -169,7 +169,6 @@ class FragmentDealDetail : Fragment() {
                     putString(ARG_TAG, tag)
                     putString(ARG_IMGURL, imgUrl)
                     putString(ARG_TIME, time)
-                    putInt(ARG_PRODUCTID, productId)
                     putBoolean(ARG_RESERVATIONSTATUS, reservationStatus)
                     putString(ARG_PRICE, price + "원")
                 }

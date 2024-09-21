@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentCommunityBinding
 import retrofit2.Call
@@ -44,10 +45,11 @@ class FragmentCommunity : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: AdapterPost
     private lateinit var progressBar: ProgressBar
-    private var postList = mutableListOf<Retrofit.Post2>()
-    private var filteredList = mutableListOf<Retrofit.Post2>()
+    private var postList = mutableListOf<Retrofit.Post3>()
+    private var filteredList = mutableListOf<Retrofit.Post3>()
     private var selectedTags = mutableListOf<String>()
     private lateinit var coordinatorLayout: CoordinatorLayout
+    private lateinit var imageUrl: String
 
     private val tagMapping = mapOf(
         "DOG" to "강아지",
@@ -102,17 +104,24 @@ class FragmentCommunity : Fragment() {
         filteredList.addAll(postList)
 
         // Adapter 생성 시 loadImageUrl 함수 전달
-        postAdapter = AdapterPost(filteredList, { post ->
+        postAdapter = AdapterPost(filteredList) { post ->
             getUserNick(post.memberId.toInt()) { nickname ->
-                val fragment = FragmentPostDetail.newInstance(post.title, post.body, post.likeCount, post.boardTags, post.fileInfo?.fileUrl, post.time, post.id.toInt(), post.memberId.toInt(), nickname)
+                val fragment = FragmentPostDetail.newInstance(
+                    post.title,
+                    post.body,
+                    post.likeCount,
+                    post.boardTags,
+                    imageUrl,
+                    post.time,
+                    post.memberId.toInt(),
+                    nickname
+                )
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.main_frame, fragment)
                     ?.addToBackStack(null)
                     ?.commit()
                 (activity as? ActivityMain)?.hideBottomNavigation()
             }
-        }) { fileId, callback ->
-            loadImg(fileId, callback)
         }
 
         recyclerView.apply {
@@ -178,29 +187,85 @@ class FragmentCommunity : Fragment() {
         progressBar.visibility = View.VISIBLE
 
         val call = RetrofitObject2.getRetrofitService.getAllPosts2()
-        call.enqueue(object : retrofit2.Callback<List<Retrofit.Post2>> {
+        call.enqueue(object : Callback<List<Retrofit.Post2>> {
             override fun onResponse(call: Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
-                progressBar.visibility = View.GONE
-
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
-                    for (post in posts) {
-                        Log.d("FragmentCommunity", "Post ID: ${post.id}, fileInfo: ${post.fileInfo}")
-                    }
+                    postList.clear()
                     val sortPosts = posts.sortedByDescending { it.time }
 
-                    // 기존 목록을 지우고 서버에서 받은 데이터로 갱신
-                    postList.clear()
-                    postList.addAll(sortPosts)
+                    var pendingCallbacks = posts.size
+                    if (pendingCallbacks == 0) {
+                        progressBar.visibility = View.GONE
+                        updatePostList() // 만약 product가 없을 때를 대비한 처리
+                    }
 
-                    // 필터 리스트도 동일하게 갱신
-                    filteredList.clear()
-                    filteredList.addAll(postList)
+                    for(post in sortPosts){
+                        if (post.fileInfo != null) {
+                            val call = RetrofitObject.getRetrofitService.loadImg(post.fileInfo.id)
+                            call.enqueue(object : Callback<Retrofit.FileUrl> {
+                                override fun onResponse(call: Call<Retrofit.FileUrl>, response: Response<Retrofit.FileUrl>) {
+                                    if (response.isSuccessful) {
+                                        val fileInfo = response.body()
+                                        fileInfo?.let {
+                                            imageUrl = it.url // 서버에서 받아온 URL을 추출
+                                            postList.add(
+                                                Retrofit.Post3(
+                                                    post.title,
+                                                    post.body,
+                                                    post.likeCount,
+                                                    post.boardTags,
+                                                    post.comments,
+                                                    post.fileInfo,
+                                                    post.memberId,
+                                                    post.time,
+                                                    imageUrl
+                                                )
+                                            )
+                                        }
+                                    }
+                                    // 콜백 완료 시마다 카운터 감소
+                                    pendingCallbacks--
+                                    if (pendingCallbacks == 0) {
+                                        progressBar.visibility = View.GONE
+                                        updatePostList()
+                                    }
+                                }
 
-                    // RecyclerView 갱신
-                    postAdapter.filterList(filteredList)
-
-                    Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                                override fun onFailure(call: Call<Retrofit.FileUrl>, t: Throwable) {
+                                    val errorMessage = "Call Failed: ${t.message}"
+                                    Log.d("Retrofit", errorMessage)
+                                    // 실패해도 카운터 감소
+                                    pendingCallbacks--
+                                    if (pendingCallbacks == 0) {
+                                        progressBar.visibility = View.GONE
+                                        updatePostList()
+                                    }
+                                }
+                            })
+                        } else {
+                            // fileInfo가 없는 경우 바로 productList에 추가
+                            postList.add(
+                                Retrofit.Post3(
+                                    post.title,
+                                    post.body,
+                                    post.likeCount,
+                                    post.boardTags,
+                                    post.comments,
+                                    null,
+                                    post.memberId,
+                                    post.time,
+                                    null
+                                )
+                            )
+                            // 콜백 완료 시마다 카운터 감소
+                            pendingCallbacks--
+                            if (pendingCallbacks == 0) {
+                                progressBar.visibility = View.GONE
+                                updatePostList()
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
@@ -210,27 +275,6 @@ class FragmentCommunity : Fragment() {
                 progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failure: ${t.message}", Toast.LENGTH_SHORT).show()
                 t.printStackTrace()
-            }
-        })
-    }
-
-    // AdapterPost에 전달될 loadImageUrl
-    private fun loadImg(id: Long, callback: (String?) -> Unit) {
-        val call = RetrofitObject2.getRetrofitService.loadImg(id)
-        call.enqueue(object : Callback<Retrofit.FileInfo> {
-            override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
-                if (response.isSuccessful) {
-                    val fileInfo = response.body()
-                    callback(fileInfo?.fileUrl) // URL 전달
-                } else {
-                    Log.d("FragmentCommunity", "이미지 로드 실패: ${response.message()}")
-                    callback(null)
-                }
-            }
-
-            override fun onFailure(call: Call<Retrofit.FileInfo>, t: Throwable) {
-                Log.d("FragmentCommunity", "Failure: ${t.message}")
-                callback(null)
             }
         })
     }
@@ -295,5 +339,13 @@ class FragmentCommunity : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updatePostList() {
+        filteredList.clear()
+        filteredList.addAll(postList)
+        postAdapter.filterList(postList)
+
+        Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }

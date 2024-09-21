@@ -295,7 +295,7 @@ class FragmentPostDetail : Fragment() {
         private const val ARG_USERID = "userId"
         private const val ARG_NICKNAME = "nickname"
 
-        fun newInstance(title: String, body: String, likeCount: Int, boardTags: List<String>, imgUrl: String?, time: String?, boardId: Int, userId: Int, nickname: String) =
+        fun newInstance(title: String, body: String, likeCount: Int, boardTags: List<String>, imgUrl: String?, time: String?, userId: Int, nickname: String) =
             FragmentPostDetail().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
@@ -304,7 +304,6 @@ class FragmentPostDetail : Fragment() {
                     putStringArrayList(ARG_TAG, ArrayList(boardTags))
                     putString(ARG_IMGURL, imgUrl ?: "")
                     putString(ARG_TIME, time)
-                    putInt(ARG_BOARDID, boardId)
                     putInt(ARG_USERID, userId)
                     putString(ARG_NICKNAME, nickname)
                 }

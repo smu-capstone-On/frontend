@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
+import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentDealBinding
 import retrofit2.Call
@@ -52,8 +53,8 @@ class FragmentDeal : Fragment() {
     private lateinit var imageUrl: String
 
     private lateinit var productAdapter: AdapterProduct
-    private var productList = mutableListOf<Retrofit.Product2>()
-    private var filteredList = mutableListOf<Retrofit.Product2>()
+    private var productList = mutableListOf<Retrofit.Product3>()
+    private var filteredList = mutableListOf<Retrofit.Product3>()
     private var selectedTags = mutableListOf<String>()
     private var isPreOrderSelected: Boolean? = null
     private var sortCriteria: String? = null
@@ -109,7 +110,7 @@ class FragmentDeal : Fragment() {
         productList = mutableListOf()
 
         productAdapter = AdapterProduct(productList) { product ->
-            val fragment = FragmentDealDetail.newInstance(product.title, product.body, product.tagType, product.fileInfo?.fileUrl ?:"", product.createDate, product.id.toInt(), product.reservationStatus, product.price.toString())
+            val fragment = FragmentDealDetail.newInstance(product.title, product.body, product.tagType, product.url, product.createDate, product.reservationStatus, product.price.toString())
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_frame, fragment)
                 ?.addToBackStack(null)
@@ -209,7 +210,7 @@ class FragmentDeal : Fragment() {
     // 정렬 기준에 따른 물건 리스트 정렬
     private fun sortProduct(criteria: String?) {
         val comparator = when (criteria) {
-            "new" -> compareByDescending<Retrofit.Product2> { it.createDate }
+            "new" -> compareByDescending<Retrofit.Product3> { it.createDate }
             "price" -> compareBy { it.price }  // 가격에 따른 오름차순 정렬
             else -> compareByDescending { it.createDate }
         }
@@ -292,48 +293,84 @@ class FragmentDeal : Fragment() {
         val call = RetrofitObject2.getRetrofitService.getAllProducts()
         call.enqueue(object : Callback<List<Retrofit.Product2>> {
             override fun onResponse(call: Call<List<Retrofit.Product2>>, response: Response<List<Retrofit.Product2>>) {
-                progressBar.visibility = View.GONE
-
                 if (response.isSuccessful) {
                     val products = response.body() ?: emptyList()
-
-                    // 각 게시글의 fileInfo.id를 이용해 이미지를 로드
-//                    for (product in products) {
-//                        product.fileInfo?.let { fileInfo ->
-//                            // fileInfo.id로 이미지 로드
-//                            loadImg(fileInfo.id) { imageUrl ->
-//                                // 이미지 URL을 받아서 해당 post에 적용
-//                                product.fileInfo.fileUrl = imageUrl
-//
-//                                // RecyclerView 갱신
-//                                productAdapter.notifyDataSetChanged()
-//                            }
-//                        }
-//                    }
-
-//                    for (product in products) {
-//                        val fileInfo = product.fileInfo
-//                        if (fileInfo != null) {
-//                            val id = fileInfo.id
-//                            val url = fileInfo.fileUrl
-//                            loadImg(fileInfo.id)
-//                            Log.d("ProductInfo", "FileInfo ID: $id, File URL: $url")
-//                        } else {
-//                            Log.d("ProductInfo", "FileInfo is null for product: ${product.title}")
-//                        }
-//                    }
-
+                    productList.clear()
                     val sortedProducts = products.sortedByDescending { it.createDate }
 
-                    productList.clear()
-                    productList.addAll(sortedProducts)
+                    // 비동기 작업의 총 개수를 추적
+                    var pendingCallbacks = products.size
+                    if (pendingCallbacks == 0) {
+                        progressBar.visibility = View.GONE
+                        updateProductList() // 만약 product가 없을 때를 대비한 처리
+                    }
 
-                    filteredList.clear()
-                    filteredList.addAll(productList)
+                    for (product in sortedProducts) {
+                        if (product.fileInfo != null) {
+                            val call = RetrofitObject.getRetrofitService.loadImg(product.fileInfo.id)
+                            call.enqueue(object : Callback<Retrofit.FileUrl> {
+                                override fun onResponse(call: Call<Retrofit.FileUrl>, response: Response<Retrofit.FileUrl>) {
+                                    if (response.isSuccessful) {
+                                        val fileInfo = response.body()
+                                        fileInfo?.let {
+                                            imageUrl = it.url // 서버에서 받아온 URL을 추출
+                                            productList.add(
+                                                Retrofit.Product3(
+                                                    product.createDate,
+                                                    product.title,
+                                                    product.body,
+                                                    product.price,
+                                                    product.reservationStatus,
+                                                    product.saleStatus,
+                                                    product.tagType,
+                                                    product.fileInfo,
+                                                    imageUrl
+                                                )
+                                            )
+                                        }
+                                    }
+                                    // 콜백 완료 시마다 카운터 감소
+                                    pendingCallbacks--
+                                    if (pendingCallbacks == 0) {
+                                        progressBar.visibility = View.GONE
+                                        updateProductList()
+                                    }
+                                }
 
-                    productAdapter.filterList(filteredList)
-
-                    Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                                override fun onFailure(call: Call<Retrofit.FileUrl>, t: Throwable) {
+                                    val errorMessage = "Call Failed: ${t.message}"
+                                    Log.d("Retrofit", errorMessage)
+                                    // 실패해도 카운터 감소
+                                    pendingCallbacks--
+                                    if (pendingCallbacks == 0) {
+                                        progressBar.visibility = View.GONE
+                                        updateProductList()
+                                    }
+                                }
+                            })
+                        } else {
+                            // fileInfo가 없는 경우 바로 productList에 추가
+                            productList.add(
+                                Retrofit.Product3(
+                                    product.createDate,
+                                    product.title,
+                                    product.body,
+                                    product.price,
+                                    product.reservationStatus,
+                                    product.saleStatus,
+                                    product.tagType,
+                                    null,
+                                    null
+                                )
+                            )
+                            // 콜백 완료 시마다 카운터 감소
+                            pendingCallbacks--
+                            if (pendingCallbacks == 0) {
+                                progressBar.visibility = View.GONE
+                                updateProductList()
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(context, "Error: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
@@ -346,29 +383,16 @@ class FragmentDeal : Fragment() {
         })
     }
 
-    private fun loadImg(id: Long) {
-        val call = RetrofitObject2.getRetrofitService.loadImg(id)
-        call.enqueue(object : Callback<Retrofit.FileInfo> {
-            override fun onResponse(call: Call<Retrofit.FileInfo>, response: Response<Retrofit.FileInfo>) {
-                if (response.isSuccessful) {
-                    val fileInfo = response.body()
-                    fileInfo?.let {
-                        imageUrl = it.fileUrl // 서버에서 받아온 URL을 추출
-                    }
-                } else {
-                    Toast.makeText(context, "이미지 로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Retrofit.FileInfo>, t: Throwable) {
-                Toast.makeText(context, "이미지 로드 실패: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-
-        })
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateProductList() {
+        filteredList.clear()
+        filteredList.addAll(productList)
+        productAdapter.filterList(filteredList)
+
+        Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }
