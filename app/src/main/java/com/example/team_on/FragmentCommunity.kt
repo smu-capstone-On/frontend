@@ -194,7 +194,7 @@ class FragmentCommunity : Fragment() {
                     val posts = response.body() ?: emptyList()
                     val subPost = posts.slice(10..13)
                     postList.clear()
-                    val sortPosts = subPost.sortedByDescending { it.time }
+                    val sortPosts = subPost.sortedByDescending { it.id }
 
                     var pendingCallbacks = subPost.size
                     if (pendingCallbacks == 0) {
@@ -205,7 +205,6 @@ class FragmentCommunity : Fragment() {
                     for(post in sortPosts){
                         Log.d("포스트", post.toString())
                         if (post.fileInfo != null) {
-                            Log.d("포스트", post.fileInfo.id.toString())
                             val call = RetrofitObject3.getRetrofitService.loadImg(post.fileInfo.id)
                             call.enqueue(object : Callback<Retrofit.FileUrl> {
                                 override fun onResponse(call: Call<Retrofit.FileUrl>, response: Response<Retrofit.FileUrl>) {

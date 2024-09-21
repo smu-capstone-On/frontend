@@ -90,8 +90,8 @@ class FragmentHome : Fragment() {
                     val topPosts = posts.sortedByDescending { it.likeCount }
 
                     if (topPosts.size >= 2) {
-                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
-                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homePostTitle2, binding.homePostBody2, binding.homePostTime2, binding.homePostImg2, binding.homeViewPopularPost2)
+                        adapterPost(topPosts[13].title, topPosts[13].body, topPosts[13].time, "https://i.ibb.co/dkqVV5C/Kakao-Talk-20240922-010452888.jpg", binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
+                        adapterPost(topPosts[11].title, topPosts[11].body, topPosts[11].time, "https://i.ibb.co/j5FW6GP/1.jpg", binding.homePostTitle2, binding.homePostBody2, binding.homePostTime2, binding.homePostImg2, binding.homeViewPopularPost2)
                     }
 //                    else if (topPosts.size == 1) {
 //                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "", binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
@@ -127,26 +127,15 @@ class FragmentHome : Fragment() {
             override fun onResponse(call: Call<List<Retrofit.Product2>>, response: Response<List<Retrofit.Product2>>) {
                 if (response.isSuccessful) {
                     val products = response.body() ?: emptyList()
-                    val recentProducts = products.sortedByDescending { it.createDate }.take(3)
+                    val recentProducts = products.sortedByDescending { it.createDate }
 
                     if (recentProducts.isNotEmpty()) {
                         binding.homeRelativeLayout.visibility = View.VISIBLE
                     }
 
-                    when (recentProducts.size) {
-                        3 -> {
-                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
-                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle3, binding.homeDealPrice3, binding.homeDealDate3, binding.homeDealImg3)
-                        }
-//                        2 -> {
-//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
-//                        }
-//                        1 -> {
-//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-//                        }
-                    }
+                    adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/yPwS6QW/a4a7dc526e84a.jpg", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
+                    adapterProduct(recentProducts[1].title, recentProducts[1].price.toString(), recentProducts[1].createDate, "https://i.ibb.co/X4vYsPg/6672e0c5b33c199e86e19b3da840b6a3525fa0189e18548e4cb08f3281aa9fe8.jpg", binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
+                    adapterProduct(recentProducts[2].title, recentProducts[2].price.toString(), recentProducts[2].createDate, "https://i.ibb.co/XXSYdGN/OIP-1.jpg", binding.homeDealTitle3, binding.homeDealPrice3, binding.homeDealDate3, binding.homeDealImg3)
                 }
             }
 

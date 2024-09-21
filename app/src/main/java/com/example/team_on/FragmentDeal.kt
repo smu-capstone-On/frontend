@@ -295,9 +295,13 @@ class FragmentDeal : Fragment() {
         call.enqueue(object : Callback<List<Retrofit.Product2>> {
             override fun onResponse(call: Call<List<Retrofit.Product2>>, response: Response<List<Retrofit.Product2>>) {
                 if (response.isSuccessful) {
-                    val products = response.body() ?: emptyList()
+                    val responseList = response.body()
+                    Log.d("product", responseList.toString())
                     productList.clear()
-                    val sortedProducts = products.sortedByDescending { it.createDate }
+                    val pro = responseList!!.toMutableList()
+                    pro.removeAt(8)
+                    val products = pro.slice(4..<pro.size)
+                    val sortedProducts = pro.sortedByDescending { it.id }
 
                     // 비동기 작업의 총 개수를 추적
                     var pendingCallbacks = products.size
