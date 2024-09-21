@@ -1,5 +1,7 @@
 package com.example.team_on
 
+import DatabaseWalk
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,13 +13,17 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentHomeBinding
 import retrofit2.Call
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 class FragmentHome : Fragment() {
 
@@ -27,6 +33,9 @@ class FragmentHome : Fragment() {
     private lateinit var btnGoCommunity: Button
     private lateinit var btnGoDeal: Button
 
+    private val databaseWalk: DatabaseWalk by lazy{ DatabaseWalk.getInstance(requireContext()) }
+
+    @SuppressLint("DefaultLocale")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +46,16 @@ class FragmentHome : Fragment() {
         btnGoCalendar = binding.homeBtnGoCalendar
         btnGoCommunity = binding.homeBtnGoCommunity
         btnGoDeal = binding.homeBtnGoDeal
+
+        val today = getCurrentDate()
+        val currentData = databaseWalk.getData(today)
+        if(currentData !=null){
+            val time = currentData.time.toInt()
+            binding.homeTextTime.text = convertSecondsToHMS(time)
+            val distanceInKm = currentData.distance.toFloat() / 1000
+            val distance = String.format("%.2f", distanceInKm)
+            binding.homeTextDistance.text = distance
+        }
 
         btnGoWalk.setOnClickListener{
             val intent = Intent(requireContext(), ActivityWalk::class.java)
@@ -151,5 +170,20 @@ class FragmentHome : Fragment() {
         val dateTime = LocalDateTime.parse(dateString)
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd  HH:mm")
         return dateTime.format(formatter)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd")
+        return dateFormat.format(calendar.time)
+    }
+
+    @SuppressLint("DefaultLocale")
+    fun convertSecondsToHMS(seconds: Int): String {
+        val hours = seconds / 3600
+        val minutes = (seconds % 3600) / 60
+        val secs = seconds % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
 }
