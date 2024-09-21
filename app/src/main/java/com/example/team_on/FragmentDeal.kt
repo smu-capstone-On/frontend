@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
+import com.example.team_on.connection.RetrofitObject3
 import com.example.team_on.databinding.FragmentDealBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -307,7 +308,7 @@ class FragmentDeal : Fragment() {
 
                     for (product in sortedProducts) {
                         if (product.fileInfo != null) {
-                            val call = RetrofitObject.getRetrofitService.loadImg(product.fileInfo.id)
+                            val call = RetrofitObject3.getRetrofitService.loadImg(product.fileInfo.id)
                             call.enqueue(object : Callback<Retrofit.FileUrl> {
                                 override fun onResponse(call: Call<Retrofit.FileUrl>, response: Response<Retrofit.FileUrl>) {
                                     if (response.isSuccessful) {

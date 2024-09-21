@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject2
 import com.example.team_on.databinding.FragmentHomeBinding
@@ -75,6 +74,8 @@ class FragmentHome : Fragment() {
             (activity as ActivityMain).bnv.selectedItemId = R.id.nav_bottom_deal
         }
 
+
+
         loadPost()
         loadItem()
         return binding.root
@@ -86,14 +87,15 @@ class FragmentHome : Fragment() {
             override fun onResponse(call: Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
-                    val topPosts = posts.sortedByDescending { it.likeCount }.take(2)
+                    val topPosts = posts.sortedByDescending { it.likeCount }
 
                     if (topPosts.size >= 2) {
-                        adapterPost(topPosts[0], binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
-                        adapterPost(topPosts[1], binding.homePostTitle2, binding.homePostBody2, binding.homePostTime2, binding.homePostImg2, binding.homeViewPopularPost2)
-                    } else if (topPosts.size >= 1) {
-                        adapterPost(topPosts[0], binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
+                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
+                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homePostTitle2, binding.homePostBody2, binding.homePostTime2, binding.homePostImg2, binding.homeViewPopularPost2)
                     }
+//                    else if (topPosts.size == 1) {
+//                        adapterPost(topPosts[0].title, topPosts[0].body, topPosts[0].time, "", binding.homePostTitle1, binding.homePostBody1, binding.homePostTime1, binding.homePostImg1, binding.homeViewPopularPost1)
+//                    }
                 }
             }
 
@@ -103,18 +105,20 @@ class FragmentHome : Fragment() {
         })
     }
 
-    private fun adapterPost(post: Retrofit.Post2, title: TextView, body: TextView, date: TextView, image: ImageView, view: ImageView) {
-        title.text = post.title
+    private fun adapterPost(postTitle: String, postBody: String, postTime:String, postUrl: String, title: TextView, body: TextView, date: TextView, image: ImageView, view: ImageView) {
+        title.text = postTitle
         title.visibility = View.VISIBLE
-        body.text = post.body
+        body.text = postBody
         body.visibility = View.VISIBLE
-        date.text = formatPostTime(post.time)
+        date.text = formatPostTime(postTime)
         date.visibility = View.VISIBLE
         view.visibility = View.VISIBLE
-        if (post.fileInfo != null) {
-
-            image.visibility = View.VISIBLE
-        }
+        image.visibility = View.VISIBLE
+        Glide.with(requireContext())
+            .load(postUrl)
+            .placeholder(R.drawable.svg_camera) // 로딩 중 표시할 이미지
+            .error(R.drawable.svg_camera_error) // 로딩 실패 시 표시할 이미지
+            .into(image)
     }
 
     private fun loadItem() {
@@ -131,17 +135,17 @@ class FragmentHome : Fragment() {
 
                     when (recentProducts.size) {
                         3 -> {
-                            adapterProduct(recentProducts[0], binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-                            adapterProduct(recentProducts[1], binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
-                            adapterProduct(recentProducts[2], binding.homeDealTitle3, binding.homeDealPrice3, binding.homeDealDate3, binding.homeDealImg3)
+                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
+                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
+                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "https://i.ibb.co/7JpMhwv/images.jpg", binding.homeDealTitle3, binding.homeDealPrice3, binding.homeDealDate3, binding.homeDealImg3)
                         }
-                        2 -> {
-                            adapterProduct(recentProducts[0], binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-                            adapterProduct(recentProducts[1], binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
-                        }
-                        1 -> {
-                            adapterProduct(recentProducts[0], binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
-                        }
+//                        2 -> {
+//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
+//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle2, binding.homeDealPrice2, binding.homeDealDate2, binding.homeDealImg2)
+//                        }
+//                        1 -> {
+//                            adapterProduct(recentProducts[0].title, recentProducts[0].price.toString(), recentProducts[0].createDate, "", binding.homeDealTitle1, binding.homeDealPrice1, binding.homeDealDate1, binding.homeDealImg1)
+//                        }
                     }
                 }
             }
@@ -153,17 +157,19 @@ class FragmentHome : Fragment() {
         })
     }
 
-    private fun adapterProduct(product2: Retrofit.Product2, title: TextView, price: TextView, date: TextView, image: ImageView) {
-        title.text = product2.title
+    private fun adapterProduct(productTitle:String, productPrice:String, productDate:String, productUrl:String, title: TextView, price: TextView, date: TextView, image: ImageView) {
+        title.text = productTitle
         title.visibility = View.VISIBLE
-        price.text = product2.price.toString() + "원"
+        price.text = productPrice + "원"
         price.visibility = View.VISIBLE
-        date.text = formatPostTime(product2.createDate)
+        date.text = formatPostTime(productDate)
         date.visibility = View.VISIBLE
-        if (product2.fileInfo != null) {
-
-            image.visibility = View.VISIBLE
-        }
+        image.visibility = View.VISIBLE
+        Glide.with(requireContext())
+            .load(productUrl)
+            .placeholder(R.drawable.svg_camera) // 로딩 중 표시할 이미지
+            .error(R.drawable.svg_camera_error) // 로딩 실패 시 표시할 이미지
+            .into(image)
     }
 
     private fun formatPostTime(dateString: String): String {

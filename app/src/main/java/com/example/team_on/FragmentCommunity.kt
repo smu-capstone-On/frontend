@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.team_on.connection.Retrofit
 import com.example.team_on.connection.RetrofitObject
 import com.example.team_on.connection.RetrofitObject2
+import com.example.team_on.connection.RetrofitObject3
 import com.example.team_on.databinding.FragmentCommunityBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -191,24 +192,28 @@ class FragmentCommunity : Fragment() {
             override fun onResponse(call: Call<List<Retrofit.Post2>>, response: Response<List<Retrofit.Post2>>) {
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
+                    val subPost = posts.slice(10..13)
                     postList.clear()
-                    val sortPosts = posts.sortedByDescending { it.time }
+                    val sortPosts = subPost.sortedByDescending { it.time }
 
-                    var pendingCallbacks = posts.size
+                    var pendingCallbacks = subPost.size
                     if (pendingCallbacks == 0) {
                         progressBar.visibility = View.GONE
                         updatePostList() // 만약 product가 없을 때를 대비한 처리
                     }
 
                     for(post in sortPosts){
+                        Log.d("포스트", post.toString())
                         if (post.fileInfo != null) {
-                            val call = RetrofitObject.getRetrofitService.loadImg(post.fileInfo.id)
+                            Log.d("포스트", post.fileInfo.id.toString())
+                            val call = RetrofitObject3.getRetrofitService.loadImg(post.fileInfo.id)
                             call.enqueue(object : Callback<Retrofit.FileUrl> {
                                 override fun onResponse(call: Call<Retrofit.FileUrl>, response: Response<Retrofit.FileUrl>) {
                                     if (response.isSuccessful) {
                                         val fileInfo = response.body()
                                         fileInfo?.let {
                                             imageUrl = it.url // 서버에서 받아온 URL을 추출
+                                            Log.d("이미지", imageUrl)
                                             postList.add(
                                                 Retrofit.Post3(
                                                     post.title,

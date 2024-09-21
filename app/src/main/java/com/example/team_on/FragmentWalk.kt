@@ -199,7 +199,7 @@ class FragmentWalk : Fragment() {
             labelLayer.removeAll()
         }
 
-        //현재 지도에서 찾기 눌렀을 때 데모
+        //현재 지도에서 찾기 눌렀을 때
         btnMapSearch.setOnClickListener {
             val LabelStyle = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon)
                 .setTextStyles(45, Color.parseColor("#000000"))
@@ -212,8 +212,11 @@ class FragmentWalk : Fragment() {
             call.enqueue(object : Callback<List<Retrofit.ResponseFindMate>> {
                 override fun onResponse(call: Call<List<Retrofit.ResponseFindMate>>, response: Response<List<Retrofit.ResponseFindMate>>) {
                     if (response.isSuccessful) {
-                        val matesList = response.body()
-                        if (matesList!!.isNotEmpty()) {
+                        val responseList = response.body()
+                        if (responseList!!.isNotEmpty()) {
+                            val matesList = responseList.toMutableList()
+                            matesList.removeAt(0)
+                            matesList.sortedByDescending { it.startDateTime }
                             var count = 1
                             val mateList = mutableListOf<Retrofit.MateInfo>()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
