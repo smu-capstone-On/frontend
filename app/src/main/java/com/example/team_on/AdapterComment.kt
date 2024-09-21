@@ -16,7 +16,6 @@ class AdapterComment (
         fun bind(loadComment: Retrofit.Comment2) {
             binding.commentUserId.text = loadComment.id.toString()
             binding.commentContent.text = loadComment.body
-            //binding.commentUserProfile = comment.userImage
 
             binding.commentDate.text = formatPostTime(loadComment.modifyDate)
         }

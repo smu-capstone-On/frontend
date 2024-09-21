@@ -33,10 +33,7 @@ class FragmentPostDetail : Fragment() {
     private lateinit var editComment: EditText
     private lateinit var btnLike: ImageButton
     private lateinit var btnSendComment: ImageButton
-    private lateinit var imageContent: ImageView
-    private lateinit var imageUserProfile: ImageView
     private lateinit var recyclerView: RecyclerView
-
 
     private lateinit var toolbar: Toolbar
 

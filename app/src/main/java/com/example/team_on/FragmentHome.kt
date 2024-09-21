@@ -41,7 +41,7 @@ class FragmentHome : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        
+
         btnGoWalk = binding.homeBtnGoWalk
         btnGoCalendar = binding.homeBtnGoCalendar
         btnGoCommunity = binding.homeBtnGoCommunity
