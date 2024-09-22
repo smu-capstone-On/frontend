@@ -39,27 +39,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/post_detail_user_profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/svg_default_profile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/post_detail_line1" />
-
             <TextView
                 android:id="@+id/post_detail_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:text="User Name"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/post_detail_user_profile"
-                app:layout_constraintTop_toTopOf="@id/post_detail_user_profile" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="11dp" />
 
             <TextView
                 android:id="@+id/post_detail_post_date"
@@ -76,13 +66,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="300dp"
-                android:layout_marginTop="15dp"
                 android:text="Post Title"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/post_detail_user_profile"
-                app:layout_constraintTop_toBottomOf="@id/post_detail_user_profile" />
+                app:layout_constraintStart_toStartOf="@+id/post_detail_user_name"
+                tools:layout_editor_absoluteY="66dp" />
 
             <TextView
                 android:id="@+id/post_detail_content"

@@ -350,6 +350,6 @@ class FragmentCommunity : Fragment() {
         filteredList.addAll(postList)
         postAdapter.filterList(postList)
 
-        Toast.makeText(context, "물품이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "게시글이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }

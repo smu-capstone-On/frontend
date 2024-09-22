@@ -194,9 +194,7 @@ class FragmentPostDetail : Fragment() {
 
                     // RecyclerView 갱신
                     commentAdapter.notifyDataSetChanged()
-                } else {
-                    Toast.makeText(context, "댓글을 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                }
+                } 
             }
 
             override fun onFailure(call: Call<Retrofit.Post2>, t: Throwable) {
