@@ -1,6 +1,5 @@
 package com.example.team_on
 
-import DatabaseWalk
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,18 +25,9 @@ class ActivityLogin : AppCompatActivity() {
     private val sharedPreference = KakaoSDK.user
     private val editor = sharedPreference.edit()
 
-//    private val databaseWalk: DatabaseWalk by lazy{ DatabaseWalk.getInstance(applicationContext) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-//        databaseWalk.insertData("2024.08.25", "3615", "3215", null)
-//        databaseWalk.insertData("2024.08.26", "2512", "2153", null)
-//        databaseWalk.insertData("2024.08.27", "3521", "3215", null)
-//        databaseWalk.insertData("2024.08.28", "2112", "1254", null)
-//        databaseWalk.insertData("2024.08.29", "4525", "5312", null)
-
 
         editId = binding.loginEditId
         editPw = binding.loginEditPwd

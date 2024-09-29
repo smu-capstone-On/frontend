@@ -194,7 +194,7 @@ class FragmentPostDetail : Fragment() {
 
                     // RecyclerView 갱신
                     commentAdapter.notifyDataSetChanged()
-                } 
+                }
             }
 
             override fun onFailure(call: Call<Retrofit.Post2>, t: Throwable) {
